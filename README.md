@@ -1,6 +1,6 @@
 **English** · [Español](README.es.md)
 
-# claude-skills-marketing
+# visual-marketing-skills
 
 Skills for **Claude Code** that produce agency-grade visual marketing pieces **for any brand**: product-in-context
 images, email headers and HTML emails, Instagram carousels, banners, thumbnails, stories and reels. Five visual
@@ -9,12 +9,12 @@ looks, a selector that picks the right one, and a polish loop that checks every 
 ## Install
 
 ```
-/plugin marketplace add C4rI0s/claude-Image-generation
-/plugin install marketing-visual-completo@claude-skills-marketing
+/plugin marketplace add C4rI0s/visual-marketing-skills
+/plugin install marketing-visual-completo@visual-marketing-skills
 ```
 
 The bundle installs all the plugins below (and `motion-graphics` for videos). To install only some:
-`/plugin install <plugin>@claude-skills-marketing`.
+`/plugin install <plugin>@visual-marketing-skills`.
 
 ## Five looks
 

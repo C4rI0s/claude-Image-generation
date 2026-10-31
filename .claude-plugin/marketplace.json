@@ -1,6 +1,6 @@
 {
     "$schema":  "https://anthropic.com/claude-code/marketplace.schema.json",
-    "name":  "claude-skills-marketing",
+    "name":  "visual-marketing-skills",
     "description":  "Skills de Claude Code para piezas de marketing visual de cualquier marca con nivel de agencia: cinco looks de campaña con selector (producto en contexto estilo Proton, oscuro glow para fintech, editorial recorte y tech grid para gaming, producto 3D con mascota), correos HTML, carruseles de Instagram, portadas, banners, miniaturas, OG, stories, reels y dirección de arte. La marca es un parámetro (marca.json).",
     "owner":  {
                   "name":  "C4rI0s",

@@ -1,6 +1,6 @@
 [English](README.md) · **Español**
 
-# claude-skills-marketing
+# visual-marketing-skills
 
 Skills de **Claude Code** para hacer piezas de marketing visual con nivel de agencia **para cualquier marca**:
 imágenes de producto en contexto, cabeceras y correos HTML, carruseles de Instagram, banners, miniaturas, stories y
@@ -10,12 +10,12 @@ entregarla.
 ## Instalación
 
 ```
-/plugin marketplace add C4rI0s/claude-Image-generation
-/plugin install marketing-visual-completo@claude-skills-marketing
+/plugin marketplace add C4rI0s/visual-marketing-skills
+/plugin install marketing-visual-completo@visual-marketing-skills
 ```
 
 El paquete instala todos los plugins de abajo (y `motion-graphics` para los vídeos). Para instalar solo algunos:
-`/plugin install <plugin>@claude-skills-marketing`.
+`/plugin install <plugin>@visual-marketing-skills`.
 
 ## Cinco looks
 

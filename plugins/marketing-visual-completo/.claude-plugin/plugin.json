@@ -1,13 +1,13 @@
 {
     "name":  "marketing-visual-completo",
     "version":  "2.5.1",
-    "description":  "Todo el marketplace de una vez: instala direccion-de-arte, piezas-graficas (los cinco looks), correos-marketing, carruseles-instagram y video-marketing. Un solo comando: /plugin install marketing-visual-completo@claude-skills-marketing",
+    "description":  "Todo el marketplace de una vez: instala direccion-de-arte, piezas-graficas (los cinco looks), correos-marketing, carruseles-instagram y video-marketing. Un solo comando: /plugin install marketing-visual-completo@visual-marketing-skills",
     "author":  {
                    "name":  "C4rI0s",
                    "url":  "https://github.com/C4rI0s"
                },
-    "homepage":  "https://github.com/C4rI0s/claude-Image-generation",
-    "repository":  "https://github.com/C4rI0s/claude-Image-generation",
+    "homepage":  "https://github.com/C4rI0s/visual-marketing-skills",
+    "repository":  "https://github.com/C4rI0s/visual-marketing-skills",
     "license":  "UNLICENSED",
     "keywords":  [
                      "marketing",
