@@ -45,6 +45,23 @@ producto y la mascota son renders propios.
 **Referencias de estilo.** Cada look parte de un estilo estudiado: Proton Pass (1), Impulse World (2), Logitech
 esports (3), Instant Gaming (4) y Logitech Deal Days (5). Solo se nombran; no se incluyen sus imágenes ni sus marcas,
 y `referencia/golden.jpg` de cada skill es nuestra propia demo.
+## Ejemplos
+
+Pide en lenguaje normal; Claude elige la skill, te pide lo que falte (marca, logo, capturas o fotos) y revisa cada PNG
+antes de entregar.
+
+| Pides | Recibes |
+|---|---|
+| «Hero y post del lanzamiento de mi app de facturas, estilo Proton. Marca: Pliego, naranja #FF5B2E» | hero 16:9, 1:1 y 4:5 con la app sobre un degradado ([ejemplo](docs/ejemplos/producto-hero.png)) |
+| «Correo anunciando los recordatorios de pago, con la app en la cabecera» | correo HTML revisado en Gmail, Outlook, móvil y modo oscuro ([ejemplo](docs/ejemplos/correo-producto.png)) |
+| «Carrusel de Instagram de 7 diapositivas: cobra en 7 días, no en 45» | diapositivas 1080x1350 y la vista de la rejilla del perfil ([ejemplo](docs/ejemplos/carrusel-hoja.png)) |
+| «Banner de Black Friday para mi tienda de periféricos, sin fotos del producto» | piezas tech grid con la librería 3D en tus colores |
+
+Prueba en limpio con marcas que las skills no habían visto nunca (Claude Code recién instalado, solo este marketplace,
+un brief por pieza):
+
+![](docs/ejemplos/prueba-en-limpio.jpg)
+
 ## Qué esperar
 
 Probado en limpio (Claude Code recién instalado, solo este marketplace, un brief normal, marcas que no había visto):
@@ -82,3 +99,6 @@ Las skills viven en `plugins/<plugin>/skills/<nombre>/SKILL.md` (la descripción
 plantillas leen la marca de `marca.json`; nada de marcas reales en ellas. Algunos ficheros están repetidos a
 propósito (`producto.css`, `producto.js`, `exportar.mjs`): copia los cambios en todas las copias. Sube la `version` del
 plugin y la del marketplace. Mira el [CHANGELOG](CHANGELOG.es.md).
+
+## Licencia
+[MIT](LICENSE) © C4rI0s.

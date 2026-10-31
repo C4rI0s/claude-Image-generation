@@ -45,6 +45,22 @@ and mascot are our own renders.
 Instant Gaming (4) and Logitech Deal Days (5). They are only named; their images and brands are not included, and
 `referencia/golden.jpg` in each skill is our own demo.
 
+## Examples
+
+Ask in plain language; Claude picks the skill, asks for what it is missing (brand, logo, screenshots or photos) and
+reviews every PNG before delivering.
+
+| You ask | You get |
+|---|---|
+| "Launch hero and post for my invoicing app, Proton style. Brand: Pliego, orange #FF5B2E" | 16:9 hero, 1:1 and 4:5 with the app over a gradient ([example](docs/ejemplos/producto-hero.png)) |
+| "Email announcing automatic payment reminders, with the app in the header" | HTML email checked in Gmail, Outlook, mobile and dark mode ([example](docs/ejemplos/correo-producto.png)) |
+| "A 7-slide Instagram carousel: get paid in 7 days, not 45" | 1080x1350 slides plus the profile-grid preview ([example](docs/ejemplos/carrusel-hoja.png)) |
+| "Black Friday banner for my peripherals store, no product photos" | tech-grid pieces with the 3D library in your colors |
+
+Clean-room run with brands the skills had never seen (fresh Claude Code, only this marketplace, one brief each):
+
+![](docs/ejemplos/prueba-en-limpio.jpg)
+
 ## What to expect
 
 Tested clean-room (fresh Claude Code, only this marketplace, a normal brief, brands it had never seen): average
@@ -83,3 +99,7 @@ Skills live in `plugins/<plugin>/skills/<name>/SKILL.md` (the description says *
 brand from `marca.json`; no real brands in templates. A few files are duplicated on purpose (`producto.css`,
 `producto.js`, `exportar.mjs`): copy changes to all copies. Bump `version` in the plugin and in the marketplace.
 See [CHANGELOG](CHANGELOG.md).
+
+## License
+[MIT](LICENSE) © C4rI0s. The skill instructions are written in Spanish; Claude follows them and answers in your
+language.
