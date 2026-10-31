@@ -72,7 +72,8 @@ propios; las marcas son ficticias.
 
 La 2.4.0 se ha probado como la usaría otra persona: Claude Code recién instalado, sin memoria ni ayudas, solo este
 marketplace y un brief normal («hazme un hero para mi marca X con el look Y»), con marcas y productos que la skill no
-había visto. Lo honesto:
+había visto. Media de las piezas: **6,8/10 con la 2.3.0 y 8,5/10 con la 2.4.0** (8 marcas nuevas, sin fallos graves en
+la versión final). Lo honesto:
 
 - **Producto en contexto y oscuro glow salen solos al nivel de las demos** (8,5-9 sobre 10): la interfaz, las
   tarjetas y el fondo son HTML. Lo que más sube la nota: capturas o la estructura real de tu app y las cifras reales.
@@ -80,7 +81,8 @@ había visto. Lo honesto:
   la luz. Sin fotos, si vendes teclados, ratones o cascos, la librería 3D los pinta con tus colores (8/10), pero son
   productos genéricos, no tu modelo. Otros productos (mandos, sillas, consolas) necesitan fotos o IA.
 - **Editorial recorte necesita personas fotográficas**: tus fotos o IA (Higgsfield, unos 0,07 $ por 3 personas) y
-  llega a 8,5. Sin fotos ni IA no se puede: el exportador no deja entregar siluetas ni figuras dibujadas.
+  llega a 8-8,5 (con IA avisa de que las personas no son las reales). Sin fotos ni IA no se puede: el exportador no
+  deja entregar siluetas ni figuras dibujadas.
 - **Producto 3D + mascota es el más exigente**: con IA genera tu producto y tu mascota con acabado 3D por céntimos
   (9/10 en las dos pruebas, unos 12 min); sin IA, solo los productos de la librería y una mascota genérica recoloreada.
 - **Tiempo y coste**: 5-15 min por hero con las 2 vueltas de pulido. IA: 0 $ si traes fotos; 0,02-0,10 $ por pieza si
