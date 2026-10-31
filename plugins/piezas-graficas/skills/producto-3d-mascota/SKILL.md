@@ -38,6 +38,11 @@ titular corto y una CTA en el aire, nunca encima de los sujetos. Reglas medidas 
 - `plantillas/marca-ejemplo.json` · la marca del ejemplo (Cometa), para ver la plantilla tal cual.
 - `plantillas/recortes/` · `producto-torre.webp` y `mascota-chispa.webp`: renders 3D propios (three.js) con alfa,
   ≤ 500 KB, renderizados con la luz de la marca de ejemplo.
+- `referencia/golden.jpg` + `golden.md` · la pieza de referencia del look y qué imitar de ella, con la lista
+  puntuable del bucle de pulido.
+- `scripts/escenas/teclado.html`, `raton.html`, `cascos.html` (+ `estudio-producto.js`) · **librería de productos 3D**
+  sin marca, con los colores de la tuya por parámetro (`cuerpo`, `acento`, `rgb1`, `rgb2`, `recorte`, `giro`): valen
+  aquí y en `tech-grid`. `mascota.html` admite `cuerpo` y `panza` (mascota genérica de vinilo).
 - `scripts/render-3d.mjs` + `scripts/escenas/` · el **render propio**, sin IA: `mascota.html` (Chispa) y
   `producto.html` (la torre) en three.js, a PNG con fondo transparente con Chrome sin cabeza. La luz de recorte
   se cambia por la de tu marca con `--param azul=3d8bff --param violeta=8b6bff` (en la torre también tiñe el RGB
@@ -55,18 +60,31 @@ titular corto y una CTA en el aire, nunca encima de los sujetos. Reglas medidas 
   columna) para `.contacto` y mira los bordes a 200 % sobre oscuro y sobre el violeta. Para fotos o renders con
   fondo: `imagen-ia/scripts/recortar.mjs`.
 
+## Antes de empezar
+Mira la golden del look (`referencia/golden.jpg`, anotada en `referencia/golden.md`): es el nivel que hay que
+alcanzar. Pide al usuario (o saca de su web) lo que no esté: el **producto** (fotos, modelo 3D o al menos qué es,
+colores y materiales), la **mascota** (imágenes o descripción: especie, colores, rasgos) y si tiene **clave de
+Higgsfield** y cuánto puede gastar. Si no contesta, decide con lo que haya y dilo en la entrega.
+
 ## Flujo
 1. **Marca y brief** (`direccion-de-arte`): `marca.json`, **un** producto y **una** mascota. Copy con contención:
    titular de 2-5 palabras por línea, 2 líneas como mucho, y una CTA de 1-2 palabras.
 2. **Copy**: titular (oferta, lanzamiento o colaboración), chip opcional («Semana gamer») y CTA. El hero y el
    banner de X pueden ir solo con logo y titular.
-3. **Material 3D** (ver «Cómo conseguir el material 3D» en `references/estilo.md`):
-   - **Render propio** (lo mejor): el modelo del producto (fabricante, CAD, GLB) y el de la mascota en three.js
-     o Blender, con luz de estudio y **recortes azul y violeta de la marca**, a PNG con alfa a ≥ 2x de lo que se
-     verá; luego WebP con alfa ≤ 500 KB.
-   - **IA** (si no hay modelos): producto y mascota por separado, **fondo plano liso**, misma luz descrita en el
-     prompt; después **quitar el fondo** (skill `imagen-ia`) y revisar el borde a 200 %.
-   - Mide la huella de cada recorte (dónde apoya) y ajusta `.contacto` (`--cx`, `--cy`, `--cw`, `--ch`).
+3. **Material: el producto y la mascota del usuario**, por este orden (`piezas-graficas/references/sujetos.md`):
+   - **Fotos o modelo 3D del usuario** → `recortar.mjs` → `preparar-recorte.mjs` → `armonizar.mjs --look
+     producto-3d-mascota` (rim azul y violeta, blancos) → `ver-recorte.mjs`.
+   - **Producto de la librería 3D** (teclado, ratón, cascos, torre) pintado con su marca:
+     `render-3d.mjs escenas/teclado.html … --param cuerpo=… --param acento=… --param recorte=…`. La mascota genérica
+     (`escenas/mascota.html --param cuerpo=… --param panza=…`) solo si la marca no tiene mascota propia.
+   - **IA** (con clave y permiso): la mascota con `z-image` y el producto con `z-image` o `soul`, por separado, fondo
+     gris liso y la misma luz (prompts en `imagen-ia/references/prompts.md`); después recortar → preparar →
+     armonizar. Revisa la anatomía de la mascota (patas, brazos, manos) y descarta las raras.
+   - Nunca la torre y Chispa de ejemplo como si fueran de la marca, ni figuras hechas con formas básicas. **No
+     modeles a mano** en three.js un producto o una mascota que no están en la librería (sale de juguete): si hay
+     clave de IA, genera; si no, pide fotos o usa la librería y la mascota genérica, y dilo.
+   - Mide la huella de cada recorte (`preparar-recorte.mjs` la imprime) y ajusta `.contacto` (`--cx`, `--cy`,
+     `--cw`, `--ch`).
 4. **Compón**: copia la carpeta `plantillas/` al trabajo (HTML + CSS + `recortes/`), cambia los recortes y los
    textos, y coloca la pareja según el formato: producto 1,2-1,3 veces más alto que la mascota, la mascota delante
    tapando el 20-35 % del ancho del producto y con la base 20-40 px más baja.
@@ -78,9 +96,13 @@ titular corto y una CTA en el aire, nunca encima de los sujetos. Reglas medidas 
    Cada pieza lleva `data-estilo="producto-3d-mascota"`: el exportador acepta las sombras oscuras, avisa de
    brillos, `text-shadow` y filtros fuera de `data-fondo`, comprueba que los recortes traen transparencia y da
    **error si un texto pisa la parte opaca** de un recorte.
-6. **Mira cada PNG** a tamaño real y la `hoja.png` a tamaño de móvil, con la lista de
-   `direccion-de-arte/references/revision-visual.md` y la de `references/estilo.md` (recortes limpios, sombra que
-   asienta, solape con intención, partículas que no se ven a la primera). Corrige y repite.
+6. **Bucle de pulido (obligatorio, 2 vueltas como mínimo)** — `piezas-graficas/references/pulido.md`:
+   ```bash
+   node <skill>/../piezas-graficas/scripts/comparar.mjs out/<html>/hero.png --look producto-3d-mascota --vuelta 1
+   ```
+   Abre `revision/vuelta-1.png` (tu pieza junto a la golden y un detalle de cada una al 100 %), puntúa cada punto de
+   la lista de `referencia/golden.md` de 1 a 10 en `revision/vuelta-1.md`, corrige lo que esté por debajo de 8 y
+   repite. Se entrega con todo ≥ 8 y sin fallos graves (sujetos de juguete o de ejemplo, halos, texto encima).
 7. **Entrega**: PNG 2x. El hero redondeado lleva las esquinas del color de la página (`--pagina`); si la web
    redondea con CSS, exporta sin `.redondeado`.
 

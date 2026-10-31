@@ -13,8 +13,10 @@ el PNG.
    - **A tamaño real**: detalles, cortes, alineaciones, erratas.
    - **A tamaño de móvil** (`hoja.png`, `movil.png`): ¿se lee el titular? ¿se entiende la idea en 2 segundos?
 3. **Pasa la lista** de abajo. Apunta cada fallo.
-4. **Corrige y vuelve a renderizar.** Repite hasta que la lista salga limpia. Mínimo una vuelta de corrección:
-   la primera versión casi nunca es la buena.
+4. **Corrige y vuelve a renderizar.** Repite hasta que la lista salga limpia. **Mínimo dos vueltas**: la primera
+   versión casi nunca es la buena. En los looks de campaña, cada vuelta compara la pieza con la golden del look
+   (`piezas-graficas/scripts/comparar.mjs --look <look>`) y puntúa su lista de 1 a 10: se entrega con todo ≥ 8 y sin
+   fallos graves (`piezas-graficas/references/pulido.md`).
 5. **Entrega** los PNG (o el HTML) junto con lo que has comprobado y lo que no (p. ej. «no probado en Outlook real»).
 
 ## Lista

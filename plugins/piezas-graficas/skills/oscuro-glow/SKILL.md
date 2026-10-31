@@ -39,6 +39,8 @@ invisible. La luz es la del look, **con contención**: dos halos (las tarjetas) 
   y `--pie` para tarjetas grandes), `.og-cta`
   y `.og-url`. La cabecera lista los tokens del look y de dónde salen.
 - `plantillas/marca-ejemplo.json` · la marca de ejemplo (Vértice) para probar el exportador con `--marca`.
+- `referencia/golden.jpg` + `golden.md` · la pieza de referencia del look, qué imitar y la lista puntuable del bucle
+  de pulido. Antes de empezar, pide (o saca de su web) las **dos cifras verdaderas** de la oferta y cómo es su panel.
 
 ## Flujo
 1. **Marca** (`direccion-de-arte`): `marca.json`. El look deriva su luz del `acento` (`--glow`) y el azul noche de
@@ -62,10 +64,14 @@ invisible. La luz es la del look, **con contención**: dos halos (las tarjetas) 
    Cada pieza lleva `data-estilo="oscuro-glow"`: el exportador acepta los halos de las tarjetas dentro de la
    medida (alfa ≤ 0,6, desenfoque ≤ 8 % del lado corto, 3 como mucho), avisa de `text-shadow` y de desenfoques
    fuera de `[data-fondo]`, y mide el titular plateado con el tono más oscuro de su degradado.
-6. **Mirar** cada PNG a tamaño real y la `hoja.png` a tamaño de móvil, con la lista de
-   `direccion-de-arte/references/revision-visual.md` y la de `references/estilo.md`: jerarquía titular → tarjetas →
-   CTA en 1 segundo, halo que no parezca neón, nada en las zonas que tapan las redes. Corrige y repite (2 vueltas
-   como mínimo). Prueba también con otra marca.
+6. **Bucle de pulido (obligatorio, 2 vueltas como mínimo)** — `piezas-graficas/references/pulido.md`:
+   ```bash
+   node <skill>/../piezas-graficas/scripts/comparar.mjs out/<html>/hero.png --look oscuro-glow --vuelta 1
+   ```
+   Abre `revision/vuelta-1.png` (tu pieza junto a la golden y el detalle de las tarjetas al 100 %), puntúa cada punto
+   de `referencia/golden.md` de 1 a 10 en `revision/vuelta-1.md`, corrige lo que esté por debajo de 8 (jerarquía
+   titular → tarjetas → CTA en 1 segundo, halo que no parezca neón, panel del portátil que parezca de su producto) y
+   repite. Prueba también con otra marca.
 
 ## Reglas que no se negocian
 - **Dos tarjetas, una cifra en cada una.** Ni tres tarjetas ni tarjetas con párrafos.

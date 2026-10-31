@@ -23,7 +23,14 @@ llamada) y nunca va encima de las fotos. Plano: sin sombras, brillos ni desenfoq
   - producto físico con mascota o personaje → **`producto-3d-mascota`**;
   - fintech u ofertas en oscuro con un número protagonista → **`oscuro-glow`**;
   - enseñar una app o una función → **`producto-en-contexto`**.
-- Sin fotos buenas de personas (o de producto en mano), este look no funciona: consíguelas antes.
+- Sin fotos buenas de personas (o de producto en mano), este look no funciona: consíguelas antes (del usuario o
+  generadas con IA con su permiso; ver «Material»). **Nunca siluetas ni figuras dibujadas**: el exportador da error.
+
+## Antes de empezar
+Mira la golden del look (`referencia/golden.jpg`, anotada en `referencia/golden.md`): tres personas fotográficas con
+jerarquía, recortes limpios y mucho aire. Pide al usuario las **fotos de las personas** (con permiso para usarlas),
+el **producto** que deben llevar y, si no hay fotos, si tiene **clave de Higgsfield** y cuánto puede gastar (generar
+3 personas cuesta ≈ 0,02-0,05 $). Si no contesta, decide con lo que haya y dilo en la entrega.
 
 ## Qué hay aquí
 - `plantillas/editorial-recorte.html` · 5 formatos de una campaña: `hero` (1600x900), `redes-1x1` (1080x1080),
@@ -37,7 +44,9 @@ llamada) y nunca va encima de las fotos. Plano: sin sombras, brillos ni desenfoq
   `ed-luz`, `ed-trazo`, `ed-trazo-arco`, `ed-texto`, `ed-apoyo`, `ed-detalle` (= `acento-2` si la marca lo trae, si no
   `acento`). El titular usa `--fuente-display` (de `tipografia.display`) o, si no hay, `--fuente`.
 - `plantillas/marca-ejemplo.json` · la marca del ejemplo (Pulso).
-- `plantillas/recortes/` · los tres recortes del ejemplo (WebP con alfa, logos inventados tapados, sin halo).
+- `plantillas/recortes/` · los tres recortes del ejemplo (WebP con alfa, logos inventados tapados, sin halo). Son de
+  la marca de ejemplo: para otra marca, sus personas.
+- `referencia/golden.jpg` + `golden.md` · la pieza de referencia del look, qué imitar y la lista puntuable.
 - `scripts/preparar-recortes.mjs` · tapa logos, quita el halo, recorta y guarda WebP con alfa (ver el paso 3).
 
 ## Flujo
@@ -45,9 +54,15 @@ llamada) y nunca va encima de las fotos. Plano: sin sombras, brillos ni desenfoq
    detalle; si no, el acento.
 2. **Copy**: firma, un titular de 2-4 palabras (el lema vale), una línea de apoyo (≤ 60 caracteres por línea) y la
    llamada o la web. Nada de listas ni de precios: eso es otro look.
-3. **Material: los recortes**. Fotos propias con el fondo quitado o generadas con IA sobre **fondo plano gris** y
-   luego sin fondo; nunca personas reales sin permiso ni fotos de otras marcas. Pide 4-5 para elegir 3: una de
-   perfil o tres cuartos (el dominante), una de frente con el producto en la mano y otra de tres cuartos.
+3. **Material: los recortes** (`piezas-graficas/references/sujetos.md`). Fotos del usuario con el fondo quitado
+   (`imagen-ia/scripts/recortar.mjs`) o, sin fotos y con su permiso, **generadas con IA** sobre **fondo plano gris**:
+   ```bash
+   node <imagen-ia>/scripts/generar.mjs "<prompt de persona de imagen-ia/references/prompts.md>" jugador-1.png --modelo soul --formato 3:4 --cantidad 4 --si
+   ```
+   (`soul`, 4 variantes por persona ≈ 0,02 $; revisa manos, orejas y letras inventadas y quédate con la mejor). Nunca
+   personas reales sin permiso ni fotos de otras marcas, ni los recortes de ejemplo de la plantilla como si fueran
+   sus jugadores. Pide o genera 4-5 para elegir 3: una de perfil o tres cuartos (el dominante), una de frente con el
+   producto en la mano y otra de tres cuartos.
    Prepáralas con `scripts/preparar-recortes.mjs` (una vez: `npm install` en `../piezas-graficas/scripts`):
    tapa los logos y textos inventados (relleno desde el borde o clonando la tela de al lado), estrecha y oscurece el
    borde semitransparente (adiós al halo gris), borra mechones con resto de fondo, corta por el contorno la oreja
@@ -66,9 +81,13 @@ llamada) y nunca va encima de las fotos. Plano: sin sombras, brillos ni desenfoq
    Cada pieza lleva `data-estilo="editorial-recorte"`: el exportador avisa de sombras y filtros fuera de las capas
    `data-fondo`, comprueba que cada recorte trae transparencia y da **error si un texto pisa la parte opaca de un
    recorte** (píxel a píxel, descontando el fundido).
-6. **Mira cada PNG** a tamaño real y la `hoja.png` a tamaño de móvil, con la lista de
-   `direccion-de-arte/references/revision-visual.md` y la de `references/estilo.md`; haz zoom al pelo y a los
-   parches. Corrige y repite.
+6. **Bucle de pulido (obligatorio, 2 vueltas como mínimo)** — `piezas-graficas/references/pulido.md`:
+   ```bash
+   node <skill>/../piezas-graficas/scripts/comparar.mjs out/<html>/hero.png --look editorial-recorte --vuelta 1
+   node <skill>/../piezas-graficas/scripts/ver-recorte.mjs revision/recortes.png recortes/*.webp --fondo "#0b0d12"
+   ```
+   Abre las dos imágenes, puntúa cada punto de `referencia/golden.md` de 1 a 10 en `revision/vuelta-1.md`, corrige
+   lo que esté por debajo de 8 (pelo y orejas al 300 %, jerarquía, aire) y repite. Se entrega con todo ≥ 8.
 7. **Entrega**: PNG 2x. El banner de X y la story ya respetan sus zonas tapadas.
 
 ## Reglas que no se negocian

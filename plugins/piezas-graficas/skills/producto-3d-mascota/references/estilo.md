@@ -85,8 +85,10 @@ componer la plantilla con Chrome a 2x. Los valores son para lienzos de 1080-1600
   la pareja de y ≈ 900 hasta la franja de abajo (los sujetos sí pueden entrar en ella).
 
 ## Cómo conseguir el material 3D
-- **Render propio** (lo mejor): el modelo real del producto (CAD del fabricante, GLB, STEP pasado a GLB) y la
-  mascota de la marca. three.js o Blender, con:
+- **Render propio** (lo mejor): el **modelo real** del producto (CAD del fabricante, GLB, STEP pasado a GLB) y la
+  mascota de la marca, o un producto de la librería (`scripts/escenas/`: teclado, ratón, cascos, torre). Modelar a
+  mano con primitivas un producto o una mascota nuevos no es render propio: sale de juguete (usa la IA). three.js o
+  Blender, con:
   - entorno de estudio (`RoomEnvironment` en three.js, un HDRI de estudio en Blender) a 0,4-0,55;
   - principal cálida-neutra arriba a la derecha con sombra suave, relleno frío débil a la izquierda y los dos
     recortes del color de la marca desde atrás (ver «Luz de color»); ACES; fondo transparente;

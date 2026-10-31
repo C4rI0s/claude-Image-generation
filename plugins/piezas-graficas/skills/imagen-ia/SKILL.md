@@ -1,6 +1,6 @@
 ---
 name: imagen-ia
-description: Genera con IA las imágenes de apoyo de una pieza de marketing (fondos, escenas, fotos de ambiente, texturas, objetos de producto) con estética sobria y profesional, sin el «look IA», controlando el gasto y revisando el resultado antes de usarlo. Pensada para Higgsfield (herramientas higgsfield_imagen/higgsfield_estado) pero vale con cualquier generador. Úsala cuando una portada, banner, miniatura, story o carrusel necesite una imagen que no existe y no basta con una captura real.
+description: Genera con IA las imágenes de apoyo de una pieza de marketing (fondos, escenas, fotos de ambiente, texturas, objetos de producto) con estética sobria y profesional, sin el «look IA», controlando el gasto y revisando el resultado antes de usarlo. Trae su propio generador para la API de Higgsfield (generar.mjs: estimación gratis, tope de gasto, 2 trabajos a la vez) y el quitafondos local; vale con cualquier otro generador. Úsala cuando una portada, banner, miniatura, story o carrusel necesite una imagen que no existe, y para conseguir las personas, productos o mascotas de los looks con recortes cuando el usuario no tiene fotos.
 ---
 
 # Imágenes con IA para piezas de marketing
@@ -20,10 +20,16 @@ La IA pone **la imagen**; el texto, la marca y la composición se hacen en HTML 
 3. **Prompt en inglés** con la plantilla de `references/prompts.md`: sujeto + composición (con el hueco para el
    texto) + luz + paleta de la marca (los colores de `marca.json` en palabras: «warm off-white, charcoal, a single
    coral accent») + estilo + lo que NO quieres.
-4. **Empieza barato**: 2-4 variantes con el modelo económico (en Higgsfield, `soul` o `z-image`; `ideogram` solo si
-   de verdad necesitas letras dentro, y casi nunca las necesitas). Lanza con `higgsfield_imagen` y recoge con
-   `higgsfield_estado`. El gasto está controlado por la herramienta: no la esquives con la API a mano. Los vídeos
-   llevan siempre el vale del dueño.
+4. **Empieza barato**: 2-4 variantes con el modelo económico (`soul` o `z-image`). Genera con el script de esta
+   skill, que estima gratis, respeta el tope de gasto, lanza 2 trabajos a la vez como mucho y apunta lo gastado:
+   ```bash
+   node <skill>/scripts/generar.mjs "<prompt en inglés>" fondo.png --modelo soul --formato 4:5          # solo estima
+   node <skill>/scripts/generar.mjs "<prompt en inglés>" fondo.png --modelo soul --formato 4:5 --si     # lanza
+   ```
+   Necesita `HIGGSFIELD_API_KEY` (la clave del usuario, «id:secreto» de open.higgsfield.ai). **Pide permiso al
+   usuario con el coste antes de gastar**, salvo que haya fijado un tope (`IMAGEN_IA_TOPE_USD`) o te haya dado un
+   presupuesto: dentro de él puedes generar sin volver a preguntar. Si en vez del script tienes herramientas de
+   Higgsfield (`higgsfield_imagen`/`higgsfield_estado`), úsalas igual: el gasto lo controlan ellas.
 5. **Revisa cada imagen** abriéndola (herramienta Read) y con zoom en las zonas críticas:
    - manos, caras, texto fantasma, logos inventados, objetos deformes, bordes repetidos;
    - que el hueco para el texto exista y sea tranquilo;
@@ -37,12 +43,15 @@ La IA pone **la imagen**; el texto, la marca y la composición se hacen en HTML 
 
 ## Recortes para los looks (sujetos y productos sin fondo)
 Los looks `editorial-recorte`, `tech-grid` y `producto-3d-mascota` componen **recortes**: personas, productos o una
-mascota sin fondo, como `<img data-recorte>`.
+mascota sin fondo, como `<img data-recorte>`. El flujo completo (fotos del usuario → librería 3D → IA, y lo que no se
+hace nunca) está en **`piezas-graficas/references/sujetos.md`**; los prompts, en `references/prompts.md` («Sujetos
+para los looks»).
 1. **Genera sobre fondo liso**: «isolated on a plain flat light grey seamless studio background, soft even
    lighting, whole subject in frame with margin». Nada de fondos con degradados fuertes ni sombras duras. Para 3D:
    «clean 3D render, … rim light in [color de la marca]» para que la luz case con el fondo del look.
 2. **Quita el fondo** en local: `node scripts/recortar.mjs foto.png recorte.png` (la primera vez, `npm install` en
-   `scripts/`). Si come pelo, auriculares o ropa negra, repite con `--modelo large`.
+   `scripts/`). Si come pelo, auriculares o ropa negra, repite con `--modelo large`. Luego
+   `piezas-graficas/scripts/preparar-recorte.mjs` (halo, recorte, WebP y huella) y `armonizar.mjs` (la luz del look).
 3. **Míralo sobre un fondo oscuro** (no sobre blanco, que esconde los halos): bordes limpios, sin restos grises,
    sin huecos dentro del sujeto. Mira al 400 % las **orejas, pendientes y mechones sueltos**: es donde el modelo deja
    una oreja «fantasma» semitransparente y motas claras. Se quitan con `contorno` y `limpiar` de
@@ -68,5 +77,7 @@ mascota sin fondo, como `<img data-recorte>`.
 ## Ficheros
 - Copia las imágenes que uses a la carpeta de la pieza y referencia la copia: los enlaces de los generadores caducan
   (los de Higgsfield, a los 7 días).
-- `references/prompts.md` · plantilla de prompt, bloques de estilo y ejemplos por tipo de pieza.
+- `references/prompts.md` · plantilla de prompt, bloques de estilo, ejemplos por tipo de pieza y prompts de sujetos.
+- `scripts/generar.mjs` · genera con la API de Higgsfield con el gasto controlado (estimación gratis, tope, 2 a la
+  vez, registro en `~/.imagen-ia/gasto.jsonl`).
 - `scripts/recortar.mjs` · quita el fondo de una foto o un render (modelo local, sin servicios externos).

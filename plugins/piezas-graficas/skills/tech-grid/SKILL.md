@@ -36,7 +36,16 @@ componer**.
   `.tg-arco` y el bloque de texto (`.tg-firma`, `.tg-titular`, `.tg-apoyo`, `.tg-fechas`, `.tg-web`).
 - `plantillas/marca-ejemplo.json` · la marca Pulso (con `acento-2` y `tipografia.display`).
 - `plantillas/recortes/` · renders 3D propios sin marca (teclado, ratón y cascos blancos) y una persona generada con
-  IA (no es real), en WebP con alfa, recortados y a la medida que se usa a 2x (≤ 500 KB cada uno).
+  IA (no es real), en WebP con alfa, recortados y a la medida que se usa a 2x (≤ 500 KB cada uno). Son **del
+  ejemplo**: para otra marca, sus productos (las escenas de esos tres renders están en
+  `producto-3d-mascota/scripts/escenas/` y admiten los colores de la marca).
+- `referencia/golden.jpg` + `golden.md` · la pieza de referencia del look, qué imitar y la lista puntuable.
+
+## Antes de empezar
+Mira la golden del look (`referencia/golden.jpg`, anotada en `referencia/golden.md`): 4 marcos, productos con
+detalle que rompen el marco, pistas con nodos y el titular ancho con su arco. Pide al usuario (o saca de su web) las
+**fotos de 2-4 productos** (mejor sobre fondo liso), si quiere una **persona** y si tiene **clave de Higgsfield** y
+cuánto puede gastar. Si no contesta, decide con lo que haya y dilo en la entrega.
 
 ## Flujo
 1. **Marca y brief** (`direccion-de-arte`): `marca.json` con `acento` (trazo 1 y titular) y, si la marca lo tiene,
@@ -46,13 +55,20 @@ componer**.
 2. **Copy**: titular de **2 líneas cortas** (≤ 7 letras por línea: «SEMANA / PULSO», «REBAJAS / DE INVIERNO» no
    cabe); apoyo de una idea con la cifra resaltada en `<b>` («Hasta −40 % en periféricos»); fechas; web. Sin CTA
    tipo botón: la web hace de cierre.
-3. **Material**: 2-4 recortes de producto con alfa y, si hace falta, una persona.
-   - Fotos propias de producto con el fondo quitado; o un **render 3D** propio (three.js, materiales PBR, luz de
-     estudio + una luz de recorte del color del fondo, tres cuartos); o **IA con fondo plano** y quitar el fondo.
-   - Producto **sin logos de otras marcas** y personas **que no sean reales** (o con permiso).
-   - Optimiza: recorta lo transparente sobrante y escala al tamaño máximo en que se usa a 2x; WebP con alfa al 90 %.
-   - En personas: limpia el halo del borde (color del interior en los píxeles semitransparentes) y corta por encima
-     de cualquier logo o escudo de la ropa.
+3. **Material: 3-4 recortes** (2 como mínimo) de SUS productos y, si hace falta, una persona, por este orden
+   (`piezas-graficas/references/sujetos.md`):
+   - **Fotos del usuario** → `recortar.mjs` → `preparar-recorte.mjs` (quita el halo: el exportador avisa si queda)
+     → `armonizar.mjs --look tech-grid` (mismo blanco y recorte azul en todos) → `ver-recorte.mjs`.
+   - **Librería 3D** pintada con su marca si son teclados, ratones o cascos:
+     `producto-3d-mascota/scripts/render-3d.mjs …/escenas/raton.html raton.png --param cuerpo=… --param rgb1=…`.
+   - **IA** (con clave y permiso): un prompt por producto con el mismo bloque de luz, fondo gris liso; luego como
+     una foto. Persona con `soul` (prompts en `imagen-ia/references/prompts.md`).
+   - Nunca los recortes de ejemplo de la plantilla (cascos, ratón, teclado y la jugadora de Pulso) como si fueran
+     de la marca; si no queda otra, entrégalos marcados como PROVISIONALES y dilo.
+   - **Con solo 2 fotos**: el 3.er marco es una persona usando el producto (IA, con permiso) u otro producto de la
+     marca (librería 3D o IA). Nunca un detalle ampliado de la misma foto ni una foto con su fondo.
+   - Producto **sin logos de otras marcas** ni letras inventadas a la vista; personas **que no sean reales** (o con
+     permiso), cortadas por encima de cualquier logo de la ropa.
 4. **Compón** (ver `references/estilo.md`): copia `plantillas/` al trabajo y deja los formatos que hagan falta.
    Coloca primero los marcos, luego los recortes (que rompan 1-2 lados), luego las pistas (de borde a borde, con su
    nodo en cada unión) y por último el bloque logo + titular con su arco. Las coordenadas de pistas y nodos están en
@@ -64,8 +80,13 @@ componer**.
    ```
    Cada pieza lleva `data-estilo="tech-grid"` (plano). La decoración lleva `data-fondo` y no cuenta en choques; cada
    `<img data-recorte>` se mide píxel a píxel: ningún texto puede pisar su parte opaca.
-6. **Mira cada PNG** a tamaño real y la `hoja.png` a tamaño de móvil, con la lista de
-   `direccion-de-arte/references/revision-visual.md` y la de `references/estilo.md`. Corrige y repite.
+6. **Bucle de pulido (obligatorio, 2 vueltas como mínimo)** — `piezas-graficas/references/pulido.md`:
+   ```bash
+   node <skill>/../piezas-graficas/scripts/comparar.mjs out/<html>/hero.png --look tech-grid --vuelta 1
+   ```
+   Abre `revision/vuelta-1.png`, puntúa cada punto de `referencia/golden.md` de 1 a 10 en `revision/vuelta-1.md`,
+   corrige lo que esté por debajo de 8 (productos pequeños, marcos de menos, halo, luz distinta entre productos) y
+   repite. Se entrega con todo ≥ 8 y sin fallos graves.
 7. **Prueba otra marca** con `--marca`: cambian color, fuentes, nombre y logo sin romperse.
 
 ## Reglas que no se negocian

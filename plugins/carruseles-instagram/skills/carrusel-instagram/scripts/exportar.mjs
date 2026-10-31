@@ -55,8 +55,14 @@
  *
  * Errores que detecta: tamaño distinto, texto fuera o cortado, textos que se
  * pisan, texto que choca con un bloque ajeno (tarjeta, botón), imágenes rotas,
- * fuentes que no cargan. Avisos: margen, letra mínima, contraste, sombras,
- * imágenes ampliadas, viudas en titulares.
+ * fuentes que no cargan, un look con recortes (editorial-recorte, tech-grid,
+ * producto-3d-mascota) sin al menos 2 <img data-recorte>. Avisos: margen, letra
+ * mínima, contraste, sombras, imágenes ampliadas, viudas en titulares, halo claro
+ * en el borde de un recorte, recortes que son rellenos planos (siluetas: error),
+ * sujetos pequeños para el look, marcos o tarjetas de menos, textos o recortes de la
+ * plantilla de ejemplo en la pieza de otra marca y entregas a menos de 2x.
+ * Después de exportar, el bucle de pulido sigue con comparar.mjs (la pieza junto
+ * a la golden del look; references/pulido.md).
  *
  * Salida: un PNG por pieza, hoja.png (todas juntas a tamaño de móvil, para
  * juzgar el ritmo) e informe.json. Lo que imprime por consola es el resumen.
@@ -145,7 +151,7 @@ async function abrirNavegador() {
 // ── Revisión dentro de la página ────────────────────────────────────────────
 // Se ejecuta en el navegador: mide lo que de verdad se ha pintado.
 
-function revisarEnPagina({ selector, solo, escala }) {
+function revisarEnPagina({ selector, solo, escala, marcaNombre }) {
   // Cualquier color CSS (rgb, oklab, oklch, color(), color-mix ya calculado…) a rgba, con un lienzo de 1 px
   const lienzo = document.createElement('canvas'); lienzo.width = lienzo.height = 1
   const ctx = lienzo.getContext('2d', { willReadFrequently: true })
@@ -341,6 +347,7 @@ function revisarEnPagina({ selector, solo, escala }) {
     if (criterio === 'halo' && conHalo.size > 3) avisos.push(`Demasiados resplandores: ${conHalo.size} elementos con halo (como mucho 3 por pieza)`)
     // Recortes (img[data-recorte]): tienen que traer transparencia y ningún texto puede pisar su parte opaca
     const mapas = []
+    let cobertura = 0
     for (const im of imagenes.filter(x => x.hasAttribute('data-recorte'))) {
       if (!im.complete || !im.naturalWidth) continue
       const src = (im.getAttribute('src') || '').split('/').pop().slice(0, 60)
@@ -356,7 +363,45 @@ function revisarEnPagina({ selector, solo, escala }) {
       let transparentes = 0
       for (let i = 3; i < datos.length; i += 4) if (datos[i] < 20) transparentes++
       if (transparentes / (gw * gh) < 0.03) { errores.push(`El recorte no trae transparencia (¿fondo sin quitar?): ${src}`); continue }
+      // Halo claro en el borde: el borde semitransparente, más claro que el sujeto pegado a él (restos del fondo)
+      {
+        const k2 = Math.min(1, 900 / Math.max(nw, nh)), hw = Math.max(1, Math.round(nw * k2)), hh = Math.max(1, Math.round(nh * k2))
+        const cv2 = document.createElement('canvas'); cv2.width = hw; cv2.height = hh
+        const c2 = cv2.getContext('2d', { willReadFrequently: true }); c2.drawImage(im, 0, 0, hw, hh)
+        const d2 = c2.getImageData(0, 0, hw, hh).data
+        // Cada píxel semitransparente del borde frente al opaco más cercano hacia dentro (local: una prenda blanca
+        // o una luz de contorno real no cuentan; el gris del fondo pegado a un sujeto oscuro, sí)
+        const L2 = i => 0.2126 * d2[i] + 0.7152 * d2[i + 1] + 0.0722 * d2[i + 2]
+        let suma = 0, n2 = 0, claros = 0
+        for (let y = 3; y < hh - 3; y++) for (let x = 3; x < hw - 3; x++) {
+          const q = (y * hw + x) * 4, a = d2[q + 3]
+          if (a < 40 || a > 200) continue
+          let o = -1
+          for (let rr = 1; rr <= 3 && o < 0; rr++) for (const [dx, dy] of [[rr, 0], [-rr, 0], [0, rr], [0, -rr], [rr, rr], [-rr, -rr], [rr, -rr], [-rr, rr]]) {
+            const t = ((y + dy) * hw + x + dx) * 4; if (d2[t + 3] > 250) { o = t; break }
+          }
+          if (o < 0) continue
+          const dl = L2(q) - L2(o); suma += dl; n2++; if (dl > 30) claros++
+        }
+        if (n2 > 200 && suma / n2 > 38 && claros / n2 > 0.55) avisos.push(`Halo claro en el borde del recorte ${src} (el ${Math.round(claros / n2 * 100)} % del borde es más claro que el sujeto): pásalo por preparar-recorte.mjs y míralo con ver-recorte.mjs`)
+        // ¿Foto o render, o un relleno plano (silueta, figura dibujada)? Tonos distintos y textura del interior a 400 px
+        const k3 = Math.min(1, 400 / Math.max(nw, nh)), w3 = Math.max(1, Math.round(nw * k3)), h3 = Math.max(1, Math.round(nh * k3))
+        const cv3 = document.createElement('canvas'); cv3.width = w3; cv3.height = h3
+        const c3 = cv3.getContext('2d', { willReadFrequently: true }); c3.drawImage(im, 0, 0, w3, h3)
+        const d3 = c3.getImageData(0, 0, w3, h3).data, L3 = i => 0.2126 * d3[i] + 0.7152 * d3[i + 1] + 0.0722 * d3[i + 2]
+        let n3 = 0, lap = 0; const tonos = new Set()
+        for (let y = 3; y < h3 - 3; y++) for (let x = 3; x < w3 - 3; x++) {
+          const q = (y * w3 + x) * 4
+          if (d3[q + 3] < 250 || d3[q - 9] < 250 || d3[q + 15] < 250 || d3[q - w3 * 12 + 3] < 250 || d3[q + w3 * 12 + 3] < 250) continue
+          n3++; lap += Math.abs(4 * L3(q) - L3(q - 4) - L3(q + 4) - L3(q - w3 * 4) - L3(q + w3 * 4))
+          tonos.add((d3[q] >> 3) << 10 | (d3[q + 1] >> 3) << 5 | (d3[q + 2] >> 3))
+        }
+        if (n3 > 500 && (tonos.size < 60 || lap / n3 < 1.5)) errores.push(`El recorte ${src} es un relleno plano (${tonos.size} tonos): una silueta o figura dibujada no sustituye a una foto o un render del sujeto (sujetos.md)`)
+      }
+      let opacos = 0
+      for (let i = 3; i < datos.length; i += 4) if (datos[i] > 128) opacos++
       const cs = getComputedStyle(im), r = im.getBoundingClientRect()
+      { const v = visible(im); cobertura += opacos / (gw * gh) * Math.max(0, Math.min((v.right - v.left) * (v.bottom - v.top), r.width * r.height)) }
       // Dónde cae la imagen dentro de su caja (object-fit + object-position en %)
       const ajuste = cs.objectFit
       const s = ajuste === 'cover' ? Math.max(r.width / nw, r.height / nh) : (ajuste === 'contain' || ajuste === 'scale-down') ? Math.min(r.width / nw, r.height / nh) : null
@@ -455,6 +500,40 @@ function revisarEnPagina({ selector, solo, escala }) {
         avisos.push(`Viuda: el titular «${corta(el.textContent).slice(0, 40)}» acaba con una palabra sola en la última línea`)
       }
     }
+    // ── Lo que separa una pieza amateur de la golden del look (bucle de pulido) ──
+    const recortes = imagenes.filter(x => x.hasAttribute('data-recorte'))
+    // Estructura mínima de cada look: sin sus sujetos, el look no existe
+    const minRecortes = { 'editorial-recorte': 2, 'producto-3d-mascota': 2, 'tech-grid': 2 }[look]
+    if (minRecortes && recortes.length < minRecortes) {
+      errores.push(`El look ${look} se hace con fotos o renders recortados (<img data-recorte>, ${minRecortes} como mínimo; hay ${recortes.length}). No valen siluetas, dibujos ni formas en CSS/SVG: consigue el material (piezas-graficas/references/sujetos.md)`)
+    }
+    // Las medidas de composición son las del hero de la golden (16:9); el resto de formatos llevan menos
+    const esHero = w / h > 1.5 && w / h < 2
+    if (look === 'tech-grid' && esHero && p.querySelectorAll('.marco').length < 3) avisos.push('Menos de 3 marcos: la golden de tech-grid compone 3-4 marcos de proporciones distintas unidos por pistas. Con 2 productos, el tercero es una persona con el producto (IA o foto) u otro producto (librería 3D o IA); nunca una ampliación de la misma foto')
+    // Fotos con su fondo dentro de la pieza (en los looks con recortes, cada sujeto va recortado)
+    if (minRecortes) {
+      const conFondo = imagenes.filter(x => !x.hasAttribute('data-recorte') && !x.closest('[data-fondo]') && x.getBoundingClientRect().width * x.getBoundingClientRect().height > w * h * 0.02)
+      if (conFondo.length) avisos.push(`Foto sin recortar en la pieza (${conFondo.map(x => (x.getAttribute('src') || '').split('/').pop().slice(0, 40)).join(', ')}): en ${look} cada sujeto va recortado (<img data-recorte>); no rellenes marcos con ampliaciones o detalles de una foto`)
+    }
+    if (look === 'oscuro-glow' && p.querySelectorAll('.og-tarjeta').length !== 2) avisos.push(`Oscuro glow lleva 2 tarjetas con una cifra cada una (hay ${p.querySelectorAll('.og-tarjeta').length})`)
+    if (look === 'producto' && !p.querySelector('[data-maqueta]')) avisos.push('Producto en contexto sin ninguna capa de interfaz [data-maqueta]: la pieza tiene que enseñar la app')
+    if (!look && p.querySelector('.tg, .og-escena, .lienzo-3d, .editorial, .escena')) avisos.push('La pieza usa los componentes de un look pero no lleva data-estilo: el exportador no puede aplicar su criterio')
+    // Sujetos pequeños: en las golden, los recortes ocupan una buena parte de la pieza
+    const minCob = { 'producto-3d-mascota': 0.16, 'tech-grid': 0.1, 'editorial-recorte': 0.18 }[look]
+    if (minCob && esHero && recortes.length && cobertura / (w * h) < minCob) avisos.push(`Los sujetos ocupan solo el ${Math.round(cobertura / (w * h) * 100)} % de la pieza (en la golden de ${look}, más del ${Math.round(minCob * 100)} %): hazlos más grandes o acércalos`)
+    // Restos de la plantilla de ejemplo cuando la marca es otra
+    const EJEMPLOS = ['Pliego', 'Vértice', 'Pulso', 'Cometa', 'Nimbo']
+    if (marcaNombre && !EJEMPLOS.includes(marcaNombre)) {
+      const visibleTxt = p.innerText || ''
+      const restos = ['Pliego', 'Vértice', 'Pulso', 'PULSO', 'Cometa', 'Chispa', 'Estudio Marea', 'Semana gamer', 'Opera sin comisiones', 'Juega en serio', 'Recordatorios automáticos', 'pulso.gg', 'vertice.app', 'pliego.app', 'cometa.gg']
+        .filter(x => new RegExp(`(^|[^\\p{L}])${x.replace('.', '\\.')}([^\\p{L}]|$)`, 'u').test(visibleTxt))
+      if (restos.length) avisos.push(`Texto de la plantilla de ejemplo en la pieza de ${marcaNombre}: «${restos.join('», «')}» (fallo grave si no es a propósito)`)
+      // Los recortes de las plantillas, por nombre y tamaño exacto (un recorte propio puede llamarse igual)
+      const EJ = { 'jugador-perfil.webp': '1082x1978', 'jugador-tres-cuartos.webp': '1536x1918', 'jugadora-raton.webp': '1480x1600', 'mascota-chispa.webp': '1233x1464', 'producto-torre.webp': '1180x1680', 'cascos.webp': '735x900', 'jugadora.webp': '1300x1117', 'raton.webp': '658x1000', 'teclado.webp': '1400x617' }
+      const deEjemplo = recortes.filter(x => EJ[(x.getAttribute('src') || '').split('/').pop()] === `${x.naturalWidth}x${x.naturalHeight}`).map(x => (x.getAttribute('src') || '').split('/').pop())
+      if (deEjemplo.length) avisos.push(`Recortes de ejemplo de la plantilla (${deEjemplo.join(', ')}): no son el producto ni las personas de ${marcaNombre}. Cámbialos (sujetos.md) o entrégalos marcados como PROVISIONALES`)
+    }
+    if (look && escala < 2) avisos.push('Exporta la entrega a 2x (--escala 2): los looks se miran y se publican a doble densidad')
     return { nombre, ancho: w, alto: h, errores: [...new Set(errores)], avisos: [...new Set(avisos)], fuentesFallidas }
   })
 }
@@ -504,7 +583,7 @@ if (marca) {
 await pagina.evaluate(() => window.recolocar?.())
 await pagina.waitForTimeout(250)
 
-const informe = await pagina.evaluate(revisarEnPagina, { selector, solo, escala })
+const informe = await pagina.evaluate(revisarEnPagina, { selector, solo, escala, marcaNombre: marca?.nombre ?? null })
 if (!informe.length) { console.error(`No hay piezas que casen con ${selector}${solo ? ` y nombre ${solo}` : ''}`); await navegador.close(); process.exit(2) }
 
 await mkdir(salida, { recursive: true })

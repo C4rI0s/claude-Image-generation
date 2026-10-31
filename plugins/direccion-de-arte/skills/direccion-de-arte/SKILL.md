@@ -45,6 +45,20 @@ antes de diseñar una imagen de campaña. Fuera de los looks (correo HTML, pieza
 siendo plano. Ningún look permite texto encima de la foto o del sujeto, sombras de color en el texto ni mezclar
 looks en una pieza.
 
+## Qué pedirle al usuario antes de empezar
+Una sola tanda de preguntas, corta, con lo que falte (lo que ya esté en su mensaje, su web o un `marca.json` no se
+pregunta):
+1. **Marca**: nombre, web, colores (hex si los tiene), tipografía y **logo** (SVG o PNG con fondo transparente).
+2. **Qué pieza**: formato y canal (hero web, post, story, banner…), objetivo, la idea o la oferta y **las cifras
+   reales** si las hay.
+3. **El sujeto**, según el look: **capturas o estructura de su app** (producto en contexto); **fotos de sus
+   productos** (tech-grid, producto 3D); **fotos de las personas** con permiso (editorial); **su mascota** (imágenes o
+   descripción). Las fotos son lo que más sube el nivel: pídelas siempre.
+4. **IA**: si no hay fotos, ¿tiene clave de Higgsfield y cuánto puede gastar? (las imágenes cuestan céntimos, pero
+   es su dinero: sin su permiso, no se genera).
+Si el usuario no está o dice «decide tú», sigue con lo que haya (su web, la librería 3D, textos razonables) y apunta en
+la entrega qué has supuesto y qué material lo mejoraría.
+
 ## Flujo (no te saltes pasos)
 0. **Brief de marca → `marca.json`** (`references/marca.md`). Si ya hay un `marca.json` en la carpeta del trabajo,
    léelo y compruébalo. Si no, consíguelo en este orden: el manual o la guía de la marca que te den; su web (saca
@@ -68,7 +82,9 @@ looks en una pieza.
    sueltos.
 4. **Maqueta** con la skill del formato, partiendo de su plantilla y pasando `--marca marca.json` al exportador.
 5. **Revisión visual obligatoria** (`references/revision-visual.md`): renderiza con Chrome de verdad, **abre el PNG y
-   míralo**, pasa la lista, corrige y vuelve a renderizar. No se entrega nada que no hayas visto renderizado.
+   míralo**, pasa la lista, corrige y vuelve a renderizar. No se entrega nada que no hayas visto renderizado. En los
+   looks, el **bucle de pulido** (`piezas-graficas/references/pulido.md`): tu pieza al lado de la golden del look
+   con `comparar.mjs`, puntuación de 1 a 10 de su lista, 2 vueltas como mínimo y todo ≥ 8 para entregar.
 
 ## Reglas rápidas que más mejoran una pieza
 - **Escala con contraste**: el titular al menos 2,5 veces el cuerpo. Titulares de 3-8 palabras.

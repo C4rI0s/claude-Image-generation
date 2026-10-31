@@ -68,7 +68,45 @@ Los cuatro con otra marca (Nimbo), sin tocar el HTML:
 Las personas de los ejemplos están generadas con IA (no son reales) y el producto y la mascota son renders 3D
 propios; las marcas son ficticias.
 
+## Qué esperar (probado en limpio)
+
+La 2.4.0 se ha probado como la usaría otra persona: Claude Code recién instalado, sin memoria ni ayudas, solo este
+marketplace y un brief normal («hazme un hero para mi marca X con el look Y»), con marcas y productos que la skill no
+había visto. Lo honesto:
+
+- **Producto en contexto y oscuro glow salen solos al nivel de las demos** (8,5-9 sobre 10): la interfaz, las
+  tarjetas y el fondo son HTML. Lo que más sube la nota: capturas o la estructura real de tu app y las cifras reales.
+- **Tech grid**: con **fotos de tus productos** (mejor sobre fondo liso), los recorta, les quita el halo y les iguala
+  la luz. Sin fotos, si vendes teclados, ratones o cascos, la librería 3D los pinta con tus colores (8/10), pero son
+  productos genéricos, no tu modelo. Otros productos (mandos, sillas, consolas) necesitan fotos o IA.
+- **Editorial recorte necesita personas fotográficas**: tus fotos o IA (Higgsfield, unos 0,07 $ por 3 personas) y
+  llega a 8,5. Sin fotos ni IA no se puede: el exportador no deja entregar siluetas ni figuras dibujadas.
+- **Producto 3D + mascota es el más exigente**: con IA genera tu producto y tu mascota con acabado 3D por céntimos
+  (9/10 en las dos pruebas, unos 12 min); sin IA, solo los productos de la librería y una mascota genérica recoloreada.
+- **Tiempo y coste**: 5-15 min por hero con las 2 vueltas de pulido. IA: 0 $ si traes fotos; 0,02-0,10 $ por pieza si
+  hay que generar sujetos (siempre con tu permiso o dentro del tope que fijes).
+- **Lo que no hace sola**: tu logo si no lo das (pone el nombre en texto), el modelo exacto de tu producto sin fotos ni
+  modelo 3D, ni una mascota que solo existe en tu cabeza sin una buena descripción o imágenes.
+
+![Prueba en limpio con marcas nuevas](docs/ejemplos/prueba-en-limpio.jpg)
+
 ## Novedades
+
+**2.4.0 · la skill sola, al nivel de las demos.** Probada en limpio (Claude Code sin memoria ni ayudas, solo con el
+marketplace instalado y un brief normal) con 6 marcas inventadas y otros productos; lo que fallaba se ha metido en la
+skill:
+- **Bucle de pulido obligatorio** (`piezas-graficas/references/pulido.md`): cada look trae su **golden**
+  (`<look>/referencia/golden.jpg` + `golden.md` con qué imitar y una lista puntuable). `comparar.mjs` pone la pieza al
+  lado de la golden con un detalle al 100 %; se puntúa de 1 a 10, 2 vueltas como mínimo y se entrega con todo ≥ 8.
+- **Sujetos de verdad** (`piezas-graficas/references/sujetos.md`): fotos del usuario → `recortar.mjs` +
+  `preparar-recorte.mjs` (halo, WebP, huella) + `armonizar.mjs` (misma luz y blancos del look) + `ver-recorte.mjs`;
+  sin fotos → **librería 3D** con los colores de la marca (teclado, ratón, cascos, torre y mascota genérica) o **IA**
+  con `generar.mjs` (API de Higgsfield: estimación gratis, tope de gasto, 2 trabajos a la vez, permiso del usuario).
+- **Qué pedir antes de empezar** (en `direccion-de-arte`): marca y logo, la pieza, el sujeto (capturas, fotos de
+  producto, personas, mascota) y si hay presupuesto de IA.
+- **El exportador ve más**: error si un look con recortes no los trae o si un recorte es un relleno plano (siluetas
+  dibujadas); avisos de halo en el borde de un recorte, sujetos pequeños, marcos o tarjetas de menos, textos o
+  recortes de la plantilla de ejemplo en la pieza de otra marca y entregas a menos de 2x.
 
 **2.3.0 · pasada de pulido de los cinco looks.** Cada muestra se ha puesto al lado de su referencia y se ha
 rehecho lo que se notaba amateur; lo aprendido está en el `references/estilo.md` de cada look como reglas medidas.
@@ -118,6 +156,9 @@ Para actualizar: `/plugin marketplace update claude-skills-marketing`.
   hace solo cuando sigue la skill. `comprobar-marca.mjs` y `aplicar-marca.mjs` no necesitan nada.
 - `recortar.mjs` (quitar fondos, en `imagen-ia/scripts`) instala un modelo local de segmentación (≈ 330 MB) la
   primera vez que se usa; solo hace falta para los looks con recortes si no traes ya los PNG sin fondo.
+- **IA (opcional)**: para generar personas, productos o mascotas cuando no hay fotos, `HIGGSFIELD_API_KEY` («id:secreto»
+  de open.higgsfield.ai) en el entorno. `IMAGEN_IA_TOPE_USD` fija cuánto puede gastar Claude sin volver a preguntar
+  (por defecto 0,50 $); el gasto queda en `~/.imagen-ia/gasto.jsonl`. Sin clave, la skill usa tus fotos o la librería 3D.
 - **ffmpeg** para revisar vídeos por fotogramas (`reel-de-marketing`).
 
 ## Plugins y skills
@@ -128,10 +169,10 @@ Para actualizar: `/plugin marketplace update claude-skills-marketing`.
 | `piezas-graficas` | `producto-en-contexto` | **Look 1 · imágenes de producto al nivel de Proton o Linear**: la app en una ventana (lateral, buscador, lista, iconos de línea) sobre un degradado, con modal, fila destacada y avisos flotantes. Cabecera de correo, hero 16:9, post 1:1 y 4:5, banner de X, miniatura y story a PNG 2x. Componentes en `producto.css` + `producto.js` y reglas medidas en `references/estilo.md` |
 | `piezas-graficas` | `oscuro-glow` | **Look 2 · lanzamientos y ofertas en oscuro** (fintech, trading, SaaS): fondo azul marino con gráfico y dashboard desenfocados, dos tarjetas con borde luminoso y cifra grande, titular plateado en mayúsculas y CTA en píldora, con un resplandor medido |
 | `piezas-graficas` | `editorial-recorte` | **Look 3 · editorial de gaming y lifestyle**: collage de personas o producto recortados con jerarquía de tamaños, arco, marco y cruces de líneas finas, mucho aire y el texto siempre fuera de la imagen |
-| `piezas-graficas` | `producto-3d-mascota` | **Look 4 · producto 3D con mascota**: banner redondeado azul-violeta con partículas y bokeh, render del producto y mascota solapados con sombras de contacto y luz de color de la marca |
+| `piezas-graficas` | `producto-3d-mascota` | **Look 4 · producto 3D con mascota**: banner redondeado azul-violeta con partículas y bokeh, render del producto y mascota solapados con sombras de contacto y luz de color de la marca. Incluye la **librería 3D** (three.js, sin IA): teclado, ratón, cascos, torre y mascota genérica, con los colores de la marca por parámetro |
 | `piezas-graficas` | `tech-grid` | **Look 5 · catálogo tech y gaming**: cuadrícula fina, productos que rompen marcos de borde fino en dos acentos, pistas de circuito con nodos y titular en grotesca ancha en mayúsculas |
-| `piezas-graficas` | `piezas-graficas` | Base plana y **exportador común** de todos los looks: hero de correo, OG, miniatura de YouTube, banner de X, story y otros formatos con titular, maquetas de producto y un recortador exacto de capturas |
-| `piezas-graficas` | `imagen-ia` | Imágenes de apoyo con IA (Higgsfield u otro) sin el «look IA»: prompts con la paleta de la marca, control de gasto, revisión y **`recortar.mjs`** para quitar el fondo de personas, productos y mascotas (modelo local) |
+| `piezas-graficas` | `piezas-graficas` | Base plana y **exportador común** de todos los looks: hero de correo, OG, miniatura de YouTube, banner de X, story y otros formatos con titular, maquetas de producto y un recortador exacto de capturas. Trae el **bucle de pulido** (`comparar.mjs` + la golden de cada look) y las **herramientas de sujetos** (`preparar-recorte.mjs`, `armonizar.mjs`, `ver-recorte.mjs`) |
+| `piezas-graficas` | `imagen-ia` | Imágenes de apoyo y **sujetos con IA** sin el «look IA»: **`generar.mjs`** (API de Higgsfield con estimación gratis, tope de gasto y 2 trabajos a la vez), prompts por look y **`recortar.mjs`** para quitar el fondo de personas, productos y mascotas (modelo local) |
 | `correos-marketing` | `correo-marketing-html` | Correos de marketing sobrios con **cabecera de producto en contexto**. Plantillas `producto`, `anuncio` y `oferta`; `aplicar-marca.mjs` las pasa a tu marca y `comprobar-correo.mjs` hace comprobaciones estáticas y renderiza **escritorio, móvil, sin imágenes y modo oscuro** |
 | `carruseles-instagram` | `carrusel-instagram` | Carruseles 1080x1350 con diapositivas de **producto en contexto** (portada, punto en claro, punto en oscuro) y de texto (lista, cifra, tabla, cierre). `exportar.mjs --marca marca.json --carrusel --escala 2` genera los PNG, la hoja de contacto y la rejilla 3:4 del perfil |
 | `video-marketing` | `reel-de-marketing` | Reels y vídeos cortos: guion por segundos, zonas seguras 9:16, subtítulos y revisión por fotogramas, sobre motion-graphics (Remotion) |
@@ -158,8 +199,17 @@ node plugins/direccion-de-arte/skills/direccion-de-arte/scripts/comprobar-marca.
 # Producto en contexto o cualquier look (a 2x): el HTML de la plantilla del look, con su CSS al lado
 node plugins/piezas-graficas/skills/piezas-graficas/scripts/exportar.mjs producto-en-contexto.html --marca marca.json --escala 2
 node plugins/piezas-graficas/skills/piezas-graficas/scripts/exportar.mjs tech-grid.html --marca marca.json --escala 2
-# Quitar el fondo de una foto o un render (para los looks con recortes)
+# Quitar el fondo de una foto o un render (para los looks con recortes), limpiarlo y darle la luz del look
 node plugins/piezas-graficas/skills/imagen-ia/scripts/recortar.mjs foto.png recorte.png
+node plugins/piezas-graficas/skills/piezas-graficas/scripts/preparar-recorte.mjs recorte.png recorte.webp --max 1800
+node plugins/piezas-graficas/skills/piezas-graficas/scripts/armonizar.mjs recorte.webp recorte-luz.png --look tech-grid
+node plugins/piezas-graficas/skills/piezas-graficas/scripts/ver-recorte.mjs revision.png recorte-luz.png
+# Producto de la librería 3D con los colores de la marca
+node plugins/piezas-graficas/skills/producto-3d-mascota/scripts/render-3d.mjs plugins/piezas-graficas/skills/producto-3d-mascota/scripts/escenas/teclado.html teclado.png --ancho 1800 --alto 1400 --param cuerpo=1c1f26 --param acento=ff6a13
+# Imagen con IA (solo estima; con --si la lanza)
+node plugins/piezas-graficas/skills/imagen-ia/scripts/generar.mjs "<prompt>" persona.png --modelo soul --formato 3:4
+# Bucle de pulido: la pieza al lado de la golden del look
+node plugins/piezas-graficas/skills/piezas-graficas/scripts/comparar.mjs out/tech-grid/hero.png --look tech-grid --vuelta 1
 # Carrusel o piezas
 node plugins/carruseles-instagram/skills/carrusel-instagram/scripts/exportar.mjs mi-carrusel.html --marca marca.json --carrusel --escala 2
 node plugins/piezas-graficas/skills/piezas-graficas/scripts/exportar.mjs mis-piezas.html --marca marca.json
@@ -177,8 +227,10 @@ plugins/<plugin>/skills/<skill>/SKILL.md
                                 /plantillas/   HTML de partida con una marca ficticia de ejemplo (y su
                                                marca-ejemplo.json en los looks); el CSS del look
                                                (producto.css + producto.js, oscuro-glow.css…) y sus recortes
-                                /scripts/      exportadores y comprobadores (Node + playwright-core)
+                                /scripts/      exportadores, comprobadores y herramientas (Node + playwright-core)
                                 /references/   guías que la skill carga cuando las necesita
+                                /referencia/   en cada look: golden.jpg (la pieza de referencia) y golden.md
+                                               (qué imitar y la lista puntuable del bucle de pulido)
 docs/ejemplos/                         renders de las plantillas
 ```
 

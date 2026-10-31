@@ -46,7 +46,16 @@ la tipografía de la marca. Así sale nítido, sin faltas, corregible en segundo
   marca ficticia.
 - `references/formatos.md` · tamaños, zonas seguras y qué funciona en cada canal.
 - `scripts/exportar.mjs` · el mismo exportador que los carruseles: aplica `--marca`, exporta y revisa (texto
-  cortado, textos que se pisan, texto que choca con una tarjeta, viudas, margen, letra mínima, contraste, fuentes).
+  cortado, textos que se pisan, texto que choca con una tarjeta, viudas, margen, letra mínima, contraste, fuentes y,
+  en los looks, recortes planos o con halo, sujetos pequeños y restos de la plantilla de ejemplo).
+- `scripts/comparar.mjs` · el bucle de pulido: tu pieza junto a la golden del look (`<look>/referencia/golden.jpg`),
+  con un detalle de cada una al 100 % y la lista puntuable. `references/pulido.md` explica el bucle (obligatorio, 2
+  vueltas como mínimo, todo ≥ 8).
+- **Herramientas de sujetos** (`references/sujetos.md`: fotos → librería 3D → IA):
+  `scripts/preparar-recorte.mjs` (quita el halo, recorta, WebP ≤ 500 KB y mide la huella para la sombra),
+  `scripts/armonizar.mjs` (blancos y luz de recorte del look para que fotos de sesiones distintas casen) y
+  `scripts/ver-recorte.mjs` (hoja de revisión: sobre negro, sobre el color del look y el borde al 300 %). El
+  quitafondos y el generador de IA están en `imagen-ia/scripts/`; la librería 3D, en `producto-3d-mascota/scripts/`.
 
 ## Flujo
 1. **Marca y brief** (skill `direccion-de-arte`): `marca.json` en la carpeta del trabajo; un titular que sirva para
@@ -70,7 +79,8 @@ la tipografía de la marca. Así sale nítido, sin faltas, corregible en segundo
    ```
 7. **Mira** `out/<nombre>/hoja.png` (coherencia de la campaña) y cada PNG a tamaño real. Además, juzga cada pieza
    **al tamaño al que se verá**: la miniatura a 320 px de ancho, el OG a 500 px, la story en un móvil. Pasa la lista
-   de `direccion-de-arte/references/revision-visual.md`. Corrige y repite.
+   de `direccion-de-arte/references/revision-visual.md`. Corrige y repite (2 vueltas como mínimo). En los looks,
+   el bucle de pulido con `comparar.mjs` y la golden (`references/pulido.md`) es obligatorio.
 8. **Entrega** los PNG (y súbelos donde toque: el hero del correo a una URL pública https).
 
 ## Reglas por tipo

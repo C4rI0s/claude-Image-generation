@@ -35,9 +35,25 @@ marketplace (para instalar) sigue siendo `claude-skills-marketing`.
   - **Plano** (correos HTML, piezas de texto): sin brillos, sombras ni bordes laterales de color.
 - Exportador: `data-fondo` = capa decorativa (blur permitido, su texto no se revisa); `img data-recorte` = recorte con
   alfa (error si no la trae o si un texto pisa su parte opaca); `tipografia.display` → `--fuente-display`.
-- `_ref/` (renders, marcas de prueba en `_ref/marcas/`, recortes originales, herramientas de 3D y de quitar fondo en
-  `_ref/herramientas/`), `_ref-proton/` (referencias de marcas reales) y `node_modules/` no se suben.
+- `_ref/` (renders, marcas de prueba en `_ref/marcas/`, recortes originales, utilidades sueltas en
+  `_ref/herramientas/`; las que valen para el usuario ya están en los plugins), `_ref-proton/` (referencias de marcas
+  reales) y `node_modules/` no se suben.
 - Si cambias algo que el usuario tiene que recoger, sube la `version` del plugin y de `metadata.version`.
+- **La skill sola tiene que llegar al nivel** (v2.4.0, orden de Carlos 31-10-2026): nada de pulir piezas a mano.
+  Lo que lo sostiene, dentro de los plugins (no en `_ref`): la **golden** de cada look (`<look>/referencia/golden.jpg`
+  = hero de la demo v4 a 2400 px + `golden.md` con qué imitar y la lista puntuable + `golden.json` con el centro del
+  detalle), el **bucle de pulido** obligatorio (`piezas-graficas/references/pulido.md` + `scripts/comparar.mjs`: 2
+  vueltas mínimo, todo ≥ 8), el **flujo de sujetos** (`references/sujetos.md`: fotos → librería 3D → IA; nunca
+  siluetas ni modelar a mano), las herramientas (`preparar-recorte.mjs`, `armonizar.mjs`, `ver-recorte.mjs`,
+  `imagen-ia/scripts/generar.mjs` con tope de gasto) y la **librería 3D** con colores de marca
+  (`producto-3d-mascota/scripts/escenas/`: teclado, ratón, cascos con `estudio-producto.js`, torre, mascota). Las
+  imágenes de `_ref-proton` (marcas reales) siguen fuera: las golden son nuestras demos.
+- **Prueba en limpio** (cómo se mide si la skill llega sola): `CLAUDE_CONFIG_DIR` nuevo en una carpeta **con ruta
+  larga** (las rutas cortas `ASISTE~1` piden aprobación manual), marketplace desde una copia de lo que va en git,
+  `permissions.allow` + `additionalDirectories` con la copia en `settings.json` (el modo sin permisos está desactivado
+  en esta cuenta), entorno sin las variables de Jarvis (solo las del sistema + `CLAUDE_CODE_OAUTH_TOKEN` del usuario)
+  y `claude -p --model opus --effort high` con un brief normal. El exportador de 2.4.0 da error si un look con
+  recortes no los trae o si son rellenos planos.
 - **Nivel de las referencias** (pulido v2.3.0, 31-10-2026): cada look se revisa con su hero **al lado de su
   referencia** (`node _ref/herramientas/3d/collage.mjs salida.png "Ref=_ref-proton/x.png" "Muestra=_ref/v4/…/hero.png"`)
   y mirando los detalles al 200-400 % (`techgrid-zoom.mjs`). Lo que delata lo amateur: 3D sin detalle interior,

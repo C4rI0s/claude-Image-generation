@@ -27,7 +27,7 @@ const mascota = new THREE.Group(); s.add(mascota)
 
 // Cuerpo: esfera deformada en gominola (más ancha abajo, base algo plana) con la panza algo más clara
 const g = new THREE.SphereGeometry(1, 200, 150), pos = g.attributes.position
-const col = new Float32Array(pos.count * 3), base = new THREE.Color('#7357ff'), panza = new THREE.Color('#a996ff'), alto = new THREE.Color('#6a4cf6'), t = new THREE.Color()
+const col = new Float32Array(pos.count * 3), base = new THREE.Color(q.has('cuerpo') ? '#' + q.get('cuerpo') : '#7357ff'), panza = new THREE.Color(q.has('panza') ? '#' + q.get('panza') : '#a996ff'), alto = base.clone().multiplyScalar(.9), t = new THREE.Color()
 for (let i = 0; i < pos.count; i++) {
   let x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i)
   const ancho = 1 + .12 * -y
@@ -39,10 +39,10 @@ for (let i = 0; i < pos.count; i++) {
   col.set([t.r, t.g, t.b], i * 3)
 }
 g.setAttribute('color', new THREE.BufferAttribute(col, 3)); g.computeVertexNormals()
-const params = { roughness: .5, sheen: 1, sheenRoughness: .35, sheenColor: '#d9ccff', clearcoat: .22, clearcoatRoughness: .4 }
+const params = { roughness: .5, sheen: 1, sheenRoughness: .35, sheenColor: panza.clone().lerp(new THREE.Color('#ffffff'), .5), clearcoat: .22, clearcoatRoughness: .4 }
 const vinilo = vinilizar(new THREE.MeshPhysicalMaterial({ vertexColors: true, ...params }))
 const cuerpo = new THREE.Mesh(g, vinilo); mascota.add(cuerpo); cuerpo.updateMatrixWorld(true)
-const morado = vinilizar(new THREE.MeshPhysicalMaterial({ color: '#7357ff', ...params }))
+const morado = vinilizar(new THREE.MeshPhysicalMaterial({ color: base, ...params }))
 
 const ray = new THREE.Raycaster()
 const pegar = (x, y) => { ray.set(new THREE.Vector3(x, y, 5), new THREE.Vector3(0, 0, -1)); const h = ray.intersectObject(cuerpo)[0]; return { p: h.point, n: h.face.normal.clone().normalize() } }

@@ -35,6 +35,9 @@ hardware o gaming → `tech-grid`.
   una capa con `data-sobre=".ui-fila.oculta"` se centra sola encima de su fila.
 - `producto.css` y `producto.js` son los mismos en `piezas-graficas` y `carrusel-instagram`: si cambias uno,
   copia los otros.
+- `referencia/golden.jpg` + `golden.md` · la pieza de referencia del look, qué imitar y la lista puntuable del bucle
+  de pulido. Antes de empezar, pide (o saca de su web) **capturas o la estructura de su app** (secciones del menú,
+  qué lista enseña, nombres reales de sus funciones): la interfaz tiene que parecer la suya.
 
 ## Flujo
 1. **Marca y brief** (`direccion-de-arte`): `marca.json` y **una función** que contar (no tres). Escribe qué hace
@@ -56,9 +59,13 @@ hardware o gaming → `tech-grid`.
    ```
    Cada pieza lleva `data-estilo="producto"`: el exportador acepta las sombras suaves de las capas, pero avisa de
    brillos, de desenfoques y de texto libre que toque una capa; las capas pueden solaparse entre ellas.
-6. **Mira cada PNG** a tamaño real y la `hoja.png` a tamaño de móvil, con la lista de
-   `direccion-de-arte/references/revision-visual.md` y la de `references/estilo.md` (ningún texto medio tapado por
-   una capa, el foco se ve en 1 segundo, el borde degradado no brilla). Corrige y repite.
+6. **Bucle de pulido (obligatorio, 2 vueltas como mínimo)** — `piezas-graficas/references/pulido.md`:
+   ```bash
+   node <skill>/../piezas-graficas/scripts/comparar.mjs out/<html>/hero.png --look producto-en-contexto --vuelta 1
+   ```
+   Abre `revision/vuelta-1.png` (tu pieza junto a la golden y un detalle de la interfaz al 100 %), puntúa cada punto
+   de `referencia/golden.md` de 1 a 10 en `revision/vuelta-1.md`, corrige lo que esté por debajo de 8 (ventana medio
+   vacía, lateral pobre, texto medio tapado por una capa, datos incoherentes) y repite.
 7. **Entrega**: PNG 2x. Para subir a una red que limite el peso (miniatura de YouTube < 2 MB), exporta esa pieza
    con `--escala 1 --solo miniatura`. La cabecera de correo sale a 1200x600: es la imagen de la plantilla
    `producto` de `correo-marketing-html` (súbela a una URL https).
