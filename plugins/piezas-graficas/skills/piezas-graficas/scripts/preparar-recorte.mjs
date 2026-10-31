@@ -12,7 +12,8 @@
  *   --borde        px que se comen del borde semitransparente (0-3; por defecto 1). Quita la línea clara que
  *                  dejan los quitafondos sobre fondos grises o blancos
  *   --sin-limpiar  no toca el color del borde (por defecto, los píxeles semitransparentes toman el color del
- *                  interior más cercano: adiós al halo gris o blanco)
+ *                  interior más cercano: adiós al halo gris o blanco; y los casi transparentes, alfa < 28, se
+ *                  borran: forman un «velo» de neblina gris sobre fondos oscuros)
  *
  * Imprime: tamaño, peso, la medida del halo (antes y después) y la huella: --cx --cy --cw --ch en % del recorte,
  * listas para la .contacto de los looks (producto-3d-mascota, tech-grid).
@@ -38,18 +39,21 @@ const r = await p.evaluate(async ({ datos, max, margen, borde, limpiar }) => {
   const x = c.getContext('2d', { willReadFrequently: true }); x.drawImage(img, 0, 0)
   const id = x.getImageData(0, 0, W, H), d = id.data
   const lum = i => 0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2]
-  // Halo: luminancia media del borde semitransparente frente a la del interior pegado a él
+  // Halo (la misma medida que el exportador): cada píxel semitransparente del borde frente al opaco más cercano
+  // hacia dentro. Media de la diferencia y % del borde más claro; una luz de contorno real no cuenta como halo.
   const medirHalo = () => {
-    let sb = 0, nb = 0, si = 0, ni = 0
-    for (let y = 1; y < H - 1; y += 2) for (let i = 1; i < W - 1; i += 2) {
+    let suma = 0, n = 0, claros = 0
+    for (let y = 3; y < H - 3; y += 1) for (let i = 3; i < W - 3; i += 1) {
       const k = (y * W + i) * 4, a = d[k + 3]
-      if (a > 25 && a < 200) { sb += lum(k); nb++ }
-      else if (a >= 250) {
-        const vec = [k - 4 * 3, k + 4 * 3, k - W * 4 * 3, k + W * 4 * 3]
-        if (vec.some(v => v >= 0 && v < d.length && d[v + 3] < 200)) { si += lum(k); ni++ }
+      if (a < 40 || a > 200) continue
+      let o = -1
+      for (let r = 1; r <= 3 && o < 0; r++) for (const [dx, dy] of [[r, 0], [-r, 0], [0, r], [0, -r], [r, r], [-r, -r], [r, -r], [-r, r]]) {
+        const t = ((y + dy) * W + i + dx) * 4; if (d[t + 3] > 250) { o = t; break }
       }
+      if (o < 0) continue
+      const dl = lum(k) - lum(o); suma += dl; n++; if (dl > 30) claros++
     }
-    return nb && ni ? (sb / nb) - (si / ni) : 0
+    return n > 200 ? { media: suma / n, claros: claros / n } : { media: 0, claros: 0 }
   }
   const transparentes = (() => { let n = 0; for (let k = 3; k < d.length; k += 4) if (d[k] < 20) n++; return n / (W * H) })()
   const haloAntes = medirHalo()
@@ -70,6 +74,9 @@ const r = await p.evaluate(async ({ datos, max, margen, borde, limpiar }) => {
       }
       if (mejor >= 0) { d[k] = src[mejor]; d[k + 1] = src[mejor + 1]; d[k + 2] = src[mejor + 2] }
     }
+    // 1b) Velo: píxeles casi transparentes (alfa < 28) que deja el quitafondos alrededor del pelo y la ropa;
+    //     sueltos no se ven, pero juntos forman una neblina gris sobre fondos oscuros. Fuera.
+    for (let k = 3; k < d.length; k += 4) if (d[k] > 0 && d[k] < 28) d[k] = 0
     // 2) Come «borde» px del alfa (erosión suave: el alfa toma el mínimo de su vecindad)
     for (let pasada = 0; pasada < borde; pasada++) {
       const a0 = new Uint8ClampedArray(W * H); for (let n = 0; n < W * H; n++) a0[n] = d[n * 4 + 3]
@@ -109,8 +116,9 @@ if (r.transparentes < 0.03) { console.error('✗ La imagen no trae transparencia
 const buf = Buffer.from(r.url.split(',')[1], 'base64')
 await writeFile(salida, buf)
 console.log(`Recorte → ${salida}  ${r.OW}x${r.OH} (de ${r.W}x${r.H}), ${Math.round(buf.length / 1024)} KB, WebP ${r.calidad}`)
-const halo = v => v > 18 ? `${v.toFixed(0)} (halo claro visible)` : v > 8 ? `${v.toFixed(0)} (ligero)` : `${v.toFixed(0)} (limpio)`
-console.log(`Halo del borde (luminancia del borde − interior): antes ${halo(r.haloAntes)}, después ${halo(r.haloDespues)}`)
-if (r.haloDespues > 18) console.log('  · Sigue habiendo halo: repite con --borde 2, o recorta de nuevo con recortar.mjs --modelo large.')
+const malo = h => h.media > 38 && h.claros > 0.55
+const halo = h => `${Math.round(h.claros * 100)} % del borde más claro, media ${h.media.toFixed(0)}${malo(h) ? ' (HALO)' : ' (limpio)'}`
+console.log(`Halo del borde: antes ${halo(r.haloAntes)}; después ${halo(r.haloDespues)}`)
+if (malo(r.haloDespues)) console.log('  · Sigue habiendo halo: repite con --borde 2, o recorta de nuevo con recortar.mjs --modelo large.')
 console.log(`Huella (sombra de contacto, en % del recorte): --cx: ${r.huella.cx}%; --cy: ${r.huella.cy}%; --cw: ${r.huella.cw}%; --ch: ≈ 8-10 % del alto (cámara a nivel) o 15-17 % (cámara alta)`)
 console.log('Ahora míralo con ver-recorte.mjs (sobre oscuro y sobre el color del look, con zoom al borde).')
