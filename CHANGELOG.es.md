@@ -1,5 +1,9 @@
 # Novedades
 
+**2.5.2 · licencia MIT y un plugin autocontenido.** `LICENSE` (MIT) y `CODEOWNERS`; todos los `plugin.json` dicen
+`"license": "MIT"`. Nuevo `plugins/visual-marketing-skills`: las diez skills en una sola carpeta y sin dependencias (para
+Claude Market y el directorio de plugins de Anthropic). Se genera a partir de los otros plugins; no se edita a mano.
+
 **2.4.0 · la skill sola, al nivel de las demos.** Probada en limpio (Claude Code sin memoria ni ayudas, solo con el
 marketplace instalado y un brief normal) con 6 marcas inventadas y otros productos; lo que fallaba se ha metido en la
 skill:

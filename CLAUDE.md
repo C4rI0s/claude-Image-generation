@@ -17,6 +17,11 @@ marketplace (para instalar) sigue siendo `visual-marketing-skills`.
 - Ficheros repetidos a propósito (cada plugin se instala solo): `exportar.mjs` es el mismo en `carrusel-instagram` y
   `piezas-graficas`; `producto.css` y `producto.js` son los mismos en `producto-en-contexto`, `piezas-graficas` y
   `carrusel-instagram`. Si cambias uno, copia los otros (compruébalo con `md5sum`).
+- **`plugins/visual-marketing-skills`** = las 10 skills en una sola carpeta sin dependencias (sin reels), para el
+  directorio oficial de Anthropic y Claude Market (MIT, 31-10-2026). No se edita a mano: tras cambiar una skill,
+  regenera con `_ref/herramientas/claude-market/empaquetar.sh <repo>/plugins propio` (y `<clon del fork>` para el PR
+  de Claude Market, rama `add-visual-marketing-skills` de `C4rI0s/marketplace`); su `plugin.json` y README salen de esa
+  carpeta. Sube su `version` con cada cambio.
 - Antes de subir un cambio en una plantilla: renderízala con su script (con `--marca`), mira los PNG, prueba también
   con otra marca y actualiza `docs/ejemplos/`.
 - **Cinco looks + plano** (orden de Carlos 31-10-2026, una referencia por look; el selector está en
