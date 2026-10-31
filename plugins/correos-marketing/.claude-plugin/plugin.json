@@ -1,6 +1,6 @@
 {
   "name": "correos-marketing",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Correos HTML de marketing sobrios para cualquier marca, compatibles con Gmail, Outlook y Apple Mail: cabecera de producto en contexto, tres plantillas probadas, aplicador de marca desde marca.json y un comprobador que renderiza escritorio, móvil, sin imágenes y modo oscuro.",
   "author": {
     "name": "C4rI0s",

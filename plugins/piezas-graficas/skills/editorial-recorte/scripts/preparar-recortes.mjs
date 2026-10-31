@@ -18,6 +18,10 @@
  *                                                    // clonando la tela de 230 px a la izquierda (conserva la textura)
  *     ],
  *     "borrar": [[x0, y0, x1, y1, 0.9]],            // zonas donde lo semitransparente es resto de fondo: fuera
+ *     "contorno": [[y0, y1, xs, xf]],               // oreja fantasma o restos pegados a la piel: en cada fila, desde
+ *                                                    // xf (fuera) hacia xs (dentro), borra hasta el primer píxel de piel
+ *                                                    // o pelo (alfa ≥ 0,85 y R > B); contorno suavizado y pluma de 1,5 px
+ *     "limpiar": [[x0, y0, x1, y1]],                // mechones sueltos y motas: apertura de 2 px e islas < 400 px fuera
  *     "estrecha": [0.3, 0.95],                      // alfa del borde: < 0,3 → 0; > 0,95 → 1 (y se oscurece)
  *     "fundidoIzq": 0.2, "fundidoDer": 0,           // fundido lateral horneado (fracción del ancho)
  *     "escala": 1, "calidad": 0.9 }
@@ -88,6 +92,52 @@ for (const t of trabajos) {
     // 2) Halo: estrecha el alfa del borde y oscurece lo semitransparente (el fondo final es casi negro)
     // Zonas donde lo semitransparente es resto de fondo (mechones con halo): fuera
     for (const [bx0, by0, bx1, by1, lim] of (t.borrar ?? [])) for (let j = by0; j < by1; j++) for (let i = bx0; i < bx1; i++) { const o = (j * w + i) * 4; if (d[o + 3] < lim * 255) d[o + 3] = 0 }
+    // Contorno (oreja fantasma, pendientes, restos pegados a la piel): en cada fila y0..y1 se avanza desde xf (fuera)
+    // hacia xs (dentro del sujeto) hasta el primer píxel de piel o pelo (alfa ≥ 0,85 y R > B) y se borra lo que queda
+    // fuera de él. Contorno suavizado (mediana de 13 filas) y pluma de 1,5 px.
+    const zonasLimpias = []
+    for (const [y0, y1, xs, xf] of (t.contorno ?? [])) {
+      const paso = xf >= xs ? 1 : -1, cortes = []
+      for (let j = y0; j <= y1; j++) { let i = xf   // de fuera hacia dentro: el primer píxel de piel o pelo es el borde
+        for (; i !== xs; i -= paso) { const o = (j * w + i) * 4; if (d[o + 3] >= 217 && d[o] > d[o + 2]) break }
+        cortes.push(i + paso) }
+      const med = cortes.map((_, k) => { const v = cortes.slice(Math.max(0, k - 6), k + 7).sort((p, q) => p - q); return v[v.length >> 1] })
+      for (let j = y0; j <= y1; j++) { const b = med[j - y0]
+        for (let i = b - 2 * paso; i !== xf + paso; i += paso) { const o = (j * w + i) * 4, f = Math.min(1, Math.max(0, ((b - i) * paso + .5) / 1.5 + .5)); d[o + 3] *= f } }
+      zonasLimpias.push([Math.min(xs, xf), y0, Math.max(xs, xf), y1])
+    }
+    // Limpiar (mechones sueltos y motas): alfa < 0,5 fuera, apertura de 2 px, islas < 400 px fuera y pluma de 1 px
+    for (const [lx0, ly0, lx1, ly1] of (t.limpiar ?? [])) {
+      const lw = lx1 - lx0 + 1, lh = ly1 - ly0 + 1, A = (i, j) => d[((j + ly0) * w + i + lx0) * 4 + 3]
+      let m = new Uint8Array(lw * lh); for (let j = 0; j < lh; j++) for (let i = 0; i < lw; i++) m[j * lw + i] = A(i, j) >= 128 ? 1 : 0
+      const morf = (src, ero) => { const out = new Uint8Array(lw * lh)
+        for (let j = 0; j < lh; j++) for (let i = 0; i < lw; i++) { let v = ero ? 1 : 0
+          for (let dj = -2; dj <= 2; dj++) for (let di = -2; di <= 2; di++) { if (di * di + dj * dj > 4) continue
+            const ii = i + di, jj = j + dj, s = ii < 0 || jj < 0 || ii >= lw || jj >= lh ? (ero ? 1 : 0) : src[jj * lw + ii]
+            if (ero && !s) v = 0; if (!ero && s) v = 1 }
+          out[j * lw + i] = v }
+        return out }
+      m = morf(morf(m, true), false)
+      const et = new Int32Array(lw * lh).fill(-1)
+      for (let s0 = 0, n = 0; s0 < lw * lh; s0++) { if (!m[s0] || et[s0] >= 0) continue
+        const pila = [s0], miembros = []; et[s0] = n
+        while (pila.length) { const q = pila.pop(); miembros.push(q); const qj = (q / lw) | 0, qi = q % lw
+          for (const [di, dj] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const ni = qi + di, nj = qj + dj; if (ni < 0 || nj < 0 || ni >= lw || nj >= lh) continue; const u = nj * lw + ni; if (m[u] && et[u] < 0) { et[u] = n; pila.push(u) } } }
+        if (miembros.length < 400 && !miembros.some(q => { const qj = (q / lw) | 0, qi = q % lw; return !qi || !qj || qi === lw - 1 || qj === lh - 1 })) for (const q of miembros) m[q] = 0
+        n++ }
+      for (let j = 0; j < lh; j++) for (let i = 0; i < lw; i++) { let s = 0, c9 = 0
+        for (let dj = -1; dj <= 1; dj++) for (let di = -1; di <= 1; di++) { const ii = i + di, jj = j + dj; s += ii < 0 || jj < 0 || ii >= lw || jj >= lh ? m[j * lw + i] : m[jj * lw + ii]; c9++ }
+        const o = ((j + ly0) * w + i + lx0) * 4; d[o + 3] = Math.min(d[o + 3], 255 * s / c9) }
+      zonasLimpias.push([lx0, ly0, lx1, ly1])
+    }
+    // En esas zonas, el color de lo semitransparente se toma del interior opaco cercano (radio 4 px): sin borde claro
+    for (const [zx0, zy0, zx1, zy1] of zonasLimpias)
+      for (let j = Math.max(0, zy0 - 4); j <= Math.min(h - 1, zy1 + 4); j++) for (let i = Math.max(0, zx0 - 4); i <= Math.min(w - 1, zx1 + 4); i++) {
+        const o = (j * w + i) * 4; if (!d[o + 3] || d[o + 3] >= 250) continue
+        let sr = 0, sg = 0, sb = 0, n = 0
+        for (let dj = -4; dj <= 4; dj++) for (let di = -4; di <= 4; di++) { const ii = i + di, jj = j + dj; if (ii < 0 || jj < 0 || ii >= w || jj >= h) continue; const q = (jj * w + ii) * 4; if (d[q + 3] >= 250) { sr += d[q]; sg += d[q + 1]; sb += d[q + 2]; n++ } }
+        if (n) { d[o] = sr / n; d[o + 1] = sg / n; d[o + 2] = sb / n }
+      }
     const [a0, a1] = t.estrecha ?? [.3, .95]
     for (let o = 0; o < d.length; o += 4) {
       const a = d[o + 3] / 255

@@ -68,6 +68,22 @@ Los cuatro con otra marca (Nimbo), sin tocar el HTML:
 Las personas de los ejemplos están generadas con IA (no son reales) y el producto y la mascota son renders 3D
 propios; las marcas son ficticias.
 
+## Novedades
+
+**2.3.0 · pasada de pulido de los cinco looks.** Cada muestra se ha puesto al lado de su referencia y se ha
+rehecho lo que se notaba amateur; lo aprendido está en el `references/estilo.md` de cada look como reglas medidas.
+- **Producto 3D + mascota**: la torre, por dentro como una de verdad (ventiladores con aspas barridas y aro de luz,
+  radiador con aletas, bomba, gráfica con su carcasa, memorias, cableado trenzado, cristal con reflejos) y la
+  mascota con más acabado (vinilo con aspecto de subsurface, luz de recorte, ojos con iris y brillos, mano que
+  saluda).
+- **Tech grid**: ratón gaming creíble (carcasa ergonómica, botones laterales, rueda estriada, agarre texturizado,
+  tira de luz) que se sale del marco con intención; teclado con leyendas y luz entre teclas; luz y sombras comunes.
+- **Editorial recorte**: recortes sin halo junto a orejas y mechones (`preparar-recortes.mjs` gana `contorno` y
+  `limpiar`) y un grupo más compacto.
+- **Oscuro glow**: fondo con gráfico de velas de verdad (volumen, medias, eje de precios) y un portátil con panel
+  detallado y base de aluminio con reflejo.
+- **Producto en contexto**: la ventana ya no deja huecos vacíos; el contexto atenuado llega hasta el borde.
+
 ## Instalación
 
 Como el repositorio es privado, Claude Code necesita acceso a GitHub: `gh auth login` hecho, o `GITHUB_TOKEN` /

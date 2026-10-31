@@ -71,8 +71,8 @@
 .contacto::before { inset: 0; background: radial-gradient(closest-side, color-mix(in oklab, var(--m3-sombra) 72%, transparent) 0%, color-mix(in oklab, var(--m3-sombra) 30%, transparent) 55%, transparent 100%) }
 .contacto::after  { inset: 32% 16%; background: radial-gradient(closest-side, color-mix(in oklab, var(--m3-sombra) 94%, transparent) 0%, color-mix(in oklab, var(--m3-sombra) 45%, transparent) 60%, transparent 100%) }
 /* Huella medida de cada recorte de ejemplo (si cambias el render, vuelve a medirla) */
-.producto .contacto { --cx: 51%; --cy: 91.5%; --cw: 112%; --ch: 17% }
-.mascota  .contacto { --cx: 47%; --cy: 97.6%; --cw: 66%;  --ch: 8.5% }
+.producto .contacto { --cx: 55%; --cy: 95.5%; --cw: 108%; --ch: 10% }
+.mascota  .contacto { --cx: 43%; --cy: 97.6%; --cw: 60%;  --ch: 8.5% }
 
 /* ── Texto: logo centrado arriba, chip, titular, apoyo y CTA, siempre en el aire ─────────────────────────────── */
 .marca-3d { position: absolute; z-index: 4; display: flex; align-items: center; gap: .4em; white-space: nowrap;

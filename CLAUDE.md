@@ -38,3 +38,9 @@ marketplace (para instalar) sigue siendo `claude-skills-marketing`.
 - `_ref/` (renders, marcas de prueba en `_ref/marcas/`, recortes originales, herramientas de 3D y de quitar fondo en
   `_ref/herramientas/`), `_ref-proton/` (referencias de marcas reales) y `node_modules/` no se suben.
 - Si cambias algo que el usuario tiene que recoger, sube la `version` del plugin y de `metadata.version`.
+- **Nivel de las referencias** (pulido v2.3.0, 31-10-2026): cada look se revisa con su hero **al lado de su
+  referencia** (`node _ref/herramientas/3d/collage.mjs salida.png "Ref=_ref-proton/x.png" "Muestra=_ref/v4/…/hero.png"`)
+  y mirando los detalles al 200-400 % (`techgrid-zoom.mjs`). Lo que delata lo amateur: 3D sin detalle interior,
+  productos «de juguete», halos en orejas y mechones, huecos vacíos en las ventanas, fondos pobres. Las reglas
+  medidas de cada look están en su `references/estilo.md`. Muestras finales en
+  `C:\AgenticOS\workspace\documentos\muestras-marketplace\v4`.

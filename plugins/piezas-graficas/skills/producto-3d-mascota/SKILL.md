@@ -40,14 +40,20 @@ titular corto y una CTA en el aire, nunca encima de los sujetos. Reglas medidas 
   ≤ 500 KB, renderizados con la luz de la marca de ejemplo.
 - `scripts/render-3d.mjs` + `scripts/escenas/` · el **render propio**, sin IA: `mascota.html` (Chispa) y
   `producto.html` (la torre) en three.js, a PNG con fondo transparente con Chrome sin cabeza. La luz de recorte
-  se cambia por la de tu marca con `--param azul=3d8bff --param violeta=8b6bff`; los colores de la mascota están
-  arriba en `mascota.html`. Con el modelo real del producto (GLB/GLTF), cópialo junto a las escenas y cárgalo con
-  `GLTFLoader` en una copia de `producto.html`. La primera vez, `npm install` en `scripts/`:
+  se cambia por la de tu marca con `--param azul=3d8bff --param violeta=8b6bff` (en la torre también tiñe el RGB
+  del interior; el encuadre, con `--param giro=0.86 --param elev=0.03`); los colores de la mascota están arriba en
+  `mascota.html` (su vinilo lleva el fresnel de recorte con esos mismos dos colores). La torre trae un interior de
+  escaparate (AIO, ventiladores de 11 aspas con aro RGB, gráfica horizontal, cables trenzados): el detalle que
+  hace falta está medido en `references/estilo.md`. Con el modelo real del producto (GLB/GLTF), cópialo junto a
+  las escenas y cárgalo con `GLTFLoader` en una copia de `producto.html`. La primera vez, `npm install` en
+  `scripts/`. Renderiza a 1800 x 1800 (≥ 2x de lo que se verá), **un render cada vez** (WebGL por software: la
+  torre tarda ≈ 40 s y la mascota ≈ 15 s):
   ```bash
-  node <skill>/scripts/render-3d.mjs <skill>/scripts/escenas/mascota.html mascota.png --ancho 1600 --alto 1600 --param violeta=8b6bff
+  node <skill>/scripts/render-3d.mjs <skill>/scripts/escenas/mascota.html mascota.png --ancho 1800 --alto 1800 --param violeta=8b6bff
   ```
-  Después recorta lo transparente sobrante y pásalo a WebP (≤ 500 KB). Para fotos o renders con fondo:
-  `imagen-ia/scripts/recortar.mjs`.
+  Después recorta lo transparente sobrante y pásalo a WebP (≤ 500 KB), mide la huella (fila opaca más baja por
+  columna) para `.contacto` y mira los bordes a 200 % sobre oscuro y sobre el violeta. Para fotos o renders con
+  fondo: `imagen-ia/scripts/recortar.mjs`.
 
 ## Flujo
 1. **Marca y brief** (`direccion-de-arte`): `marca.json`, **un** producto y **una** mascota. Copy con contención:

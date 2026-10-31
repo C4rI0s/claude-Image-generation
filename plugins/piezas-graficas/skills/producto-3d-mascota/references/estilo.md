@@ -45,15 +45,17 @@ componer la plantilla con Chrome a 2x. Los valores son para lienzos de 1080-1600
 - **Dos elipses con `radial-gradient`, sin `filter`**, dentro de cada `.sujeto` (van detrás del recorte):
   penumbra al 72 % → 30 % → 0 y núcleo (68 % x 36 % de la penumbra) al 94 % → 45 % → 0, en `sombra-3d`
   (oklch L 0,13, poco saturada: nunca de color vivo).
-- **Tamaño**: mascota, 66 % de su ancho x 8,5 % de su alto, centrada en la línea de los pies; producto, 112 % de
-  su ancho x 17 % de su alto (la huella en perspectiva de ¾), centrada en el 91,5 % del alto.
+- **Tamaño**: mascota, 60 % de su ancho x 8,5 % de su alto, centrada en la línea de los pies (`--cx` 43 %, el
+  brazo que saluda ensancha el recorte por la derecha); producto con cámara casi a nivel, 108 % de su ancho x 10 %
+  de su alto, centrada en el 55 % x 95,5 % (la huella se ve como una elipse plana; con cámara alta, de ¾ desde
+  arriba, sube a ≈ 17 % de alto y baja al ≈ 91 %).
 - Mide la huella de cada recorte nuevo (la fila opaca más baja por columnas) y ajusta `--cx`, `--cy`, `--cw` y
   `--ch`. Si un sujeto sangra por abajo, su sombra sobra.
 
 ## Escala y solape
-- **Producto 1,2-1,3 veces más alto que la mascota** (hero: 702 y 563 px). Si el producto es pequeño (mando,
+- **Producto 1,2-1,3 veces más alto que la mascota** (hero: 702 y 553 px). Si el producto es pequeño (mando,
   ratón), al revés: la mascota lo sostiene o se apoya en él, y el producto ≥ 45 % de su alto.
-- **La mascota delante**, tapando el **20-35 % del ancho** del producto (hero: 146 px de 470 = 31 %), con la base
+- **La mascota delante**, tapando el **20-35 % del ancho** del producto (hero: 169 px de 493 = 34 %), con la base
   **20-40 px más baja** (más cerca de la cámara) y **mirando al producto** (giro de 20-25°).
 - Lo que tapa la mascota no puede ser lo que vende el producto (el frontal con la luz sí; el logotipo del
   fabricante o la pantalla, no).
@@ -91,7 +93,9 @@ componer la plantilla con Chrome a 2x. Los valores son para lienzos de 1080-1600
   - materiales PBR: lacado con `clearcoat` 0,5-0,6 y rugosidad 0,3; metales con `metalness` 1 y rugosidad
     0,25-0,45; cristal con `transmission` y un reflejo diagonal suave; vinilo de juguete (mascota) con rugosidad
     0,5, `sheen` 1 y `clearcoat` 0,2; ojos con `clearcoat` 1 y dos puntos de brillo;
-  - cámara de ¾ con FOV 22-26° y elevación ligera; geometría suave (esferas de ≥ 150 segmentos, biseles reales);
+  - cámara de ¾ con FOV 22-26° y **casi a nivel** (elevación 0,03-0,06 en `encuadrar`), la misma para producto y
+    mascota: con cámara alta se ve el techo de la caja y el interior queda de canto; geometría suave (esferas de
+    ≥ 150 segmentos, biseles reales);
   - salida PNG con alfa a ≥ 2x del tamaño en pieza (1800-2000 px de alto) → recorte de bordes y WebP con alfa
     (calidad 0,9, ≤ 500 KB) en `recortes/`.
 - **IA** (sin modelos): producto y mascota por separado, «isolated on a plain flat light grey seamless studio
@@ -101,6 +105,51 @@ componer la plantilla con Chrome a 2x. Los valores son para lienzos de 1080-1600
 - **Los renders no cambian con la marca**: llevan la luz de la marca con la que se hicieron. Con otra marca, el
   fondo, la fuente y el logo cambian solos; los sujetos, solo si se vuelven a renderizar con su luz.
 - Mascota: de la marca o original. Nada de personajes con derechos ni productos con logotipos de terceros.
+
+## Detalle que hace creíble el render (medido en la torre y en Chispa)
+- **Tamaño mínimo de detalle**: en el hero la torre va a ≈ 330 px por unidad a 1x; lo que mide < 0,02 u (≈ 6 px)
+  no se lee. Tornillos de ventilador ≈ 10 px, hilos de cable ≈ 7 px, barra de luz de memoria ≈ 8 px: por ahí el
+  mínimo. Lo de menos tamaño (chips, ranuras) solo como manchas oscuras de contraste.
+- **Ventilador**: 11 aspas barridas (curva hasta 0,55 rad en la punta, paso que baja del 17 al 9 % del lado de la
+  raíz a la punta, un poco de comba), buje del 30 % del lado con cúpula, 4 brazos detrás, marco cuadrado con
+  esquinas de radio 8,5 % y 4 tornillos, y **aro RGB doble** (toro del 1,2 % del lado, emisivo 3-3,4, más una
+  banda plana del 3 % al 38 % de esa intensidad). Un disco plano con rayas se lee como «ventilador de dibujo».
+- **Interior de escaparate**, de arriba abajo: radiador con aletas (textura de 150 rayas) y 2 ventiladores; bomba
+  con tapa de espejo y 3 aros (violeta, azul, mezcla) y tubos trenzados; ventilador trasero de cara al cristal
+  (es el que mejor se ve); placa gris oscura (#4c4860) con VRM de aletas y tapa de E/S; 4 memorias con barra de
+  luz (de violeta a azul); gráfica **horizontal** con carcasa **grafito** (#2e2b3d: es el ancla oscura del
+  interior, como en las fotos de montajes), franja de aletas en el canto, tira de luz y backplate de aluminio, con
+  el PCIe blanco trenzado (8 hilos y peine) bajando al cubre-fuente; cubre-fuente con rejilla de ranuras. Los
+  oscuros (gráfica, placa, aletas, ranuras, tapa de la bomba) dan el contraste que en blanco sobre blanco falta:
+  todo blanco y lila se lee como maqueta.
+- **Centro de la placa** (lo que se ve entre el ventilador trasero y la gráfica): disipador M.2 con 22 ranuras y
+  2 tornillos, PCIe x16 con refuerzo de aluminio y un x1, fila de 5 bobinas y 4 condensadores bajo la bomba,
+  3 chips y tornillos de placa. Con el giro 0,86, en el plano de la placa solo se ve lo que queda a ≲ 0,1 u del
+  centro hacia el frontal: el borde delantero (24 pines) lo tapa el frontal, así que sus cables tienen que salir
+  hacia el cristal antes de doblar al pasacables.
+- **Ventiladores del radiador inclinados 8° (0,14 rad) hacia el cristal**: con la cámara casi a nivel, planos se
+  ven de canto (una raya); inclinados enseñan las aspas y el aro sin que se note el truco.
+- **Blanco limpio**: estudio con sala **gris neutra** (#211f2c, no índigo) a 0,5, principal 1,9 y relleno neutro
+  (#eceaf4). El color tiene que venir de los paneles de la marca (reflejos), los recortes y el RGB; una sala
+  índigo tiñe de lila todo el blanco.
+- **Luz del interior**: el estudio entra a 0,42 en los materiales de dentro y los recortes de color **hacen
+  sombra** (`castShadow`): si no, atraviesan las paredes y lo lavan todo de rosa. El color lo ponen puntuales RGB
+  (decay 2, intensidad 0,5-2,2, alcance 0,9-2,4 u) junto a cada grupo de ventiladores.
+- **Cristal**: transmisión 1 casi neutra (`attenuationColor` #eeecf8 a 2,5 u) y, delante, un plano con
+  una banda diagonal de alfa 0,17 (y otra de 0,12) y el brillo de canto: 1 % del ancho al 70 % en el canto
+  frontal y al 45 % en el de arriba, desvaneciéndose a mitad de lado. Más alfa ya parece plástico.
+- **Encuadre del producto**: giro 0,86 rad con el espejo: el cristal ocupa ≈ 68 % del ancho y el frontal ≈ 32 %,
+  que es lo que tapa la mascota.
+- **Vinilo de la mascota**: físico (rugosidad 0,5, sheen 1, clearcoat 0,22) + **fresnel de recorte** inyectado
+  (`pow(1 − n·v, 5) × 3,2`, azul si la normal mira a la izquierda de la pantalla y violeta a la derecha) + un
+  «wrap» del 5 % de su color en los bordes (aspecto de subsurface). Al lado de la torre tiene que leerse la línea
+  de color en la silueta.
+- **Ojos**: iris en degradado (pupila al 40 %, aro violeta → azul claro, luz azul abajo, emisivo 0,32), dos puntos
+  de brillo y un arco de reflejo al 42 %. Los ojos negros lisos se ven de pegatina.
+- **Manos**: el brazo que saluda lleva palma, 3 dedos en abanico (±0,3 rad) y pulgar; el que cuelga, al menos el
+  pulgar. Una esfera sola en la punta se lee como un muñón.
+- **Punto de la bufanda**: relieve de «V» (2 hojas inclinadas ±0,6 rad por punto) repetido 70 x 3,5, con 2
+  columnas por costilla (70 costillas).
 
 ## Qué evitar (lo que delata una plantilla barata)
 - Sujetos sin sombra de contacto (flotan) o con una sombra de `drop-shadow` alrededor.

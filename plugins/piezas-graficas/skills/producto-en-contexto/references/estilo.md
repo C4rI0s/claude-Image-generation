@@ -38,6 +38,9 @@ escala con el lienzo.
 - **Se atenúa, no se desenfoca**: lo que no es la función baja al ~50 % (`.atenuado` en la lista o la zona
   principal), y los botones de fondo van teñidos al ~10 % con el texto a media luz (`.ui-accion`).
 - La lateral puede quedar a plena luz (orienta), pero nunca compitiendo con la capa.
+- **La ventana no se queda vacía**: el contexto atenuado sigue hasta el borde del lienzo (en el hero, ≥ 2 filas por
+  debajo de la capa destacada, con su importe y su estado a la derecha). Un hueco liso dentro de la ventana de más
+  del 15 % del lienzo delata la maqueta; la referencia llena hasta abajo.
 
 ## Tipografía
 - Interfaz a ~1,5 % del ancho del lienzo (16 px en 1072; 20-21 px en 1080; 9,5-10 px en una cabecera de 600).

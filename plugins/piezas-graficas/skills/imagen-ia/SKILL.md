@@ -44,7 +44,9 @@ mascota sin fondo, como `<img data-recorte>`.
 2. **Quita el fondo** en local: `node scripts/recortar.mjs foto.png recorte.png` (la primera vez, `npm install` en
    `scripts/`). Si come pelo, auriculares o ropa negra, repite con `--modelo large`.
 3. **Míralo sobre un fondo oscuro** (no sobre blanco, que esconde los halos): bordes limpios, sin restos grises,
-   sin huecos dentro del sujeto.
+   sin huecos dentro del sujeto. Mira al 400 % las **orejas, pendientes y mechones sueltos**: es donde el modelo deja
+   una oreja «fantasma» semitransparente y motas claras. Se quitan con `contorno` y `limpiar` de
+   `editorial-recorte/scripts/preparar-recortes.mjs` (reglas en `editorial-recorte/references/estilo.md` → Recortes).
 4. **Logos y letras inventados** (la IA los pone en cascos, camisetas y teclados): tápalos rellenando con el color
    de alrededor, o encuadra para que no salgan. Marcas reales (un logo deportivo conocido): esa imagen no vale.
 5. **Optimiza**: recorta lo transparente sobrante y escala al tamaño máximo que se use a 2x; WebP con alfa o PNG,

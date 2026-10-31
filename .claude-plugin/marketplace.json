@@ -7,14 +7,14 @@
     "url": "https://github.com/C4rI0s"
   },
   "metadata": {
-    "version": "2.2.0"
+    "version": "2.3.0"
   },
   "plugins": [
     {
       "name": "direccion-de-arte",
       "source": "./plugins/direccion-de-arte",
       "description": "La base: brief de marca → marca.json (con comprobador de contraste), selector de look por marca y objetivo, copy, tipografía, rejillas, color y la revisión visual obligatoria. Instálala siempre.",
-      "version": "2.2.0",
+      "version": "2.3.0",
       "category": "design",
       "tags": [
         "diseño",
@@ -27,7 +27,7 @@
       "name": "correos-marketing",
       "source": "./plugins/correos-marketing",
       "description": "Correos HTML de marketing compatibles con Gmail, Outlook y Apple Mail, con cabecera de producto en contexto, plantillas probadas, aplicador de marca y comprobador que renderiza 4 vistas.",
-      "version": "2.2.0",
+      "version": "2.3.0",
       "category": "design",
       "tags": [
         "email",
@@ -39,7 +39,7 @@
       "name": "carruseles-instagram",
       "source": "./plugins/carruseles-instagram",
       "description": "Carruseles 1080x1350 con diapositivas de producto en contexto (la app con capas flotantes) y de texto, exportación a PNG 2x con Chrome real, revisión automática y hoja de contacto con la rejilla del perfil.",
-      "version": "2.2.0",
+      "version": "2.3.0",
       "category": "design",
       "tags": [
         "instagram",
@@ -51,7 +51,7 @@
       "name": "piezas-graficas",
       "source": "./plugins/piezas-graficas",
       "description": "Cinco looks de campaña (producto en contexto, oscuro glow, editorial recorte, producto 3D con mascota, tech grid) en hero 16:9, 1:1, 4:5, banner y story a PNG 2x, más portadas, OG, heros, recortador de fondos e imágenes de apoyo con IA.",
-      "version": "2.2.0",
+      "version": "2.3.0",
       "category": "design",
       "tags": [
         "banner",
@@ -71,7 +71,7 @@
       "name": "video-marketing",
       "source": "./plugins/video-marketing",
       "description": "Reels y vídeos cortos: guion por segundos, zonas seguras, subtítulos y revisión por fotogramas, sobre el plugin motion-graphics (Remotion).",
-      "version": "2.2.0",
+      "version": "2.3.0",
       "category": "design",
       "tags": [
         "reel",

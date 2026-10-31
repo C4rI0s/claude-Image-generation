@@ -25,11 +25,31 @@ en mayúsculas. Los valores son para un lienzo de 1080-1600 px; escala con el li
 - Tamaños: el marco más grande ≈ 30-40 % del ancho del lienzo; el más pequeño ≈ 15 %. Proporciones distintas
   (uno vertical, uno apaisado, uno casi cuadrado): nunca cuatro iguales.
 - **El producto rompe el marco** por 1-2 lados, entre el **15 y el 35 %** del lado del marco (cascos 78 px por
-  arriba en un marco de 240; ratón 48 px por la izquierda en uno de 250). El resto, dentro y con aire.
+  arriba en un marco de 240; ratón 52 px por arriba y 48 por la izquierda en uno de 250x330). Si rompe 2 lados, que
+  sea por **una esquina** y con la **punta** del producto (la nariz del ratón, la diadema, el extremo del teclado);
+  el resto, dentro y con aire (≥ 10 px hasta los otros bordes).
 - **Persona**: cortada por el **borde de abajo** del marco (`.corte`: el contenedor llega al borde interior y
   recorta los lados); la cabeza sale 60-80 px por arriba. Corta por encima de logos o escudos de la ropa.
 - Sombra de contacto opcional (`.contacto`): elipse `radial-gradient` de la noche al 70 % → transparente, debajo
   del producto y dentro del marco. Nada de `box-shadow` ni `filter`.
+
+## Productos (recortes)
+- **Detalle mínimo**: a tamaño real, cada producto enseña **≥ 4 detalles** que se leen: juntas o ranuras oscuras de
+  1-1,5 px con su bisel, mandos con su forma (rueda con banda estriada, botones con su junta y su canto, teclas con
+  leyenda tenue y escalón), una textura (rombos en relieve, moleteado, polipiel con costura) y la luz RGB. Un
+  producto liso «de pastilla» delata la plantilla.
+- **La misma sesión de fotos**: los mismos blanco (≈ `#e3e6ea`), luz y cámara para todos. Llave cálida **arriba a
+  la izquierda** del encuadre, recorte azul (el del fondo) **detrás a la derecha** y un relleno frío suave; la luz se
+  fija respecto a la cámara, no al objeto, para que coincida aunque cada producto gire distinto. Entorno bajo: los
+  costados tienen que caer a gris medio, no quedarse blancos.
+- **Ángulo**: tres cuartos desde arriba. El ratón, con la punta arriba a la izquierda (20-30° sobre la vertical) y
+  enseñando el costado del pulgar; el teclado, en diagonal descendente hacia la derecha.
+- **RGB**: azul → violeta, difusa (luz dentro de plástico lechoso), solo en el producto y en **≤ 15 %** de su
+  superficie visible: tira lateral del ratón, luz entre teclas, aro fino en los cascos. Nunca un brillo fuera del
+  producto.
+- **Sombra de contacto** (`.contacto`): elipse del **70-75 %** del ancho visible del producto y alto ≈ 22 % de ese
+  ancho, pegada a su base y desplazada abajo a la derecha (contraria a la llave).
+- **Sin halo**: render con fondo transparente (nada que quitar) y borde limpio a 200 % sobre el azul del marco.
 
 ## Pistas de circuito
 - Mismo grosor que el borde de los marcos (`--trazo`), del color del marco del que salen.
@@ -85,6 +105,7 @@ en mayúsculas. Los valores son para un lienzo de 1080-1600 px; escala con el li
 - Glow, neón, `text-shadow`, sombras de color, desenfoques, bordes con brillo.
 - Pistas en diagonal, con curvas, que acaban en el vacío o que pasan por detrás de un producto.
 - Productos flotando sin marco o metidos enteros dentro del marco (sin romperlo); productos que se tocan entre sí.
+- Productos de juguete: formas lisas sin juntas, sin mandos ni textura; cada producto con su luz o su blanco.
 - Cuatro marcos iguales en fila; marcos con esquinas redondeadas; más de dos colores de trazo.
 - Titular en más de 2 líneas, en minúsculas o en una fuente estrecha forzada; mayúsculas en el resto del texto.
 - Recortes con halo claro alrededor del pelo o con logos de otras marcas.
@@ -92,6 +113,8 @@ en mayúsculas. Los valores son para un lienzo de 1080-1600 px; escala con el li
 ## Lista de revisión de este estilo (además de la general)
 - [ ] La cuadrícula se ve, pero no compite; el fondo pasa de negro a azul abajo sin bandas.
 - [ ] Cada producto rompe su marco por 1-2 lados, con intención; ninguno toca otro producto ni un texto.
+- [ ] Cada producto enseña sus detalles a tamaño real (juntas, mandos, textura, RGB) y todos comparten luz, blanco y
+      sombra de contacto.
 - [ ] Todas las pistas son ortogonales y unen marco con marco o marco con el borde; un nodo en cada unión, centrado
       en el borde.
 - [ ] El arco abraza el bloque logo + titular sin cruzar ninguna letra.

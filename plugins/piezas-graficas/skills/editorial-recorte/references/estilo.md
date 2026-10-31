@@ -24,6 +24,9 @@ Los valores son para los lienzos de la plantilla (1080-1600 px de ancho); escala
 - Los medianos tapan **el cuerpo** del dominante (hombro, pecho), **nunca su cara**: entre una cara y otro sujeto,
   ≥ 40 px de aire (a 1x en 1080).
 - Orden de capas: construcción → dominante → sujeto del marco → mediano delantero.
+- **Un bloque, no tres islas**: en el hero el grupo ocupa **≤ 60 % del ancho** (497-1462 px en 1600) y cada mediano
+  solapa **≥ 25 % de su ancho** con el dominante (por el cuerpo). Si entre dos sujetos queda un hueco de fondo más
+  ancho que una cabeza, acércalos.
 - Ningún sujeto toca el borde del lienzo con un corte duro: o se funde por abajo o queda dentro del marco. Si la foto
   viene cortada por un lado (ropa a sangre), hornea un fundido lateral en el alfa del recorte (≈ 20 % del ancho).
 
@@ -87,6 +90,14 @@ Los valores son para los lienzos de la plantilla (1080-1600 px de ancho); escala
   use a 2x (sin ampliar: ancho intrínseco ≥ 2 veces el ancho en la pieza).
 - **Sin halo**: estrecha el alfa del borde (0,3 → 0,95) y oscurece lo semitransparente; borra los mechones con resto
   de fondo gris. Míralo con zoom sobre negro.
+- **Orejas, pendientes y mechones sueltos** son donde el quitafondos deja restos: una oreja «fantasma»
+  semitransparente, motas claras o grises y pelos sueltos con el gris del estudio. Regla: mirado al 400 % sobre el
+  fondo del look, **ningún píxel con alfa < 0,85 a más de 2 px del contorno** ni ningún resto frío o gris (B ≥ R)
+  pegado a la piel o al pelo. Si los hay, en `preparar-recortes.mjs`: `contorno` (de fuera hacia dentro hasta el
+  primer píxel de piel o pelo, contorno suavizado con mediana de 13 filas y pluma de 1,5 px) y `limpiar` (apertura de
+  2 px e islas < 400 px fuera) en esa zona; el color del borde sale del interior (radio 4 px). Mejor perder la oreja
+  con un contorno limpio que dejar una oreja fantasma: a tamaño de pieza nadie echa de menos la oreja, el halo sí se ve.
+- Un `borrar` grande sobre la oreja deja el borde a dientes: después de `borrar`, pasa siempre `contorno` o `limpiar`.
 - **Sin logos ni textos inventados** (cascos, ratones, camisetas): tápalos rellenando desde el borde (o clonando la
   tela de al lado) y mira el resultado con zoom. Si no queda limpio, que quede fuera con el fundido o el marco.
 

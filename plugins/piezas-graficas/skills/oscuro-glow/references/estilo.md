@@ -41,13 +41,22 @@ Los porcentajes de luz y posición son del lienzo.
 - **Degradado lineal a 128°**: `--fondo-1` (L 0,13, casi negro) de 0 a 20 % → `--fondo-2` (L 0,23) al 56 % →
   `--fondo-3` (L 0,40, azul vivo) al 100 %. Oscuro arriba a la izquierda, vivo abajo a la derecha.
 - `background-color: var(--fondo-2)` en la `<section>`: es el color con el que el exportador mide el contraste.
-- **Velas**: SVG con semilla fija, opacidad **15-24 %** (tope 30 %), velas al 50 % de su paso, rejilla horizontal
-  y media móvil; máscara que las funde por los lados. Una franja arriba (detrás del titular, la más tenue) y otra
-  abajo o a la derecha.
-- **Portátil**: maqueta SVG del panel (barra, lateral, gráfico de área, lista de mercados, 4 indicadores) sin
-  texto, opacidad 90 %, desenfocado. Ancho ≈ 39 % del lienzo en el hero, 54 % en el 1:1, 61 % en el 4:5 y 74 %
-  en la story; la pantalla empieza bajo el borde de arriba de las tarjetas y la base acaba antes del texto que
-  viene debajo.
+- **Velas**: SVG con semilla fija, opacidad **15-26 %** (tope 30 %), como un gráfico de verdad: paso de **15 px**
+  (`data-paso`), cuerpo al 56 % del paso, mecha de 1,6 px, **volumen** abajo (≤ 13 % del alto de la capa, al 45 %),
+  rejilla horizontal (6 líneas, al 35 %) y vertical cada 8 velas (al 16 %), **dos medias** (rápida de 7 velas,
+  continua; lenta de 21, discontinua 6/5), **eje de precios** en pastillas sin texto al 76 % del ancho y la línea
+  del último precio con su pastilla más clara. Máscara que las funde por los lados. Una franja arriba (detrás del
+  titular, la más tenue), otra abajo y, en el hero, una tercera estrecha en el borde derecho (x ≥ 85 %, al 26 %):
+  es la que da la densidad de la referencia.
+- **Portátil**: maqueta SVG del panel sin texto, opacidad 90 %, desenfocado 4-6 px: barra con 5 pestañas (una
+  activa en píldora del glow), lateral, gráfico de área con su rejilla y el punto del último precio, lista de
+  mercados y **fila de 6 indicadores** (icono cuadrado del glow al 70 %, dos líneas tenues, cifra y minigráfico).
+  La pantalla lleva su **brillo** (radial del glow al 34 % arriba) y una **barbilla** oscura de 18/610 de alto. La
+  base es **aluminio**: degradado horizontal claro-suave → claro (reflejos al 22 % y al 78 %) → claro-suave en el
+  centro, filo claro arriba, muesca oscura centrada (14 % del ancho) y una sombra elíptica debajo. Lo que asoma
+  bajo las tarjetas (indicadores y base) es lo que más se ve: nunca bloques blancos lisos (≤ 42 % de claro).
+  Ancho ≈ 39 % del lienzo en el hero, 54 % en el 1:1, 61 % en el 4:5 y 74 % en la story; la pantalla empieza bajo
+  el borde de arriba de las tarjetas y la base acaba antes del texto que viene debajo.
 - Liso: sin ruido, texturas, rayos ni destellos.
 
 ## Tipografía

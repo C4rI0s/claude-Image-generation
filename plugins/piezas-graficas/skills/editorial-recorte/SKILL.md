@@ -50,8 +50,10 @@ llamada) y nunca va encima de las fotos. Plano: sin sombras, brillos ni desenfoq
    perfil o tres cuartos (el dominante), una de frente con el producto en la mano y otra de tres cuartos.
    Prepáralas con `scripts/preparar-recortes.mjs` (una vez: `npm install` en `../piezas-graficas/scripts`):
    tapa los logos y textos inventados (relleno desde el borde o clonando la tela de al lado), estrecha y oscurece el
-   borde semitransparente (adiós al halo gris), borra mechones con resto de fondo, hornea un fundido lateral si la
-   ropa llega cortada al borde, recorta y guarda WebP ≤ 500 KB. **Mira cada parche y el pelo con zoom sobre negro.**
+   borde semitransparente (adiós al halo gris), borra mechones con resto de fondo, corta por el contorno la oreja
+   «fantasma» y los restos pegados a la piel (`contorno`), limpia mechones sueltos y motas (`limpiar`), hornea un
+   fundido lateral si la ropa llega cortada al borde, recorta y guarda WebP ≤ 500 KB. **Mira cada parche, el pelo y
+   las orejas al 400 % sobre negro.**
 4. **Compón** (ver `references/estilo.md`): copia `plantillas/` al trabajo y deja los formatos que hagan falta.
    Dominante arriba al centro del collage, medianos delante a 0,5-0,6 veces su cabeza, solapes de cuerpo y nunca de
    cara, el arco abrazando el collage por el lado del texto, el sujeto del marco rompiendo el lado de arriba,

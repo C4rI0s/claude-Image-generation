@@ -65,23 +65,33 @@
             -webkit-mask-image: var(--velas-mascara, linear-gradient(90deg, transparent 0%, #000 18%, #000 82%, transparent 100%));
             mask-image: var(--velas-mascara, linear-gradient(90deg, transparent 0%, #000 18%, #000 82%, transparent 100%)) }
 .og-velas svg { display: block; width: 100%; height: 100% }
-.og-velas .og-rejilla { stroke: var(--glow-claro); stroke-width: 1; opacity: .35 }
+.og-velas .og-rejilla { fill: var(--glow-claro); opacity: .35 }
+.og-velas .og-rejilla-v { opacity: .16 }
 .og-velas .og-sube { fill: var(--glow-claro) }
 .og-velas .og-baja { fill: var(--glow); opacity: .7 }
+.og-velas .og-volumen { opacity: .45 }
 .og-velas .og-media { fill: none; stroke: var(--claro); stroke-width: 2; opacity: .45 }
+.og-velas .og-media-lenta { stroke: var(--glow-claro); stroke-width: 1.5; stroke-dasharray: 6 5; opacity: .5 }
+.og-velas .og-etiqueta { fill: var(--glow-claro); opacity: .4 }
+.og-velas .og-ultimo { fill: var(--claro); opacity: .4 }
+.og-velas .og-etiqueta-viva { fill: var(--claro); opacity: .75 }
 
 .og-portatil { pointer-events: none; filter: blur(var(--portatil-blur, 5px)); opacity: var(--portatil-opacidad, .9) }
 .og-portatil svg { display: block; width: 100%; height: auto; overflow: visible }
 .og-portatil .p-marco { fill: oklch(from var(--glow) .12 calc(c * .3) h); stroke: color-mix(in oklab, var(--glow-claro) 45%, transparent); stroke-width: 2 }
 .og-portatil .p-pantalla { fill: oklch(from var(--glow) .17 calc(c * .5) h) }
-.og-portatil .p-panel { fill: color-mix(in oklab, var(--claro) 6%, transparent) }
-.og-portatil .p-tenue { fill: color-mix(in oklab, var(--claro) 22%, transparent) }
-.og-portatil .p-claro { fill: color-mix(in oklab, var(--claro) 55%, transparent) }
+.og-portatil .p-panel { fill: color-mix(in oklab, var(--claro) 6%, transparent); stroke: color-mix(in oklab, var(--claro) 8%, transparent); stroke-width: 1.5 }
+.og-portatil .p-tenue { fill: color-mix(in oklab, var(--claro) 20%, transparent) }
+.og-portatil .p-claro { fill: color-mix(in oklab, var(--claro) 42%, transparent) }
 .og-portatil .p-acento { fill: var(--glow) }
-.og-portatil .p-area { fill: url(#og-p-area) }
+.og-portatil .p-pestana { fill: color-mix(in oklab, var(--glow) 55%, transparent) }
+.og-portatil .p-icono { fill: color-mix(in oklab, var(--glow) 70%, transparent) }
+.og-portatil .p-rejilla { fill: color-mix(in oklab, var(--claro) 7%, transparent) }
 .og-portatil .p-linea { fill: none; stroke: var(--glow-claro); stroke-width: 3 }
-.og-portatil .p-base { fill: oklch(from var(--glow) .3 calc(c * .5) h) }
-.og-portatil .p-filo { fill: color-mix(in oklab, var(--glow-claro) 80%, var(--claro)) }
+.og-portatil .p-mini { fill: none; stroke: var(--glow-claro); stroke-width: 2.5; stroke-linejoin: round; opacity: .8 }
+.og-portatil .p-barbilla { fill: oklch(from var(--glow) .08 calc(c * .3) h) }
+.og-portatil .p-filo { fill: var(--claro); opacity: .9 }
+.og-portatil .p-muesca { fill: oklch(from var(--glow) .2 calc(c * .3) h) }
 
 /* ── Marca: logo + nombre, centrada arriba ───────────────────────────────────────────────────────────────── */
 .og-marca { display: flex; align-items: center; gap: .34em; font-weight: 600; letter-spacing: -.03em; line-height: 1;
