@@ -65,6 +65,24 @@ exportadores lo cogen solo si está junto al HTML) o se pasa con `--marca ruta/m
 En plantillas HTML los colores llegan como variables CSS con el mismo nombre (`--acento`, `--papel`…); en correos,
 como marcadores `%%colores.acento%%` que rellena `aplicar-marca.mjs` (los clientes de correo no entienden variables).
 
+### Campos opcionales que usan los looks
+Ninguno es obligatorio: si faltan, cada look los deriva del acento y de los neutros.
+```jsonc
+{
+  "tipografia": {
+    "display": "Poppins"        // titulares de los looks (geométrica compacta en oscuro-glow, grotesca ancha en
+                                // tech-grid) → --fuente-display. Si falta, la «fuente». Inclúyela en google_fonts
+  },
+  "colores": {
+    "acento-2": "#d4ff3a",      // segundo acento: trazos y marcos de tech-grid, detalles de editorial-recorte
+    "escena-1": "#…",           // producto-en-contexto: degradado de fondo (escena-1/2/3, sobre-escena, ok…)
+    "glow": "#…"                // y los tokens propios de cada look, con el mismo nombre que en su estilo.md
+  }
+}
+```
+Cada clave de `colores` llega a las plantillas como `--clave`, así que cualquier token de un look se puede fijar
+desde aquí si el derivado no convence. Qué look usar con cada marca: `references/looks.md`.
+
 ## 3. Si solo te dan un color
 Con un único color de marca se deriva el resto (y luego se pasa `comprobar-marca.mjs`):
 - **acento** = el color tal cual.

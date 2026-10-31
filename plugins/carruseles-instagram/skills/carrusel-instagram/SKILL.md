@@ -23,6 +23,11 @@ Antes, lee **`direccion-de-arte`** (brief de marca → `marca.json`, copy, revis
   Con `--carrusel` añade `hoja.png` (toda la secuencia a tamaño de móvil) y la rejilla 3:4 del perfil.
 - `references/estructura-y-ritmo.md` · cómo construir la historia de un carrusel y su ritmo.
 
+**Otros looks.** Si la campaña va con otro look del selector (`direccion-de-arte/references/looks.md`: oscuro-glow,
+editorial-recorte, producto-3d-mascota o tech-grid), la portada y el cierre salen de la pieza `redes-4x5` de la
+plantilla de ese look (en `piezas-graficas`): cópiala aquí con su CSS y sus recortes, ponle la cabecera y el pie
+del carrusel y mantén `data-estilo` del look. Este exportador es el mismo y aplica su criterio.
+
 ## Flujo
 1. **Marca**: ten el `marca.json` de la marca en la carpeta del trabajo (skill `direccion-de-arte`). Sin él, el
    carrusel sale con la marca de ejemplo: no lo entregues así.

@@ -31,10 +31,16 @@ el PNG.
 - [ ] Sin viudas en titulares; sin palabras partidas raras.
 
 **Estilo**
-- [ ] Plano: sin brillos, sombras difusas, degradados, bordes ni barras laterales de color, ni emojis. Excepción:
-      las imágenes de «producto en contexto» (degradado suave de fondo, capas con borde de ~1 px degradado y una
-      sombra oscura suave); ahí se mira además la lista de `producto-en-contexto/references/estilo.md` (nada medio
-      tapado por una capa, el borde no brilla, el contexto atenuado sin desenfocar).
+- [ ] Un solo look, el que dice el selector (`references/looks.md`), y su lista de revisión pasada (está al final de
+      `references/estilo.md` de su skill). Sin look, plano: sin brillos, sombras difusas, degradados, bordes ni
+      barras laterales de color, ni emojis. Cada look solo levanta sus excepciones medidas:
+      · `producto-en-contexto`: degradado suave, capas con borde de ~1 px degradado y sombra oscura suave (nada medio
+        tapado por una capa, el borde no brilla, el contexto atenuado sin desenfocar);
+      · `oscuro-glow`: halo contenido (alfa ≤ 0,6, desenfoque ≤ 8 % del lado corto, 3 elementos como mucho), nada de
+        text-shadow, desenfoque solo en el fondo, titular plateado legible;
+      · `producto-3d-mascota`: luz de color en los renders y el fondo, sombras de contacto oscuras, partículas sutiles;
+      · `editorial-recorte` y `tech-grid`: planos; líneas, marcos y pistas finas; recortes limpios sin halo de fondo.
+      En todos: ningún texto encima de un recorte o de la foto (el exportador lo mide píxel a píxel).
 - [ ] Un acento, < 10 % de la superficie, con contraste suficiente.
 - [ ] La tipografía y los colores son los del `marca.json` (no los del ejemplo) y la fuente cargó de verdad.
 - [ ] Capturas nítidas (no ampliadas), recortadas a lo que importa, con fondo que casa con el lienzo y sin texto

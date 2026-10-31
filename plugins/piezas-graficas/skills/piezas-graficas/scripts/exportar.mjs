@@ -17,7 +17,8 @@
  *   --estricto         Sale con código 1 si hay avisos (no solo errores)
  *
  * La marca entra por variables CSS (--papel, --tinta, --acento, --fuente…, ver marca.json en la skill
- * direccion-de-arte) y por elementos marcados: data-marca="nombre" | "web_texto" | "lema" | … (cualquier
+ * direccion-de-arte; cada clave de «colores» pasa a --clave, y tipografia.display a --fuente-display)
+ * y por elementos marcados: data-marca="nombre" | "web_texto" | "lema" | … (cualquier
  * campo de texto del JSON) y data-marca="logo" (se rellena con logo.svg, que usa currentColor).
  *
  * Cada pieza es un elemento con data-pieza="nombre" y, opcionalmente,
@@ -34,6 +35,23 @@
  * profundidad buscada; el texto libre (titular, apoyo, botón) no puede chocar
  * con ninguna. El texto dentro de .atenuado o [data-atenuado] es contexto
  * apagado a propósito: no se le mide el contraste ni la letra mínima.
+ *
+ * Looks (data-estilo en la pieza; el criterio de sombras y brillos de cada uno):
+ *   (sin data-estilo)       plano: ni sombras, ni brillos, ni filtros.
+ *   producto                sombras oscuras y suaves; ningún brillo; sin desenfoques.
+ *   oscuro-glow             resplandor CON CONTENCIÓN: halos claros o de color con alfa ≤ 0,6 y
+ *                           desenfoque ≤ 8 % del lado corto, en 3 elementos como mucho; sin text-shadow.
+ *   producto-3d-mascota     como producto: sombras oscuras (contacto) sí; la luz de color va en las
+ *                           imágenes y en el fondo, no en sombras de elementos.
+ *   editorial-recorte       plano (el fundido de los recortes va con mask-image).
+ *   tech-grid               plano.
+ * En todos: [data-fondo] marca capas decorativas (rejilla, gráfico o dashboard desenfocado, bokeh,
+ * partículas, líneas de construcción): dentro vale filter: blur() y su texto no se revisa ni cuenta
+ * como bloque. <img data-recorte> es un sujeto o producto recortado: tiene que traer transparencia y
+ * ningún texto puede pisar su parte opaca (se mide píxel a píxel, con la máscara de fundido si es
+ * un linear-gradient vertical; data-sobre-recorte en el texto lo permite a propósito, p. ej. una
+ * etiqueta de precio). Un titular con background-clip:text se mide con el tono más oscuro de su
+ * degradado.
  *
  * Errores que detecta: tamaño distinto, texto fuera o cortado, textos que se
  * pisan, texto que choca con un bloque ajeno (tarjeta, botón), imágenes rotas,
@@ -75,6 +93,7 @@ async function aplicarMarcaEnPagina(m) {
   const c = m.colores || {}, t = m.tipografia || {}
   const vars = Object.entries(c).map(([k, v]) => `--${k}:${v}`)
   if (t.fuente) vars.push(`--fuente:'${t.fuente}', system-ui, sans-serif`)
+  if (t.display) vars.push(`--fuente-display:'${t.display}', '${t.fuente ?? t.display}', system-ui, sans-serif`)
   if (t.mono) vars.push(`--mono:'${t.mono}', ui-monospace, monospace`)
   if (m.forma?.radio) vars.push(`--radio:${m.forma.radio}`)
   const st = document.createElement('style')
@@ -93,9 +112,10 @@ async function aplicarMarcaEnPagina(m) {
     if (k === 'logo') { if (m.logo?.svg) el.innerHTML = m.logo.svg }
     else { const v = leer(k); if (typeof v === 'string') el.textContent = v }
   }
-  if (t.fuente) await Promise.all([400, 500, 600, 700, 800].map(w => document.fonts.load(`${w} 40px "${t.fuente}"`).catch(() => null)))
+  for (const fam of [t.fuente, t.display].filter(Boolean)) await Promise.all([300, 400, 500, 600, 700, 800].map(w => document.fonts.load(`${w} 40px "${fam}"`).catch(() => null)))
   await document.fonts.ready
-  return !t.fuente || [...document.fonts].some(f => f.family.replace(/["']/g, '') === t.fuente && f.status === 'loaded')
+  const cargada = fam => [...document.fonts].some(f => f.family.replace(/["']/g, '') === fam && f.status === 'loaded')
+  return [t.fuente, t.display].filter(Boolean).filter(f => !cargada(f))
 }
 
 // ── Navegador ───────────────────────────────────────────────────────────────
@@ -114,7 +134,8 @@ async function abrirNavegador() {
   intentos.push({ channel: 'chrome' }, { channel: 'msedge' }, {})
   let ultimo
   for (const o of intentos) {
-    try { return await pw.chromium.launch({ headless: true, ...o }) } catch (e) { ultimo = e }
+    // --allow-file-access-from-files: deja leer los píxeles de los recortes locales (comprobación de transparencia)
+    try { return await pw.chromium.launch({ headless: true, args: ['--allow-file-access-from-files'], ...o }) } catch (e) { ultimo = e }
   }
   console.error('No encuentro Chrome ni Edge. Instala Chrome, define CHROME_PATH o ejecuta: npx playwright install chromium')
   console.error(String(ultimo?.message ?? ultimo).split('\n')[0])
@@ -163,6 +184,9 @@ function revisarEnPagina({ selector, solo, escala }) {
     g: arriba.g * arriba.a + abajo.g * (1 - arriba.a),
     b: arriba.b * arriba.a + abajo.b * (1 - arriba.a), a: 1,
   })
+  // Colores de un valor calculado (paradas de un degradado, capas de sombra…)
+  const coloresDe = s => (s.match(/(rgba?|oklab|oklch|lab|lch|color|hsla?)\([^)]*\)/g) || []).map(parse).filter(Boolean)
+  const clipTexto = cs => /text/.test(`${cs.backgroundClip} ${cs.webkitBackgroundClip}`) && /gradient/.test(cs.backgroundImage)
   const fondoDe = el => {
     const capas = []
     for (let n = el; n; n = n.parentElement) {
@@ -170,6 +194,15 @@ function revisarEnPagina({ selector, solo, escala }) {
       if (cs.backgroundImage && cs.backgroundImage !== 'none' && !/gradient/.test(cs.backgroundImage)) return { imagen: true }
       const c = parse(cs.backgroundColor)
       if (c && c.a > 0) { capas.push(c); if (c.a >= 0.99) break }
+      else if (n !== el && /gradient/.test(cs.backgroundImage) && !clipTexto(cs)) {
+        // Degradado sin color sólido debajo: se aproxima por la media de sus paradas (ponderada por su alfa)
+        const cols = coloresDe(cs.backgroundImage)
+        const s = cols.reduce((a, x) => ({ r: a.r + x.r * x.a, g: a.g + x.g * x.a, b: a.b + x.b * x.a, a: a.a + x.a }), { r: 0, g: 0, b: 0, a: 0 })
+        if (s.a > 0) {
+          const capa = { r: s.r / s.a, g: s.g / s.a, b: s.b / s.a, a: Math.min(1, s.a / cols.length) }
+          capas.push(capa); if (capa.a >= 0.99) break
+        }
+      }
     }
     let base = { r: 255, g: 255, b: 255, a: 1 }
     for (let i = capas.length - 1; i >= 0; i--) base = mezcla(capas[i], base)
@@ -216,7 +249,8 @@ function revisarEnPagina({ selector, solo, escala }) {
       }
       return r
     }
-    const rectImgs = imagenes.map(visible).filter(r => r.right > r.left && r.bottom > r.top)
+    // Los recortes (data-recorte) no cuentan como foto de fondo: se miden píxel a píxel más abajo
+    const rectImgs = imagenes.filter(im => !im.hasAttribute('data-recorte') && !im.closest('[data-fondo]')).map(visible).filter(r => r.right > r.left && r.bottom > r.top)
 
     for (const im of imagenes) {
       const r = im.getBoundingClientRect()
@@ -231,18 +265,38 @@ function revisarEnPagina({ selector, solo, escala }) {
 
     const vistos = new Set()
     const textos = []
-    const producto = p.dataset.estilo === 'producto'
+    // Criterio de sombras y brillos del look (ver la cabecera)
+    const look = p.dataset.estilo || ''
+    const criterio = { producto: 'oscuras', 'producto-3d-mascota': 'oscuras', 'oscuro-glow': 'halo' }[look] ?? 'plano'
+    const porque = { plano: 'en este estilo no van sombras ni brillos', oscuras: 'aquí solo valen sombras oscuras y suaves', halo: 'el resplandor va con contención' }[criterio]
+    const maxHalo = Math.round(Math.min(w, h) * 0.08)
+    const conHalo = new Set()
     for (const el of [p, ...p.querySelectorAll('*')]) {
       const cs = getComputedStyle(el)
-      if (!p.hasAttribute('data-permite-sombra')) {
-        const brillo = (cs.textShadow !== 'none' && 'text-shadow')
-          || (cs.boxShadow !== 'none' && (!producto ? 'box-shadow' : esBrillo(cs.boxShadow) && 'box-shadow clara o de color'))
-          || (/drop-shadow|blur/.test(cs.filter) && (producto ? 'filter: el contexto se atenúa, no se desenfoca' : 'filter'))
+      const decorado = !!el.closest('[data-fondo]')
+      if (!p.hasAttribute('data-permite-sombra') && !decorado) {
+        let brillo = null
+        if (cs.textShadow !== 'none') brillo = 'text-shadow'
+        else if (cs.boxShadow !== 'none') {
+          if (criterio === 'plano') brillo = 'box-shadow'
+          else if (criterio === 'oscuras') { if (esBrillo(cs.boxShadow)) brillo = 'box-shadow clara o de color' }
+          else {
+            const halos = capasSombra(cs.boxShadow).filter(c => !c.inset && c.blur > 4 && c.color && c.color.a > 0.15 && lum(c.color) > 0.18)
+            if (halos.length) {
+              conHalo.add(el)
+              const fuerte = halos.find(c => c.color.a > 0.6 || c.blur > maxHalo)
+              if (fuerte) brillo = `halo demasiado fuerte: alfa ${fuerte.color.a.toFixed(2)} y ${Math.round(fuerte.blur)} px de desenfoque; máximo 0,6 y ${maxHalo} px`
+            }
+          }
+        }
+        if (!brillo && /drop-shadow|blur/.test(cs.filter)) brillo = look === 'producto' ? 'filter: el contexto se atenúa, no se desenfoca' : 'filter: desenfoques y sombras de filtro solo en capas data-fondo'
         if (brillo && !vistos.has(brillo + el.tagName)) {
           vistos.add(brillo + el.tagName)
-          avisos.push(`Sombra o brillo (${brillo}) en <${el.tagName.toLowerCase()} class="${el.className?.baseVal ?? el.className}">: ${producto ? 'en el estilo producto solo valen sombras oscuras y suaves' : 'el estilo es plano'}`)
+          avisos.push(`Sombra o brillo (${brillo}) en <${el.tagName.toLowerCase()} class="${el.className?.baseVal ?? el.className}">: ${porque}`)
         }
       }
+      // Las capas decorativas (data-fondo) no se revisan como texto: son fondo
+      if (decorado) continue
       const rt = rectTexto(el)
       if (!rt || cs.visibility === 'hidden' || Number(cs.opacity) === 0) continue
       const atenuado = !!el.closest('.atenuado, [data-atenuado]')
@@ -274,10 +328,72 @@ function revisarEnPagina({ selector, solo, escala }) {
       } else if (sobreFoto || fondo.imagen) {
         if (!el.closest('[data-legible]')) avisos.push(`Texto sobre imagen, comprueba la legibilidad a ojo: «${texto}»`)
       } else if (color && fondo.color) {
-        const c = contraste(mezcla(color, fondo.color), fondo.color)
+        // Texto con degradado (background-clip:text): manda el tono más oscuro del degradado
+        const degradado = clipTexto(cs) ? coloresDe(cs.backgroundImage) : []
+        const c = degradado.length
+          ? Math.min(...degradado.map(x => contraste(mezcla(x, fondo.color), fondo.color)))
+          : contraste(mezcla(color, fondo.color), fondo.color)
         const grande = tam >= Math.min(w, h) * 0.04 || (tam >= Math.min(w, h) * 0.03 && Number(cs.fontWeight) >= 700)
         const minimo = grande ? 3 : 4.5
-        if (c < minimo) avisos.push(`Contraste ${c.toFixed(2)}:1 (mínimo ${minimo}:1): «${texto}»`)
+        if (c < minimo) avisos.push(`Contraste ${c.toFixed(2)}:1 (mínimo ${minimo}:1${degradado.length ? ', tono más oscuro del degradado' : ''}): «${texto}»`)
+      }
+    }
+    if (criterio === 'halo' && conHalo.size > 3) avisos.push(`Demasiados resplandores: ${conHalo.size} elementos con halo (como mucho 3 por pieza)`)
+    // Recortes (img[data-recorte]): tienen que traer transparencia y ningún texto puede pisar su parte opaca
+    const mapas = []
+    for (const im of imagenes.filter(x => x.hasAttribute('data-recorte'))) {
+      if (!im.complete || !im.naturalWidth) continue
+      const src = (im.getAttribute('src') || '').split('/').pop().slice(0, 60)
+      const nw = im.naturalWidth, nh = im.naturalHeight
+      const k = Math.min(1, 200 / Math.max(nw, nh))
+      const gw = Math.max(1, Math.round(nw * k)), gh = Math.max(1, Math.round(nh * k))
+      const cv = document.createElement('canvas'); cv.width = gw; cv.height = gh
+      const cx = cv.getContext('2d', { willReadFrequently: true })
+      let datos
+      try { cx.drawImage(im, 0, 0, gw, gh); datos = cx.getImageData(0, 0, gw, gh).data } catch {
+        avisos.push(`No puedo leer los píxeles del recorte ${src}: comprueba a ojo que trae transparencia y que ningún texto lo pisa`); continue
+      }
+      let transparentes = 0
+      for (let i = 3; i < datos.length; i += 4) if (datos[i] < 20) transparentes++
+      if (transparentes / (gw * gh) < 0.03) { errores.push(`El recorte no trae transparencia (¿fondo sin quitar?): ${src}`); continue }
+      const cs = getComputedStyle(im), r = im.getBoundingClientRect()
+      // Dónde cae la imagen dentro de su caja (object-fit + object-position en %)
+      const ajuste = cs.objectFit
+      const s = ajuste === 'cover' ? Math.max(r.width / nw, r.height / nh) : (ajuste === 'contain' || ajuste === 'scale-down') ? Math.min(r.width / nw, r.height / nh) : null
+      const dw = s ? nw * s : r.width, dh = s ? nh * s : r.height
+      const [px, py] = (cs.objectPosition.match(/-?[\d.]+%/g) || ['50%', '50%']).map(v => parseFloat(v) / 100)
+      const ox = r.left + (r.width - dw) * (px ?? 0.5), oy = r.top + (r.height - dh) * (py ?? 0.5)
+      // Máscara de fundido (solo un linear-gradient vertical; si es otra cosa, no se descuenta)
+      const mk = cs.maskImage && cs.maskImage !== 'none' ? cs.maskImage : (cs.webkitMaskImage || '')
+      let mascara = () => 1
+      if (/linear-gradient/.test(mk) && !/(to (left|right)|\d+deg)/.test(mk.replace(/(180|0)deg/g, ''))) {
+        const arriba = /to top|(^|[^\d])0deg/.test(mk)
+        const paradas = [...mk.matchAll(/((?:rgba?|oklab|oklch|color)\([^)]*\)|transparent|black|white|#[0-9a-f]{3,8})\s*([-\d.]+%)?/gi)]
+          .map(([, col, pos], i, arr) => ({ a: parse(col === 'transparent' ? 'rgba(0,0,0,0)' : col)?.a ?? 1, t: pos ? parseFloat(pos) / 100 : i / Math.max(1, arr.length - 1) }))
+        if (paradas.length > 1) mascara = y => {
+          let t = (y - r.top) / r.height; if (arriba) t = 1 - t
+          if (t <= paradas[0].t) return paradas[0].a
+          for (let i = 1; i < paradas.length; i++) if (t <= paradas[i].t) {
+            const a = paradas[i - 1], b = paradas[i]; return a.a + (b.a - a.a) * ((t - a.t) / Math.max(1e-6, b.t - a.t))
+          }
+          return paradas[paradas.length - 1].a
+        }
+      }
+      mapas.push({ src, vis: visible(im), alfa: (x, y) => {
+        const u = Math.floor((x - ox) / dw * gw), v = Math.floor((y - oy) / dh * gh)
+        if (u < 0 || v < 0 || u >= gw || v >= gh) return 0
+        return datos[(v * gw + u) * 4 + 3] / 255 * mascara(y) * Number(cs.opacity)
+      } })
+    }
+    for (const t of textos) {
+      if (t.el.closest('[data-sobre-recorte]')) continue
+      for (const m of mapas) {
+        const L = Math.max(t.rt.left, m.vis.left), R = Math.min(t.rt.right, m.vis.right)
+        const T = Math.max(t.rt.top, m.vis.top), B = Math.min(t.rt.bottom, m.vis.bottom)
+        if (R - L < 2 || B - T < 2) continue
+        let total = 0, opacos = 0
+        for (let y = T + 1; y < B; y += 3) for (let x = L + 1; x < R; x += 3) { total++; if (m.alfa(x, y) > 0.35) opacos++ }
+        if (opacos > 2 && opacos / total > 0.02) { errores.push(`Texto encima de un recorte: «${t.texto.slice(0, 40)}» pisa ${m.src}`); break }
       }
     }
     // Choques: dos textos que no se contienen uno a otro y se pisan
@@ -292,7 +408,7 @@ function revisarEnPagina({ selector, solo, escala }) {
     }
     // Texto que choca con un bloque (tarjeta, botón, maqueta) que no es el suyo
     const bloques = [...p.querySelectorAll('*')].filter(b => {
-      if (b.tagName === 'IMG' || b.tagName === 'svg' || b.closest('svg')) return false
+      if (b.tagName === 'IMG' || b.tagName === 'svg' || b.closest('svg') || b.closest('[data-fondo]')) return false
       const c = getComputedStyle(b), bg = parse(c.backgroundColor)
       return (bg && bg.a > 0.05) || parseFloat(c.borderTopWidth) > 0 && parseFloat(c.borderLeftWidth) > 0
     }).map(b => ({ b, r: visible(b) }))
@@ -326,13 +442,16 @@ function revisarEnPagina({ selector, solo, escala }) {
           const re = /\S+/g; let mt
           while ((mt = re.exec(n.textContent))) {
             const rg = document.createRange(); rg.setStart(n, mt.index); rg.setEnd(n, mt.index + mt[0].length)
-            const q = rg.getClientRects()[0]; if (q) palabras.push(Math.round(q.top))
+            const q = rg.getClientRects()[0]; if (q) palabras.push({ top: Math.round(q.top), left: q.left, right: q.right })
           }
         } else n.childNodes.forEach(recorrer)
       }
       recorrer(el)
-      const lineas = [...new Set(palabras)].sort((x, y) => x - y)
-      if (lineas.length > 1 && palabras.filter(t => t === lineas[lineas.length - 1]).length === 1) {
+      const lineas = [...new Set(palabras.map(x => x.top))].sort((x, y) => x - y)
+      const ultima = palabras.filter(x => x.top === lineas[lineas.length - 1])
+      // Una palabra sola y corta (< 45 % de la línea más ancha). «OPERA SIN / COMISIONES» es un corte buscado, no una viuda
+      const ancho = l => { const ps = palabras.filter(x => x.top === l); return Math.max(...ps.map(x => x.right)) - Math.min(...ps.map(x => x.left)) }
+      if (lineas.length > 1 && ultima.length === 1 && ancho(lineas[lineas.length - 1]) < 0.45 * Math.max(...lineas.map(ancho))) {
         avisos.push(`Viuda: el titular «${corta(el.textContent).slice(0, 40)}» acaba con una palabra sola en la última línea`)
       }
     }
@@ -376,9 +495,9 @@ pagina.on('pageerror', e => fallosRed.push(`Error JS: ${e.message}`))
 
 await pagina.goto(pathToFileURL(fichero).href, { waitUntil: 'networkidle', timeout: 60000 })
 await pagina.evaluate(() => document.fonts.ready)
-let fuenteMarcaOk = true
+let fuentesMarcaFallidas = []
 if (marca) {
-  fuenteMarcaOk = await pagina.evaluate(aplicarMarcaEnPagina, marca)
+  fuentesMarcaFallidas = await pagina.evaluate(aplicarMarcaEnPagina, marca)
   console.log(`Marca: ${marca.nombre ?? '?'} (${path.relative(process.cwd(), ficheroMarca) || ficheroMarca})`)
 }
 // Con la fuente definitiva, las capas con data-sobre (producto.js) se vuelven a colocar encima de su fila
@@ -416,7 +535,7 @@ for (const p of informe) {
   if (p.avisos.length > 12) console.log(`   · …y ${p.avisos.length - 12} avisos más (informe.json)`)
 }
 if (fuentes.length) { nErr++; console.log(`\n✗ Fuentes que no cargaron: ${fuentes.join(', ')}`) }
-if (!fuenteMarcaOk) { nErr++; console.log(`\n✗ La fuente de la marca («${marca.tipografia.fuente}») no cargó: revisa tipografia.google_fonts en ${ficheroMarca}`) }
+if (fuentesMarcaFallidas.length) { nErr++; console.log(`\n✗ La fuente de la marca («${fuentesMarcaFallidas.join('», «')}») no cargó: revisa tipografia.google_fonts en ${ficheroMarca}`) }
 if (fallosRed.length) { nErr++; console.log(`\n✗ Recursos que fallaron:\n   ${fallosRed.join('\n   ')}`) }
 console.log(`\nResumen: ${nErr} error(es), ${nAv} aviso(s).`)
 console.log('Ahora ABRE los PNG y la hoja.png y míralos: el informe no sustituye a tu ojo.\n')

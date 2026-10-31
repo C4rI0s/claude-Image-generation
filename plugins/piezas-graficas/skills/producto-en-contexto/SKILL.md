@@ -15,6 +15,12 @@ que cambia, el aviso que llega). Lo demás se atenúa para que el ojo vaya a la 
 cuando la pieza va dentro de algo que ya lo lleva (correo, web); con un titular corto cuando va sola (redes,
 banner, miniatura, story). Reglas medidas en `references/estilo.md`: **léelas antes de componer**.
 
+## Cuándo no
+Es el **look 1** del selector (`direccion-de-arte/references/looks.md`). Si la pieza no enseña una app haciendo
+algo, hay otro mejor: oferta o referidos con cifras en una marca oscura de fintech → `oscuro-glow`; personas o
+equipo de gaming y lifestyle → `editorial-recorte`; producto físico con mascota → `producto-3d-mascota`; catálogo de
+hardware o gaming → `tech-grid`.
+
 ## Qué hay aquí
 - `plantillas/producto-en-contexto.html` · 7 formatos de una campaña: `cabecera-correo` (600x300 → PNG
   1200x600), `hero` (1600x900), `redes-1x1` (1080x1080), `redes-4x5` (1080x1350), `banner-x` (1500x500),

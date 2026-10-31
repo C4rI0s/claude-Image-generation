@@ -35,6 +35,23 @@ La IA pone **la imagen**; el texto, la marca y la composición se hacen en HTML 
    uniforme; nada de sombras ni brillos. El exportador marcará «texto sobre imagen»: compruébalo a ojo.
 7. **Exporta y revisa** con el exportador de la skill de la pieza (revisión visual obligatoria).
 
+## Recortes para los looks (sujetos y productos sin fondo)
+Los looks `editorial-recorte`, `tech-grid` y `producto-3d-mascota` componen **recortes**: personas, productos o una
+mascota sin fondo, como `<img data-recorte>`.
+1. **Genera sobre fondo liso**: «isolated on a plain flat light grey seamless studio background, soft even
+   lighting, whole subject in frame with margin». Nada de fondos con degradados fuertes ni sombras duras. Para 3D:
+   «clean 3D render, … rim light in [color de la marca]» para que la luz case con el fondo del look.
+2. **Quita el fondo** en local: `node scripts/recortar.mjs foto.png recorte.png` (la primera vez, `npm install` en
+   `scripts/`). Si come pelo, auriculares o ropa negra, repite con `--modelo large`.
+3. **Míralo sobre un fondo oscuro** (no sobre blanco, que esconde los halos): bordes limpios, sin restos grises,
+   sin huecos dentro del sujeto.
+4. **Logos y letras inventados** (la IA los pone en cascos, camisetas y teclados): tápalos rellenando con el color
+   de alrededor, o encuadra para que no salgan. Marcas reales (un logo deportivo conocido): esa imagen no vale.
+5. **Optimiza**: recorta lo transparente sobrante y escala al tamaño máximo que se use a 2x; WebP con alfa o PNG,
+   ≤ 500 KB por recorte.
+6. Sin saldo o sin IA: un **render 3D propio** del modelo del producto (three.js o Blender, fondo transparente, luz
+   de recorte del color de la marca) sirve igual; ver `producto-3d-mascota`.
+
 ## Look sobrio (lo que pedir y lo que evitar)
 - Pide: luz natural suave, materiales mate, profundidad de campo, paletas cálidas neutras con un acento,
   composición con espacio negativo, fotografía editorial, «product photography on seamless backdrop».
@@ -50,3 +67,4 @@ La IA pone **la imagen**; el texto, la marca y la composición se hacen en HTML 
 - Copia las imágenes que uses a la carpeta de la pieza y referencia la copia: los enlaces de los generadores caducan
   (los de Higgsfield, a los 7 días).
 - `references/prompts.md` · plantilla de prompt, bloques de estilo y ejemplos por tipo de pieza.
+- `scripts/recortar.mjs` · quita el fondo de una foto o un render (modelo local, sin servicios externos).

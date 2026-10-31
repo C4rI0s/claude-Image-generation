@@ -35,9 +35,15 @@ for (const k of colores) {
   if (!c[k]) errores.push(`Falta el color «${k}»`)
   else if (!/^#[0-9a-f]{6}$/i.test(c[k])) errores.push(`Color «${k}» = ${c[k]}: usa hex de 6 cifras (#rrggbb)`)
 }
-// Opcionales (estilo «producto en contexto»): si no están, las plantillas los derivan del acento
-for (const k of ['escena-1', 'escena-2', 'escena-3', 'sobre-escena', 'ok', 'pendiente', 'vencida']) {
-  if (c[k] && !/^#[0-9a-f]{6}$/i.test(c[k])) errores.push(`Color «${k}» = ${c[k]}: usa hex de 6 cifras (#rrggbb)`)
+// Opcionales (tokens de los looks: escena-1/2/3, acento-2, glow…): si no están, las plantillas los derivan del
+// acento; si están, tienen que ser hex
+for (const [k, v] of Object.entries(c)) {
+  if (!colores.includes(k) && !/^#[0-9a-f]{6}$/i.test(String(v))) errores.push(`Color «${k}» = ${v}: usa hex de 6 cifras (#rrggbb)`)
+}
+// Fuente de titulares de los looks (tipografia.display): tiene que cargarse con google_fonts
+const disp = m.tipografia?.display
+if (disp && disp !== m.tipografia?.fuente && !String(m.tipografia?.google_fonts ?? '').includes(`family=${disp.replace(/ /g, '+')}`)) {
+  errores.push(`La fuente de titulares «${disp}» (tipografia.display) no está en tipografia.google_fonts: no cargará`)
 }
 if (m.web && !/^https:\/\//.test(m.web)) avisos.push('«web» debería empezar por https://')
 if (m.logo?.svg && !/currentColor/.test(m.logo.svg)) avisos.push('El logo SVG no usa currentColor: no cambiará de color entre fondo claro y oscuro')
@@ -66,6 +72,7 @@ const parejas = [
   ['sobre-acento', 'acento', 4.5, 'texto del botón y de las piezas con fondo de acento'],
   ['sobre-escena', 'escena-1', 3, 'titular sobre el degradado (producto en contexto)'],
   ['sobre-escena', 'escena-2', 3, 'titular sobre el degradado, zona media'],
+  ['acento-2', 'noche', 3, 'segundo acento (trazos de tech-grid) sobre oscuro'],
 ]
 const filas = []
 for (const [t, f, min, uso] of parejas) {

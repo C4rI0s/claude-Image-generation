@@ -1,6 +1,6 @@
 ---
 name: direccion-de-arte
-description: Dirección de arte para piezas de marketing de cualquier marca con nivel de agencia (Proton, Linear, Stripe) y estética sobria y plana. Úsala SIEMPRE antes de diseñar o revisar cualquier pieza visual (correo HTML, carrusel de Instagram, portada, banner, miniatura, OG, story, anuncio o vídeo) y cuando pidan «que quede más profesional», «menos IA», «más limpio», una guía de estilo, la marca de un cliente o proyecto, tipografía, rejillas, paleta, jerarquía o textos de una pieza. Empieza pidiendo o leyendo el brief de marca y lo convierte en un marca.json que usan todas las plantillas; termina con la revisión visual obligatoria.
+description: Dirección de arte para piezas de marketing de cualquier marca con nivel de agencia (Proton, Linear, Stripe) y estética sobria. Úsala SIEMPRE antes de diseñar o revisar cualquier pieza visual (correo HTML, carrusel de Instagram, portada, banner, miniatura, OG, story, anuncio o vídeo) y cuando pidan «que quede más profesional», «menos IA», «más limpio», un estilo o look concreto, una guía de estilo, la marca de un cliente o proyecto, tipografía, rejillas, paleta, jerarquía o textos de una pieza. Empieza pidiendo o leyendo el brief de marca y lo convierte en un marca.json que usan todas las plantillas, elige el look con el selector (producto en contexto, oscuro glow, editorial recorte, producto 3D con mascota, tech grid o plano) y termina con la revisión visual obligatoria.
 ---
 
 # Dirección de arte · la base de todas las piezas
@@ -29,12 +29,21 @@ titular, exclamaciones, iconos 3D brillantes, fondos con texturas, más de un ac
 efectos «cristal», palabras de relleno («increíble», «revolucionario», «descubre», «potencia»), stock genérico de
 gente señalando.
 
-**La excepción medida: «producto en contexto»** (skill `producto-en-contexto`, el estilo de las imágenes de
-producto de Proton o Linear). Cuando la pieza enseña la app, valen —y son lo que da el nivel— un **degradado de
-fondo suave** (acento → tono claro y cálido), **capas flotantes con borde de ~1 px degradado** y **una sombra
-oscura larga y suave**. Siguen prohibidos el glow, el neón, las sombras de color, los bordes gruesos o laterales, el
-cristal y desenfocar el contexto. Fuera de las imágenes de producto (correo HTML, piezas solo de texto), el estilo
-sigue siendo plano.
+**Las excepciones medidas: los looks.** Para las imágenes de campaña hay cinco looks, cada uno una skill de
+`piezas-graficas` con sus reglas medidas, y cada uno levanta **solo** algunas prohibiciones, con números:
+
+| Look | Skill | Cuándo | Lo que permite |
+|---|---|---|---|
+| Producto en contexto | `producto-en-contexto` | SaaS, apps: enseñar una función | degradado suave, capas con borde de 1 px degradado y sombra oscura suave |
+| Oscuro glow | `oscuro-glow` | lanzamiento u oferta de fintech, trading, SaaS en oscuro | resplandor contenido en 2-3 elementos, fondo desenfocado, titular en mayúsculas plateado |
+| Editorial recorte | `editorial-recorte` | gaming, esports, lifestyle con personas | collage de recortes y líneas finas de construcción (plano) |
+| Producto 3D + mascota | `producto-3d-mascota` | producto físico o gaming con mascota | renders 3D con luz de color, partículas y bokeh sutiles, sombras de contacto |
+| Tech grid | `tech-grid` | catálogo u ofertas de gaming, hardware | cuadrícula, marcos de borde fino, pistas de circuito, dos acentos, titular ancho en mayúsculas |
+
+El selector completo (por marca y por objetivo, y qué permite cada look) está en **`references/looks.md`**: léelo
+antes de diseñar una imagen de campaña. Fuera de los looks (correo HTML, piezas solo de texto), el estilo sigue
+siendo plano. Ningún look permite texto encima de la foto o del sujeto, sombras de color en el texto ni mezclar
+looks en una pieza.
 
 ## Flujo (no te saltes pasos)
 0. **Brief de marca → `marca.json`** (`references/marca.md`). Si ya hay un `marca.json` en la carpeta del trabajo,
@@ -49,6 +58,9 @@ sigue siendo plano.
 1. **Brief de la pieza** (`references/brief.md`): objetivo, público, una idea, una acción, formato y canal, y los
    **datos verificados**. Las cifras se comprueban en la fuente viva (web, panel, base de datos) y se fechan, nunca
    en un material viejo: los heros y correos antiguos suelen arrastrar cifras caducadas.
+   **Elige el look** con `references/looks.md` (marca + objetivo → uno de los cinco looks o plano) y dilo en el
+   brief: «look oscuro-glow porque es una oferta con cifra de una marca financiera en oscuro». Si el usuario trae una
+   referencia («como esta imagen»), busca el look que la cubre; si ninguno, el más cercano y explica la diferencia.
 2. **Copy primero** (`references/copy.md`): titular, apoyo y botón escritos y recortados ANTES de maquetar. Si el
    texto no funciona en un .txt, el diseño no lo salva.
 3. **Sistema** (`references/tipografia.md`, `references/rejilla-y-espacio.md`, `references/color.md`): escala
@@ -83,6 +95,8 @@ sigue siendo plano.
 - `scripts/comprobar-marca.mjs` · campos obligatorios, formato de colores y contraste de cada pareja (sin dependencias)
 - `references/marca.md` · cómo sacar la marca (preguntas, de una web, de un manual), qué es cada campo y cómo derivar
   la paleta cuando solo te dan un color
+- `references/looks.md` · **el selector de look**: los cinco looks y el plano, cuándo usar cada uno según la marca
+  y el objetivo, y qué excepciones medidas permite cada uno
 - `references/brief.md` · plantilla de brief y preguntas que hay que contestar antes de diseñar
 - `references/copy.md` · titulares, botones, tono, palabras prohibidas
 - `references/tipografia.md` · escalas, emparejamientos, ajustes finos, fuentes seguras en correo

@@ -4,22 +4,38 @@ Marketplace privado de plugins para **Claude Code** con skills para hacer piezas
 agencia **para cualquier marca o proyecto**: imágenes de producto en contexto, correos HTML, carruseles de
 Instagram, portadas, banners, miniaturas, imágenes OG, stories, heros de correo y reels.
 
-Dos estilos, los dos sobrios:
-- **Producto en contexto** (el de las imágenes de producto de Proton o Linear): la interfaz de la app, real y con
-  detalle, en una ventana que sangra sobre un degradado suave, con 1-2 capas flotantes (modal, fila destacada, aviso)
-  que cuentan una función; borde de ~1 px degradado, una sombra oscura suave y el resto atenuado. Sin glow ni neón.
-- **Plano**: una tipografía, neutros y un acento, sin brillos, sombras ni bordes de color. Es el de los correos HTML
-  y las piezas de solo texto.
+## Cinco looks y un selector
+
+Cada look es una skill con su guía medida (radios, bordes, sombras, degradados, tipografía, composición), plantillas
+en **hero 16:9, 1:1, 4:5, banner de X y story** exportadas a PNG 2x, y su propio criterio en el revisor automático.
+La skill `direccion-de-arte` elige el look según la marca y el objetivo (`references/looks.md`):
+
+| Look | Skill | Úsalo para | Qué lo define |
+|---|---|---|---|
+| **1 · Producto en contexto** | `producto-en-contexto` | SaaS y apps: enseñar una función | la interfaz real en una ventana sobre un degradado suave, 1-2 capas flotantes con borde de 1 px degradado y sombra oscura suave (estilo Proton/Linear) |
+| **2 · Oscuro glow** | `oscuro-glow` | lanzamientos y ofertas de fintech, trading, cripto o SaaS en oscuro; referidos | azul marino con datos desenfocados, dos tarjetas con borde luminoso y cifra grande, titular plateado en mayúsculas, CTA en píldora; resplandor **contenido** |
+| **3 · Editorial recorte** | `editorial-recorte` | gaming, esports, equipos, lifestyle | collage de recortes con jerarquía de tamaños sobre negro, arco y marco de líneas finas de construcción, cruces de registro, mucho aire y nada de texto encima |
+| **4 · Producto 3D + mascota** | `producto-3d-mascota` | producto físico o gaming con mascota o personaje; tiendas | banner redondeado azul-violeta con partículas y bokeh, producto 3D y mascota solapados, sombras de contacto y luz de color coherente |
+| **5 · Tech grid** | `tech-grid` | catálogo y ofertas de gaming, periféricos, hardware | cuadrícula fina sobre negro-azul, productos que se salen de marcos de borde fino azul y lima, pistas de circuito con nodos, titular ancho en mayúsculas |
+| Plano | `piezas-graficas`, correos, carruseles de texto | correos HTML y piezas solo de texto | una tipografía, neutros y un acento, sin brillos, sombras ni bordes de color |
+
+Fuera de los looks, todo es **plano**. Cada look solo levanta sus excepciones medidas (el resplandor, solo en
+oscuro-glow y con alfa ≤ 0,6 en 3 elementos como mucho; las mayúsculas, solo en oscuro-glow y tech-grid…) y ninguno
+permite texto encima del sujeto.
 
 La marca es un **parámetro**. La skill `direccion-de-arte` empieza pidiendo o leyendo el brief de marca (nombre,
 colores, tipografía, logo, tono) y lo guarda en un `marca.json`; las plantillas lo aplican solas (variables CSS en
-las piezas, marcadores en los correos), incluido el degradado de fondo, que sale del acento si la marca no lo trae.
-Los ejemplos usan **Pliego**, una marca ficticia de facturación para autónomos.
+las piezas, marcadores en los correos), incluidos los fondos y los tokens de cada look, que salen del acento si la
+marca no los trae. Los ejemplos usan marcas ficticias: **Pliego** (facturación, look 1), **Vértice** (trading,
+look 2), **Pulso** (periféricos y esports, looks 3 y 5) y **Cometa** (tienda gaming, look 4); **Nimbo** es la marca
+con la que se prueba que todo cambia sin tocar el HTML.
 
 Todas las skills siguen la misma regla: **no se entrega nada que no se haya renderizado con un Chrome real y mirado**.
 Los scripts exportan a PNG (a 2x si se pide) y revisan lo que suele salir mal: texto cortado o fuera, textos que se
-pisan, texto que choca con una tarjeta, bloques sin aire, viudas en titulares, márgenes, contraste, brillos, fuentes
-que no cargan, imágenes rotas o ampliadas y, en correos, compatibilidad con Gmail, Outlook y Apple Mail.
+pisan, texto que choca con una tarjeta, bloques sin aire, viudas en titulares, márgenes, contraste (también de
+titulares con degradado), brillos según el look, recortes sin transparencia, texto encima de un recorte (píxel a
+píxel), fuentes que no cargan, imágenes rotas o ampliadas y, en correos, compatibilidad con Gmail, Outlook y Apple
+Mail.
 
 | Producto en contexto · hero 16:9 | Cabecera de correo |
 |---|---|
@@ -31,6 +47,26 @@ que no cargan, imágenes rotas o ampliadas y, en correos, compatibilidad con Gma
 
 Las mismas plantillas con otra marca (otro `marca.json`, sin tocar el HTML):
 ![Otra marca](docs/ejemplos/producto-otra-marca.png)
+
+### Looks 2-5
+
+| Oscuro glow · Vértice (trading) | Editorial recorte · Pulso (esports) |
+|---|---|
+| ![Oscuro glow](docs/ejemplos/look-oscuro-glow.jpg) | ![Editorial recorte](docs/ejemplos/look-editorial-recorte.jpg) |
+| **Producto 3D + mascota · Cometa (tienda gaming)** | **Tech grid · Pulso (periféricos)** |
+| ![Producto 3D + mascota](docs/ejemplos/look-producto-3d-mascota.jpg) | ![Tech grid](docs/ejemplos/look-tech-grid.jpg) |
+
+Cada look en sus 5 formatos (hero 16:9, 1:1, 4:5, banner de X y story):
+[oscuro glow](docs/ejemplos/look-oscuro-glow-hoja.jpg) ·
+[editorial recorte](docs/ejemplos/look-editorial-recorte-hoja.jpg) ·
+[producto 3D + mascota](docs/ejemplos/look-producto-3d-mascota-hoja.jpg) ·
+[tech grid](docs/ejemplos/look-tech-grid-hoja.jpg).
+
+Los cuatro con otra marca (Nimbo), sin tocar el HTML:
+![Looks con otra marca](docs/ejemplos/looks-otra-marca.jpg)
+
+Las personas de los ejemplos están generadas con IA (no son reales) y el producto y la mascota son renders 3D
+propios; las marcas son ficticias.
 
 ## Instalación
 
@@ -64,16 +100,22 @@ Para actualizar: `/plugin marketplace update claude-skills-marketing`.
   ejecuta `npx playwright install chromium`.
 - La primera vez, en la carpeta `scripts/` de cada skill: `npm install` (solo instala `playwright-core`). Claude lo
   hace solo cuando sigue la skill. `comprobar-marca.mjs` y `aplicar-marca.mjs` no necesitan nada.
+- `recortar.mjs` (quitar fondos, en `imagen-ia/scripts`) instala un modelo local de segmentación (≈ 330 MB) la
+  primera vez que se usa; solo hace falta para los looks con recortes si no traes ya los PNG sin fondo.
 - **ffmpeg** para revisar vídeos por fotogramas (`reel-de-marketing`).
 
 ## Plugins y skills
 
 | Plugin | Skill | Para qué |
 |---|---|---|
-| `direccion-de-arte` | `direccion-de-arte` | La base: **brief de marca → `marca.json`** con `comprobar-marca.mjs` (campos y contraste de cada pareja de color), brief de la pieza, copy, tipografía, rejillas y zonas seguras, color y la **revisión visual obligatoria**. Las demás skills la usan |
-| `piezas-graficas` | `producto-en-contexto` | **Imágenes de producto al nivel de Proton o Linear**: la app en una ventana (lateral, buscador, lista, iconos de línea) sobre un degradado, con modal, fila destacada y avisos flotantes. Cabecera de correo, hero 16:9, post 1:1 y 4:5, banner de X, miniatura y story a PNG 2x. Componentes reutilizables en `producto.css` + `producto.js` y reglas medidas en `references/estilo.md` |
-| `piezas-graficas` | `piezas-graficas` | Hero de correo, OG, miniatura de YouTube, banner de X, story y otros formatos con titular, con maquetas de producto flotantes sobre fondos de escena y un recortador exacto de capturas |
-| `piezas-graficas` | `imagen-ia` | Imágenes de apoyo con IA (Higgsfield u otro) sin el «look IA»: prompts con la paleta de la marca, control de gasto y revisión |
+| `direccion-de-arte` | `direccion-de-arte` | La base: **brief de marca → `marca.json`** con `comprobar-marca.mjs` (campos, tokens de los looks y contraste de cada pareja de color), **selector de look** (`references/looks.md`), brief de la pieza, copy, tipografía, rejillas y zonas seguras, color y la **revisión visual obligatoria**. Las demás skills la usan |
+| `piezas-graficas` | `producto-en-contexto` | **Look 1 · imágenes de producto al nivel de Proton o Linear**: la app en una ventana (lateral, buscador, lista, iconos de línea) sobre un degradado, con modal, fila destacada y avisos flotantes. Cabecera de correo, hero 16:9, post 1:1 y 4:5, banner de X, miniatura y story a PNG 2x. Componentes en `producto.css` + `producto.js` y reglas medidas en `references/estilo.md` |
+| `piezas-graficas` | `oscuro-glow` | **Look 2 · lanzamientos y ofertas en oscuro** (fintech, trading, SaaS): fondo azul marino con gráfico y dashboard desenfocados, dos tarjetas con borde luminoso y cifra grande, titular plateado en mayúsculas y CTA en píldora, con un resplandor medido |
+| `piezas-graficas` | `editorial-recorte` | **Look 3 · editorial de gaming y lifestyle**: collage de personas o producto recortados con jerarquía de tamaños, arco, marco y cruces de líneas finas, mucho aire y el texto siempre fuera de la imagen |
+| `piezas-graficas` | `producto-3d-mascota` | **Look 4 · producto 3D con mascota**: banner redondeado azul-violeta con partículas y bokeh, render del producto y mascota solapados con sombras de contacto y luz de color de la marca |
+| `piezas-graficas` | `tech-grid` | **Look 5 · catálogo tech y gaming**: cuadrícula fina, productos que rompen marcos de borde fino en dos acentos, pistas de circuito con nodos y titular en grotesca ancha en mayúsculas |
+| `piezas-graficas` | `piezas-graficas` | Base plana y **exportador común** de todos los looks: hero de correo, OG, miniatura de YouTube, banner de X, story y otros formatos con titular, maquetas de producto y un recortador exacto de capturas |
+| `piezas-graficas` | `imagen-ia` | Imágenes de apoyo con IA (Higgsfield u otro) sin el «look IA»: prompts con la paleta de la marca, control de gasto, revisión y **`recortar.mjs`** para quitar el fondo de personas, productos y mascotas (modelo local) |
 | `correos-marketing` | `correo-marketing-html` | Correos de marketing sobrios con **cabecera de producto en contexto**. Plantillas `producto`, `anuncio` y `oferta`; `aplicar-marca.mjs` las pasa a tu marca y `comprobar-correo.mjs` hace comprobaciones estáticas y renderiza **escritorio, móvil, sin imágenes y modo oscuro** |
 | `carruseles-instagram` | `carrusel-instagram` | Carruseles 1080x1350 con diapositivas de **producto en contexto** (portada, punto en claro, punto en oscuro) y de texto (lista, cifra, tabla, cierre). `exportar.mjs --marca marca.json --carrusel --escala 2` genera los PNG, la hoja de contacto y la rejilla 3:4 del perfil |
 | `video-marketing` | `reel-de-marketing` | Reels y vídeos cortos: guion por segundos, zonas seguras 9:16, subtítulos y revisión por fotogramas, sobre motion-graphics (Remotion) |
@@ -83,6 +125,11 @@ Para actualizar: `/plugin marketplace update claude-skills-marketing`.
 Puedes pedirlo en lenguaje normal; Claude elige la skill:
 
 - «Hazme las imágenes del lanzamiento de la función de recordatorios: cabecera de correo, hero y post, estilo Proton».
+- «Campaña de referidos de mi app de trading en oscuro, con dos cifras grandes» (oscuro-glow).
+- «Presenta a los jugadores del nuevo equipo, estilo editorial con recortes» (editorial-recorte).
+- «Banner de la tienda con nuestro producto y la mascota en 3D» (producto-3d-mascota).
+- «Rebajas de periféricos en todos los formatos, con cuadrícula y marcos» (tech-grid).
+- «¿Qué look le va a esta marca?» (selector de `direccion-de-arte`).
 - «Esta es la web de mi cliente: saca su marca y hazme un carrusel de 6 diapositivas sobre su nuevo servicio».
 - «Correo de lanzamiento con la plantilla de producto para la marca de `./marca.json`, y compruébalo».
 - «La misma campaña en OG, miniatura, banner de X y story».
@@ -92,8 +139,11 @@ O a mano:
 ```bash
 # Marca
 node plugins/direccion-de-arte/skills/direccion-de-arte/scripts/comprobar-marca.mjs marca.json
-# Producto en contexto (a 2x)
+# Producto en contexto o cualquier look (a 2x): el HTML de la plantilla del look, con su CSS al lado
 node plugins/piezas-graficas/skills/piezas-graficas/scripts/exportar.mjs producto-en-contexto.html --marca marca.json --escala 2
+node plugins/piezas-graficas/skills/piezas-graficas/scripts/exportar.mjs tech-grid.html --marca marca.json --escala 2
+# Quitar el fondo de una foto o un render (para los looks con recortes)
+node plugins/piezas-graficas/skills/imagen-ia/scripts/recortar.mjs foto.png recorte.png
 # Carrusel o piezas
 node plugins/carruseles-instagram/skills/carrusel-instagram/scripts/exportar.mjs mi-carrusel.html --marca marca.json --carrusel --escala 2
 node plugins/piezas-graficas/skills/piezas-graficas/scripts/exportar.mjs mis-piezas.html --marca marca.json
@@ -108,8 +158,9 @@ node plugins/correos-marketing/skills/correo-marketing-html/scripts/comprobar-co
 .claude-plugin/marketplace.json        catálogo del marketplace
 plugins/<plugin>/.claude-plugin/plugin.json
 plugins/<plugin>/skills/<skill>/SKILL.md
-                                /plantillas/   HTML de partida (y marca.json de ejemplo) con contenido de Pliego;
-                                               producto.css + producto.js donde hay maquetas de producto
+                                /plantillas/   HTML de partida con una marca ficticia de ejemplo (y su
+                                               marca-ejemplo.json en los looks); el CSS del look
+                                               (producto.css + producto.js, oscuro-glow.css…) y sus recortes
                                 /scripts/      exportadores y comprobadores (Node + playwright-core)
                                 /references/   guías que la skill carga cuando las necesita
 docs/ejemplos/                         renders de las plantillas

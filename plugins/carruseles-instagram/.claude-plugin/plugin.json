@@ -1,6 +1,6 @@
 {
   "name": "carruseles-instagram",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Carruseles de Instagram 1080x1350 para cualquier marca: diapositivas de producto en contexto (la app con capas flotantes sobre un degradado) y de texto, marca desde marca.json, exportación a PNG 2x con Chrome real, revisión automática (cortes, choques, viudas, contraste, brillos) y hoja de contacto con la rejilla del perfil.",
   "author": {
     "name": "C4rI0s",

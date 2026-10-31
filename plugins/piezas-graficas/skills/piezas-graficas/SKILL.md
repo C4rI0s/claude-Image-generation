@@ -11,6 +11,21 @@ hermana **`producto-en-contexto`**: la interfaz real en una ventana sobre un deg
 al nivel de las imágenes de producto de las grandes apps. Sus componentes (`producto.css`, `producto.js`) también
 sirven aquí: enlázalos y pon `data-estilo="producto"` en la pieza.
 
+## Looks (skills hermanas de este plugin)
+Para una imagen de campaña con nivel de agencia, elige primero el look con el selector de
+`direccion-de-arte/references/looks.md` y abre su skill: cada una trae su guía medida, plantillas en 5 formatos
+(hero 16:9, 1:1, 4:5, banner de X y story) y su criterio en el exportador.
+
+| Look | Skill | Para |
+|---|---|---|
+| Producto en contexto | `producto-en-contexto` | enseñar una app (SaaS) haciendo una cosa |
+| Oscuro glow | `oscuro-glow` | ofertas y lanzamientos de fintech, trading o SaaS en oscuro, con cifras |
+| Editorial recorte | `editorial-recorte` | gaming, esports y lifestyle con personas recortadas |
+| Producto 3D + mascota | `producto-3d-mascota` | producto físico o gaming con mascota |
+| Tech grid | `tech-grid` | catálogo y ofertas de gaming, periféricos y hardware |
+
+Esta skill (`piezas-graficas`) es la base plana y el exportador común de todos.
+
 ## Principio
 **El texto se compone en HTML, nunca dentro de la imagen generada.** La pieza es un `<section>` con su tamaño
 exacto; debajo va el material (maqueta de producto en HTML, captura real, foto o fondo de IA) y encima el texto con
@@ -74,3 +89,15 @@ para fallar también con avisos. Piezas existentes de otros proyectos se exporta
 deja que las maquetas se solapen entre ellas y no mide el contraste del texto dentro de `.atenuado`. Antes de
 revisar llama a `window.recolocar()` (de `producto.js`) para que las capas con `data-sobre` caigan en su fila con la
 fuente definitiva. Es el mismo fichero que el de `carrusel-instagram`: si lo cambias, copia el otro.
+
+Criterio por look (`data-estilo` en la pieza): sin atributo, plano; `producto` y `producto-3d-mascota`, sombras
+oscuras sí y brillos no; `oscuro-glow`, halos claros o de color con alfa ≤ 0,6 y desenfoque ≤ 8 % del lado corto en
+3 elementos como mucho, sin `text-shadow`; `editorial-recorte` y `tech-grid`, planos. En todos:
+- `data-fondo` en las capas decorativas (rejilla, gráfico o dashboard desenfocado, bokeh, partículas, líneas): dentro
+  vale `filter: blur()`, su texto no se revisa y no cuentan como bloques en los choques.
+- `<img data-recorte>` en sujetos y productos recortados: error si no traen transparencia o si un texto pisa su parte
+  opaca (medido píxel a píxel; descuenta un fundido con `mask-image: linear-gradient(...)` vertical).
+  `data-sobre-recorte` en un texto lo permite a propósito (una etiqueta de precio pegada al producto).
+- Un titular con `background-clip: text` se mide con el tono más oscuro de su degradado.
+- La marca puede traer `tipografia.display` (titulares de los looks): llega como `--fuente-display` y el exportador
+  falla si no carga.

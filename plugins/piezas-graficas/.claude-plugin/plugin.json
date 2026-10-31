@@ -1,7 +1,7 @@
 {
   "name": "piezas-graficas",
-  "version": "2.1.0",
-  "description": "Imágenes de producto en contexto para cualquier marca (la app en una ventana sobre un degradado suave, con modal, fila destacada y avisos flotantes, estilo Proton/Linear) en cabecera de correo, hero 16:9, post 1:1 y 4:5, banner, miniatura y story a PNG 2x; más portadas, banners, miniaturas, OG, stories y heros con titular, recortador de capturas, revisión automática y guía de imágenes de apoyo con IA sin el look IA.",
+  "version": "2.2.0",
+  "description": "Cinco looks de campaña con nivel de agencia para cualquier marca, cada uno con guía medida y plantillas en hero 16:9, 1:1, 4:5, banner de X y story a PNG 2x: producto en contexto (la app sobre un degradado con capas flotantes, estilo Proton), oscuro glow (fintech/trading con halo contenido y cifras), editorial recorte (collage de recortes con líneas de construcción), producto 3D con mascota y tech grid (cuadrícula, marcos y pistas de circuito). Más portadas, OG, heros, recortador de fondos, imágenes de apoyo con IA y un exportador que revisa cortes, choques, contraste, brillos por look y texto encima de los recortes.",
   "author": {
     "name": "C4rI0s",
     "url": "https://github.com/C4rI0s"
@@ -23,6 +23,15 @@
     "producto",
     "mockup",
     "producto en contexto",
-    "hero"
+    "hero",
+    "looks",
+    "oscuro glow",
+    "editorial",
+    "recorte",
+    "3d",
+    "mascota",
+    "tech grid",
+    "gaming",
+    "fintech"
   ]
 }
