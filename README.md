@@ -1,6 +1,6 @@
 # claude-skills-marketing
 
-Marketplace privado de plugins para **Claude Code** con skills para hacer piezas de marketing visual con nivel de
+Marketplace de plugins para **Claude Code** con skills para hacer piezas de marketing visual con nivel de
 agencia **para cualquier marca o proyecto**: imágenes de producto en contexto, correos HTML, carruseles de
 Instagram, portadas, banners, miniaturas, imágenes OG, stories, heros de correo y reels.
 
@@ -67,6 +67,50 @@ Los cuatro con otra marca (Nimbo), sin tocar el HTML:
 
 Las personas de los ejemplos están generadas con IA (no son reales) y el producto y la mascota son renders 3D
 propios; las marcas son ficticias.
+
+## Referencias de estilo
+
+Cada look parte de una referencia visual que se ha estudiado y medido (radios, bordes, sombras, degradados,
+tipografía y composición). Aquí solo se nombran: **no se incluyen sus imágenes ni nada de su marca**, y los ejemplos
+usan marcas ficticias.
+
+| Look | Referencia de estilo | Qué se toma de ella |
+|---|---|---|
+| 1 · Producto en contexto | las imágenes de producto de **Proton Pass** (y webs como Linear, Stripe o Vercel) | la interfaz real a sangre sobre un degradado suave, una o dos capas flotantes con borde de 1 px degradado, contexto atenuado, titulares en peso medio |
+| 2 · Oscuro glow | la campaña «Refiere y gana» de **Impulse World** | azul marino con datos desenfocados, dos tarjetas con borde luminoso y cifra grande, titular plateado, CTA en píldora |
+| 3 · Editorial recorte | una pieza editorial de esports de **Logitech** | collage de recortes con jerarquía de tamaños sobre negro, líneas finas de construcción, cruces de registro |
+| 4 · Producto 3D + mascota | un banner de **Instant Gaming** | producto 3D y mascota solapados sobre un degradado azul-violeta con partículas, sombras de contacto |
+| 5 · Tech grid | la campaña **Deal Days** de **Logitech** | cuadrícula fina, productos en marcos de borde fino unidos por pistas de circuito, titular ancho en mayúsculas |
+
+Las marcas citadas pertenecen a sus dueños. Dentro de cada skill, `referencia/golden.jpg` es **nuestra** demo del look
+(la que hay que igualar), no la imagen original.
+
+## Demos
+
+Todas las piezas son de marcas ficticias; las personas están generadas con IA y el producto y la mascota son renders
+propios.
+
+| Producto 3D + mascota · hero | Producto 3D + mascota · 4:5 |
+|---|---|
+| ![](docs/demos/01-producto-3d-mascota-hero.jpg) | ![](docs/demos/02-producto-3d-mascota-4x5.jpg) |
+| **Tech grid · hero** | **Tech grid · banner de X** |
+| ![](docs/demos/03-tech-grid-hero.jpg) | ![](docs/demos/04-tech-grid-banner-x.jpg) |
+| **Editorial recorte · hero** | **Editorial recorte · 1:1** |
+| ![](docs/demos/05-editorial-recorte-hero.jpg) | ![](docs/demos/06-editorial-recorte-1x1.jpg) |
+| **Oscuro glow · hero** | **Oscuro glow · 4:5** |
+| ![](docs/demos/07-oscuro-glow-hero.jpg) | ![](docs/demos/08-oscuro-glow-4x5.jpg) |
+| **Producto en contexto · hero** | |
+| ![](docs/demos/09-producto-en-contexto-hero.jpg) | |
+
+### Pruebas en limpio (la skill sola, con marcas que no había visto)
+
+| Producto en contexto · Tilde | Oscuro glow · Arca |
+|---|---|
+| ![](docs/pruebas-en-limpio/01-producto-en-contexto-tilde.jpg) | ![](docs/pruebas-en-limpio/02-oscuro-glow-arca.jpg) |
+| **Editorial recorte · Orbe** | **Producto 3D + mascota · Nami** |
+| ![](docs/pruebas-en-limpio/03-editorial-recorte-orbe.jpg) | ![](docs/pruebas-en-limpio/04-producto-3d-mascota-nami.jpg) |
+| **Tech grid · Orbe (sin fotos)** | **Tech grid · Rumbo (con fotos)** |
+| ![](docs/pruebas-en-limpio/05-tech-grid-orbe-sin-fotos.jpg) | ![](docs/pruebas-en-limpio/06-tech-grid-rumbo-con-fotos.jpg) |
 
 ## Qué esperar (probado en limpio)
 
