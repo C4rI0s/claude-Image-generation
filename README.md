@@ -175,10 +175,18 @@ redone; what was learned is in each look `references/estilo.md` as measured rule
 
 ## Installation
 
-The repository is public: no credentials are needed.
+The repository is public: no credentials are needed. Two commands install **everything** (a bundle plugin pulls in
+the other five):
 
 ```
 /plugin marketplace add C4rI0s/claude-Image-generation
+/plugin install marketing-visual-completo@claude-skills-marketing
+```
+
+(Adding a marketplace never installs plugins by itself in Claude Code; the `marketing-visual-completo` bundle is what
+installs all five at once.) To install only some of them:
+
+```
 /plugin install direccion-de-arte@claude-skills-marketing
 /plugin install correos-marketing@claude-skills-marketing
 /plugin install carruseles-instagram@claude-skills-marketing

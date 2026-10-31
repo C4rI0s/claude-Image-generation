@@ -1,83 +1,95 @@
 {
-  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
-  "name": "claude-skills-marketing",
-  "description": "Skills de Claude Code para piezas de marketing visual de cualquier marca con nivel de agencia: cinco looks de campaña con selector (producto en contexto estilo Proton, oscuro glow para fintech, editorial recorte y tech grid para gaming, producto 3D con mascota), correos HTML, carruseles de Instagram, portadas, banners, miniaturas, OG, stories, reels y dirección de arte. La marca es un parámetro (marca.json).",
-  "owner": {
-    "name": "C4rI0s",
-    "url": "https://github.com/C4rI0s"
-  },
-  "metadata": {
-    "version": "2.4.0"
-  },
-  "plugins": [
-    {
-      "name": "direccion-de-arte",
-      "source": "./plugins/direccion-de-arte",
-      "description": "La base: brief de marca → marca.json (con comprobador de contraste), selector de look por marca y objetivo, copy, tipografía, rejillas, color y la revisión visual obligatoria. Instálala siempre.",
-      "version": "2.4.0",
-      "category": "design",
-      "tags": [
-        "diseño",
-        "marca",
-        "copy",
-        "tipografía"
-      ]
-    },
-    {
-      "name": "correos-marketing",
-      "source": "./plugins/correos-marketing",
-      "description": "Correos HTML de marketing compatibles con Gmail, Outlook y Apple Mail, con cabecera de producto en contexto, plantillas probadas, aplicador de marca y comprobador que renderiza 4 vistas.",
-      "version": "2.4.0",
-      "category": "design",
-      "tags": [
-        "email",
-        "correo",
-        "newsletter"
-      ]
-    },
-    {
-      "name": "carruseles-instagram",
-      "source": "./plugins/carruseles-instagram",
-      "description": "Carruseles 1080x1350 con diapositivas de producto en contexto (la app con capas flotantes) y de texto, exportación a PNG 2x con Chrome real, revisión automática y hoja de contacto con la rejilla del perfil.",
-      "version": "2.4.0",
-      "category": "design",
-      "tags": [
-        "instagram",
-        "carrusel",
-        "redes"
-      ]
-    },
-    {
-      "name": "piezas-graficas",
-      "source": "./plugins/piezas-graficas",
-      "description": "Cinco looks de campaña (producto en contexto, oscuro glow, editorial recorte, producto 3D con mascota, tech grid) en hero 16:9, 1:1, 4:5, banner y story a PNG 2x, cada uno con su pieza golden y un bucle de pulido obligatorio; sujetos desde tus fotos (recorte, halo y luz automáticos), una librería 3D con tus colores o IA con tope de gasto. Más portadas, OG y heros.",
-      "version": "2.4.0",
-      "category": "design",
-      "tags": [
-        "banner",
-        "miniatura",
-        "og",
-        "story",
-        "ia",
-        "producto",
-        "mockup",
-        "looks",
-        "gaming",
-        "fintech",
-        "3d"
-      ]
-    },
-    {
-      "name": "video-marketing",
-      "source": "./plugins/video-marketing",
-      "description": "Reels y vídeos cortos: guion por segundos, zonas seguras, subtítulos y revisión por fotogramas, sobre el plugin motion-graphics (Remotion).",
-      "version": "2.4.0",
-      "category": "design",
-      "tags": [
-        "reel",
-        "vídeo",
-        "remotion"
-      ]
-    }
-  ]
+    "$schema":  "https://anthropic.com/claude-code/marketplace.schema.json",
+    "name":  "claude-skills-marketing",
+    "description":  "Skills de Claude Code para piezas de marketing visual de cualquier marca con nivel de agencia: cinco looks de campaña con selector (producto en contexto estilo Proton, oscuro glow para fintech, editorial recorte y tech grid para gaming, producto 3D con mascota), correos HTML, carruseles de Instagram, portadas, banners, miniaturas, OG, stories, reels y dirección de arte. La marca es un parámetro (marca.json).",
+    "owner":  {
+                  "name":  "C4rI0s",
+                  "url":  "https://github.com/C4rI0s"
+              },
+    "metadata":  {
+                     "version":  "2.5.0"
+                 },
+    "plugins":  [
+                    {
+                        "name":  "marketing-visual-completo",
+                        "source":  "./plugins/marketing-visual-completo",
+                        "description":  "Instala todo de una vez: dirección de arte, los cinco looks (piezas-graficas), correos, carruseles y reels. Un solo comando.",
+                        "version":  "2.5.0",
+                        "category":  "design",
+                        "tags":  [
+                                     "bundle",
+                                     "todo en uno",
+                                     "marca"
+                                 ]
+                    },
+                    {
+                        "name":  "direccion-de-arte",
+                        "source":  "./plugins/direccion-de-arte",
+                        "description":  "La base: brief de marca → marca.json (con comprobador de contraste), selector de look por marca y objetivo, copy, tipografía, rejillas, color y la revisión visual obligatoria. Instálala siempre.",
+                        "version":  "2.4.0",
+                        "category":  "design",
+                        "tags":  [
+                                     "diseño",
+                                     "marca",
+                                     "copy",
+                                     "tipografía"
+                                 ]
+                    },
+                    {
+                        "name":  "correos-marketing",
+                        "source":  "./plugins/correos-marketing",
+                        "description":  "Correos HTML de marketing compatibles con Gmail, Outlook y Apple Mail, con cabecera de producto en contexto, plantillas probadas, aplicador de marca y comprobador que renderiza 4 vistas.",
+                        "version":  "2.4.0",
+                        "category":  "design",
+                        "tags":  [
+                                     "email",
+                                     "correo",
+                                     "newsletter"
+                                 ]
+                    },
+                    {
+                        "name":  "carruseles-instagram",
+                        "source":  "./plugins/carruseles-instagram",
+                        "description":  "Carruseles 1080x1350 con diapositivas de producto en contexto (la app con capas flotantes) y de texto, exportación a PNG 2x con Chrome real, revisión automática y hoja de contacto con la rejilla del perfil.",
+                        "version":  "2.4.0",
+                        "category":  "design",
+                        "tags":  [
+                                     "instagram",
+                                     "carrusel",
+                                     "redes"
+                                 ]
+                    },
+                    {
+                        "name":  "piezas-graficas",
+                        "source":  "./plugins/piezas-graficas",
+                        "description":  "Cinco looks de campaña (producto en contexto, oscuro glow, editorial recorte, producto 3D con mascota, tech grid) en hero 16:9, 1:1, 4:5, banner y story a PNG 2x, cada uno con su pieza golden y un bucle de pulido obligatorio; sujetos desde tus fotos (recorte, halo y luz automáticos), una librería 3D con tus colores o IA con tope de gasto. Más portadas, OG y heros.",
+                        "version":  "2.4.0",
+                        "category":  "design",
+                        "tags":  [
+                                     "banner",
+                                     "miniatura",
+                                     "og",
+                                     "story",
+                                     "ia",
+                                     "producto",
+                                     "mockup",
+                                     "looks",
+                                     "gaming",
+                                     "fintech",
+                                     "3d"
+                                 ]
+                    },
+                    {
+                        "name":  "video-marketing",
+                        "source":  "./plugins/video-marketing",
+                        "description":  "Reels y vídeos cortos: guion por segundos, zonas seguras, subtítulos y revisión por fotogramas, sobre el plugin motion-graphics (Remotion).",
+                        "version":  "2.4.0",
+                        "category":  "design",
+                        "tags":  [
+                                     "reel",
+                                     "vídeo",
+                                     "remotion"
+                                 ]
+                    }
+                ]
 }

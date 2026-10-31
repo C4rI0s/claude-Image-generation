@@ -172,11 +172,18 @@ rehecho lo que se notaba amateur; lo aprendido está en el `references/estilo.md
 
 ## Instalación
 
-El repositorio es público: no hace falta ninguna credencial. (Si lo conviertes en privado, Claude Code necesitará acceso a GitHub: `gh auth login` hecho, o `GITHUB_TOKEN` /
-`GH_TOKEN` en el entorno.)
+El repositorio es público: no hace falta ninguna credencial. Con dos comandos se instala **todo** (un plugin «paquete»
+trae los otros cinco):
 
 ```
 /plugin marketplace add C4rI0s/claude-Image-generation
+/plugin install marketing-visual-completo@claude-skills-marketing
+```
+
+(En Claude Code, añadir un marketplace nunca instala plugins por sí solo; lo que instala los cinco de golpe es el
+paquete `marketing-visual-completo`.) Para instalar solo algunos:
+
+```
 /plugin install direccion-de-arte@claude-skills-marketing
 /plugin install correos-marketing@claude-skills-marketing
 /plugin install carruseles-instagram@claude-skills-marketing
