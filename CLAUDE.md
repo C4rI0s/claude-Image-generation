@@ -1,7 +1,7 @@
 # claude-skills-marketing
 
-Marketplace **privado** de plugins de Claude Code con skills de marketing visual **para cualquier marca**.
-Repositorio: https://github.com/C4rI0s/claude-Image-generation (privado: no cambiar la visibilidad). El nombre del
+Marketplace de plugins de Claude Code con skills de marketing visual **para cualquier marca**.
+Repositorio: https://github.com/C4rI0s/claude-Image-generation (público desde el 31-10-2026, orden de Carlos). El nombre del
 marketplace (para instalar) sigue siendo `claude-skills-marketing`.
 
 - **General, sin marca propia**: ninguna marca real (tampoco las del dueño) en skills, plantillas, referencias ni
