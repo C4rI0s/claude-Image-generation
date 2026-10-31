@@ -193,12 +193,8 @@ paquete `marketing-visual-completo`.) Para instalar solo algunos:
 
 Desde una copia local: `claude plugin marketplace add ./claude-skills-marketing`.
 
-Para los vídeos, instala también el motor de animación:
-
-```
-/plugin marketplace add FefeRP/motion-graphics-skills
-/plugin install motion-graphics@motion-graphics-skills
-```
+Las skills de vídeo se apoyan en el plugin [motion-graphics](https://github.com/FefeRP/motion-graphics-skills) (MIT, de FefeRP);
+está listado en este marketplace y se instala solo con el paquete o con `video-marketing`.
 
 Para actualizar: `/plugin marketplace update claude-skills-marketing`.
 

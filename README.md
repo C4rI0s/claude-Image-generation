@@ -196,12 +196,8 @@ installs all five at once.) To install only some of them:
 
 From a local copy: `claude plugin marketplace add ./claude-skills-marketing`.
 
-For videos, also install the animation engine:
-
-```
-/plugin marketplace add FefeRP/motion-graphics-skills
-/plugin install motion-graphics@motion-graphics-skills
-```
+The video skills rely on the [motion-graphics](https://github.com/FefeRP/motion-graphics-skills) plugin (MIT, by FefeRP);
+it is listed in this marketplace and installed automatically with the bundle or with `video-marketing`.
 
 To update: `/plugin marketplace update claude-skills-marketing`.
 

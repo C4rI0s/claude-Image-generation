@@ -1,23 +1,26 @@
 {
-  "name": "video-marketing",
-  "version": "2.4.0",
-  "description": "Dirección de reels y vídeos cortos de marketing para cualquier marca: guion por segundos, zonas seguras 9:16, subtítulos, entrega y revisión por fotogramas. Se apoya en el plugin motion-graphics (Remotion) y en generadores de vídeo con IA.",
-  "author": {
-    "name": "C4rI0s",
-    "url": "https://github.com/C4rI0s"
-  },
-  "homepage": "https://github.com/C4rI0s/claude-Image-generation",
-  "repository": "https://github.com/C4rI0s/claude-Image-generation",
-  "license": "UNLICENSED",
-  "keywords": [
-    "reel",
-    "tiktok",
-    "shorts",
-    "vídeo",
-    "remotion",
-    "motion graphics",
-    "anuncio",
-    "marca",
-    "cualquier marca"
-  ]
+    "name":  "video-marketing",
+    "version":  "2.5.1",
+    "description":  "Dirección de reels y vídeos cortos de marketing para cualquier marca: guion por segundos, zonas seguras 9:16, subtítulos, entrega y revisión por fotogramas. Se apoya en el plugin motion-graphics (Remotion) y en generadores de vídeo con IA.",
+    "author":  {
+                   "name":  "C4rI0s",
+                   "url":  "https://github.com/C4rI0s"
+               },
+    "homepage":  "https://github.com/C4rI0s/claude-Image-generation",
+    "repository":  "https://github.com/C4rI0s/claude-Image-generation",
+    "license":  "UNLICENSED",
+    "keywords":  [
+                     "reel",
+                     "tiktok",
+                     "shorts",
+                     "vídeo",
+                     "remotion",
+                     "motion graphics",
+                     "anuncio",
+                     "marca",
+                     "cualquier marca"
+                 ],
+    "dependencies":  [
+                         "motion-graphics"
+                     ]
 }

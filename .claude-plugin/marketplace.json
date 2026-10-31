@@ -7,14 +7,14 @@
                   "url":  "https://github.com/C4rI0s"
               },
     "metadata":  {
-                     "version":  "2.5.0"
+                     "version":  "2.5.1"
                  },
     "plugins":  [
                     {
                         "name":  "marketing-visual-completo",
                         "source":  "./plugins/marketing-visual-completo",
                         "description":  "Instala todo de una vez: dirección de arte, los cinco looks (piezas-graficas), correos, carruseles y reels. Un solo comando.",
-                        "version":  "2.5.0",
+                        "version":  "2.5.1",
                         "category":  "design",
                         "tags":  [
                                      "bundle",
@@ -83,12 +83,27 @@
                         "name":  "video-marketing",
                         "source":  "./plugins/video-marketing",
                         "description":  "Reels y vídeos cortos: guion por segundos, zonas seguras, subtítulos y revisión por fotogramas, sobre el plugin motion-graphics (Remotion).",
-                        "version":  "2.4.0",
+                        "version":  "2.5.1",
                         "category":  "design",
                         "tags":  [
                                      "reel",
                                      "vídeo",
                                      "remotion"
+                                 ]
+                    },
+                    {
+                        "name":  "motion-graphics",
+                        "source":  {
+                                       "source":  "git-subdir",
+                                       "url":  "https://github.com/FefeRP/motion-graphics-skills.git",
+                                       "path":  "plugins/motion-graphics"
+                                   },
+                        "description":  "Motion graphics en Remotion (de FefeRP/motion-graphics-skills, licencia MIT): la base para los reels. Se instala sola con el paquete.",
+                        "category":  "design",
+                        "tags":  [
+                                     "video",
+                                     "remotion",
+                                     "motion graphics"
                                  ]
                     }
                 ]
