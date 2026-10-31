@@ -8,21 +8,21 @@ Negative / avoid: text, letters, watermark, logo, neon, glow, lens flare, oversa
 ```
 
 ## Bloques de estilo (cópialos tal cual)
-**Cálido editorial (GamzyHost claro)**
-`soft natural daylight, warm neutral palette of cream, sand and charcoal with a single amber accent, matte
+**Cálido editorial (claro)** · cambia la paleta por la de tu `marca.json`
+`soft natural daylight, warm neutral palette of cream, sand and charcoal with a single [brand accent] accent, matte
 materials, editorial photography, 50mm lens, shallow depth of field, clean seamless backdrop, generous negative space`
 
-**Oscuro sobrio (GamzyHost oscuro)**
-`low-key lighting, deep warm charcoal background (#17150f), subtle rim light, muted tones, single amber accent,
+**Oscuro sobrio (oscuro)**
+`low-key lighting, deep charcoal background (your noche color), subtle rim light, muted tones, single [brand accent] accent,
 matte surfaces, minimal, premium product photography, no glow, no neon`
 
 ## Ejemplos
 **Fondo para portada de carrusel (4:5), hueco arriba para el titular**
-`A tidy gaming desk with a closed laptop and a small external drive, placed in the lower third of the frame, empty
+`A tidy desk with a closed laptop, a notebook and a coffee cup, placed in the lower third of the frame, empty
 cream wall filling the upper two thirds for text, ` + bloque cálido editorial
 
 **Miniatura (16:9), objeto a la derecha, izquierda limpia**
-`A single matte black external hard drive standing upright on the right side of the frame, plain dark background on
+`A single matte product object standing upright on the right side of the frame, plain dark background on
 the left half, ` + bloque oscuro sobrio
 
 **Story (9:16), textura sutil de fondo**

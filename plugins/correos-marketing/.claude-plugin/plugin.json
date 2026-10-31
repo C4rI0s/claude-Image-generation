@@ -1,10 +1,23 @@
 {
   "name": "correos-marketing",
-  "version": "1.0.0",
-  "description": "Correos HTML de marketing nivel Proton (fondo blanco, sobrios y planos) compatibles con Gmail, Outlook y Apple Mail: tres plantillas probadas y un comprobador que renderiza escritorio, móvil, sin imágenes y modo oscuro.",
-  "author": { "name": "Carlos · GamzyHost", "url": "https://gamzyhost.com" },
+  "version": "2.0.0",
+  "description": "Correos HTML de marketing sobrios y planos para cualquier marca, compatibles con Gmail, Outlook y Apple Mail: tres plantillas probadas, aplicador de marca desde marca.json y un comprobador que renderiza escritorio, móvil, sin imágenes y modo oscuro.",
+  "author": {
+    "name": "C4rI0s",
+    "url": "https://github.com/C4rI0s"
+  },
   "homepage": "https://github.com/C4rI0s/claude-skills-marketing",
   "repository": "https://github.com/C4rI0s/claude-skills-marketing",
   "license": "UNLICENSED",
-  "keywords": ["email", "correo", "newsletter", "html", "outlook", "gmail", "marketing"]
+  "keywords": [
+    "email",
+    "correo",
+    "newsletter",
+    "html",
+    "outlook",
+    "gmail",
+    "marketing",
+    "marca",
+    "cualquier marca"
+  ]
 }

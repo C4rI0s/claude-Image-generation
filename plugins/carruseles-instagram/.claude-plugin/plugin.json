@@ -1,10 +1,22 @@
 {
   "name": "carruseles-instagram",
-  "version": "1.0.0",
-  "description": "Carruseles de Instagram 1080x1350 con nivel de agencia: sistema de diapositivas (portada, punto, lista, cifra, tabla, cierre), exportación a PNG con Chrome real, revisión automática y hoja de contacto con la rejilla del perfil.",
-  "author": { "name": "Carlos · GamzyHost", "url": "https://gamzyhost.com" },
+  "version": "2.0.0",
+  "description": "Carruseles de Instagram 1080x1350 para cualquier marca: sistema de diapositivas con maquetas de producto en HTML, marca desde marca.json, exportación a PNG con Chrome real, revisión automática (cortes, choques, viudas, contraste) y hoja de contacto con la rejilla del perfil.",
+  "author": {
+    "name": "C4rI0s",
+    "url": "https://github.com/C4rI0s"
+  },
   "homepage": "https://github.com/C4rI0s/claude-skills-marketing",
   "repository": "https://github.com/C4rI0s/claude-skills-marketing",
   "license": "UNLICENSED",
-  "keywords": ["instagram", "carrusel", "carousel", "redes sociales", "diseño", "png"]
+  "keywords": [
+    "instagram",
+    "carrusel",
+    "carousel",
+    "redes sociales",
+    "diseño",
+    "png",
+    "marca",
+    "cualquier marca"
+  ]
 }

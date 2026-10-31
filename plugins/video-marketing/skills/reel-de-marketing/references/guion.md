@@ -3,15 +3,15 @@
 ## Plantilla (rellénala antes de abrir Remotion)
 ```
 Duración: 15 s · Formato: 1080x1920 · Estilo: claro sobrio · Voz: sí/no · Música: calmada/pulsante
-Acción final: «Crea tu cuenta gratis · drive.gamzyhost.com»
+Acción final: «Crea tu cuenta gratis · pliego.app»   (ejemplo: Pliego, marca ficticia)
 
 | Tiempo | Plano (qué se ve)                         | Texto en pantalla (≤ 6 palabras) | Voz                       |
 |--------|-------------------------------------------|----------------------------------|---------------------------|
-| 0-1,5  | Ventana de Drive entra desde abajo        | Tu nube, tu control.             | ¿Necesitas enviar 20 GB?  |
-| 1,5-5  | Arrastrar un archivo; barra que se llena  | Hasta 20 GB sin cuenta           | Sin registrarte…          |
-| 5-9    | Diálogo «Compartir»: contraseña, caducidad| Con tus condiciones              | …con contraseña…          |
-| 9-12   | «20 GB» cuenta de 0 a 20                  | 20 GB gratis                     | …y 20 GB gratis.          |
-| 12-15  | Marca + URL + botón                       | drive.gamzyhost.com              | Créala en un minuto.      |
+| 0-1,5  | Factura de 1.250 € entra desde abajo      | Cobra en 7 días, no en 45.       | ¿Te pagan tarde?          |
+| 1,5-5  | Botón «Enviar»; la factura sale           | Factúrala el mismo día           | Envíala al terminar…      |
+| 5-9    | Línea de tiempo: día 0, 3 y 7             | Recordatorios que salen solos    | …y olvídate de reclamar…  |
+| 9-12   | La etiqueta cambia a «Pagada»; «7 días»   | Pagada en 7 días                 | …cobra en una semana.     |
+| 12-15  | Marca + URL + botón                       | pliego.app                       | Pruébalo gratis.          |
 ```
 
 ## Estructuras

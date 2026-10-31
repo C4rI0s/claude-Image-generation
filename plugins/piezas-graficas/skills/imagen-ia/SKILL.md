@@ -18,7 +18,8 @@ La IA pone **la imagen**; el texto, la marca y la composición se hacen en HTML 
    texto**: esa zona tiene que quedar limpia (cielo, pared, desenfoque, espacio negativo).
 2. **Formato igual al de la pieza** (o mayor): 4:5 para carrusel, 9:16 para story, 16:9 para miniatura/OG.
 3. **Prompt en inglés** con la plantilla de `references/prompts.md`: sujeto + composición (con el hueco para el
-   texto) + luz + paleta de la marca + estilo + lo que NO quieres.
+   texto) + luz + paleta de la marca (los colores de `marca.json` en palabras: «warm off-white, charcoal, a single
+   coral accent») + estilo + lo que NO quieres.
 4. **Empieza barato**: 2-4 variantes con el modelo económico (en Higgsfield, `soul` o `z-image`; `ideogram` solo si
    de verdad necesitas letras dentro, y casi nunca las necesitas). Lanza con `higgsfield_imagen` y recoge con
    `higgsfield_estado`. El gasto está controlado por la herramienta: no la esquives con la API a mano. Los vídeos
@@ -46,6 +47,6 @@ La IA pone **la imagen**; el texto, la marca y la composición se hacen en HTML 
 - Para un personaje recurrente: imagen ancla y referencia (ver la skill `higgsfield` si está instalada).
 
 ## Ficheros
-- En el entorno de GamzyHost las imágenes bajan a `C:\AgenticOS\workspace\documentos\higgsfield\`. Copia las que uses
-  a la carpeta de la pieza y referencia la copia (los enlaces de Higgsfield caducan a los 7 días).
+- Copia las imágenes que uses a la carpeta de la pieza y referencia la copia: los enlaces de los generadores caducan
+  (los de Higgsfield, a los 7 días).
 - `references/prompts.md` · plantilla de prompt, bloques de estilo y ejemplos por tipo de pieza.

@@ -5,8 +5,10 @@ bien» no vale: fuentes que no cargan, textos que saltan de línea, imágenes ro
 el PNG.
 
 ## Bucle
-1. **Renderiza** con el script de la skill del formato (`exportar.mjs` para piezas y carruseles,
-   `comprobar-correo.mjs` para correos). Errores = se arreglan siempre. Avisos = se arreglan o se justifican.
+1. **Renderiza** con el script de la skill del formato (`exportar.mjs --marca marca.json` para piezas y carruseles,
+   `aplicar-marca.mjs` + `comprobar-correo.mjs` para correos). Errores = se arreglan siempre. Avisos = se arreglan o
+   se justifican. El exportador detecta texto cortado o fuera, textos que se pisan, texto que choca con una tarjeta,
+   viudas, contraste, letra mínima, fuentes que no cargan e imágenes rotas o ampliadas; aun así, **mira**.
 2. **Abre los PNG** (herramienta Read sobre la imagen). Míralos dos veces:
    - **A tamaño real**: detalles, cortes, alineaciones, erratas.
    - **A tamaño de móvil** (`hoja.png`, `movil.png`): ¿se lee el titular? ¿se entiende la idea en 2 segundos?
@@ -29,9 +31,9 @@ el PNG.
 - [ ] Sin viudas en titulares; sin palabras partidas raras.
 
 **Estilo**
-- [ ] Plano: sin brillos, sombras difusas, degradados, bordes de color ni emojis.
+- [ ] Plano: sin brillos, sombras difusas, degradados, bordes ni barras laterales de color, ni emojis.
 - [ ] Un acento, < 10 % de la superficie, con contraste suficiente.
-- [ ] Una familia tipográfica (más mono como mucho) y cargada de verdad (no la de sistema por error).
+- [ ] La tipografía y los colores son los del `marca.json` (no los del ejemplo) y la fuente cargó de verdad.
 - [ ] Capturas nítidas (no ampliadas), recortadas a lo que importa, con fondo que casa con el lienzo y sin texto
       quemado que contradiga la pieza (cifras viejas, titulares duplicados).
 

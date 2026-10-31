@@ -19,10 +19,10 @@ Para voz en off y música, la skill `voz-y-musica-de-video` si está instalada. 
    30 s como máximo para promo; lanzamientos largos 45-60 s.
 2. **Guion por segundos** (`references/guion.md`): gancho en el primer segundo, una idea por plano, cifra o prueba
    real a mitad, acción al final. Escribe el texto en pantalla de cada plano (≤ 6 palabras) y la voz si la hay.
-3. **Reutiliza lo que ya existe**: los tokens y textos del carrusel o de las piezas de la campaña; las capturas reales
+3. **Reutiliza lo que ya existe**: el `marca.json` y los textos del carrusel o de las piezas de la campaña; las capturas reales
    (vía «recrear la interfaz» o «captura entera» de motion-graphics).
-4. **Anima** con motion-graphics: estilo **claro** u **oscuro** sobrio para GamzyHost (el de agencia, solo si se pide
-   algo más enérgico). Nada de glitch, brillos ni partículas por defecto; movimiento con propósito (cámara que acompaña,
+4. **Anima** con motion-graphics: estilo **claro** u **oscuro** sobrio con los colores y la tipografía del
+   `marca.json` (el de agencia, solo si se pide algo más enérgico). Nada de glitch, brillos ni partículas por defecto; movimiento con propósito (cámara que acompaña,
    piezas que entran con trayectoria, cifras que cuentan).
 5. **Formato**: 1080x1920 a 30 o 60 fps para Reels/TikTok/Shorts; 1080x1350 para feed; 1920x1080 para YouTube/web.
    Zonas seguras en 9:16: 250 px arriba, 340 abajo y 120 a la derecha libres de texto.

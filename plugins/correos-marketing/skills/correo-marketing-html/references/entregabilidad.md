@@ -14,9 +14,9 @@ El diseño no sirve de nada si el correo acaba en spam. Lo que depende del HTML 
 - **SPF, DKIM y DMARC** alineados con el dominio del remitente.
 - Cabeceras `List-Unsubscribe` (mailto y https) y `List-Unsubscribe-Post: List-Unsubscribe=One-Click`
   (obligatorias para envíos masivos a Gmail y Yahoo desde 2024).
-- Remitente reconocible («GamzyHost <contact@…>»), con `From` bien formado: en GamzyHost un `EMAIL_FROM` mal
-  cargado produjo rechazos 550 «not RFC 5322 compliant».
-- Solo a quien dio su **consentimiento** (en GamzyHost el filtro `marketing_optin = 1` está en la propia consulta).
+- Remitente reconocible («Marca <hola@…>»), con `From` bien formado: un `From` mal cargado desde un `.env` (comillas,
+  espacios) produce rechazos 550 «not RFC 5322 compliant».
+- Solo a quien dio su **consentimiento** (mejor si el filtro está en la propia consulta de destinatarios).
 - Por tandas, no todo de golpe; reanudable sin duplicar.
 - Versión de **texto plano** junto al HTML.
 

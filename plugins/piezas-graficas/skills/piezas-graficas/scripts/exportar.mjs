@@ -7,6 +7,8 @@
  *   node exportar.mjs <fichero.html> [opciones]
  *
  * Opciones:
+ *   --marca <json>     Marca que se aplica (colores, tipografía, nombre, web y logo). Si no se da y hay un
+ *                      marca.json junto al HTML, se usa ese. Sin marca, se ven los valores de la plantilla.
  *   --selector <css>   Qué elementos son piezas (por defecto [data-pieza])
  *   --salida <dir>     Carpeta de salida (por defecto out/<nombre-del-html>/ junto al HTML)
  *   --escala <n>       Densidad de píxeles (1 = tamaño exacto; 2 = retina). Por defecto 1
@@ -14,10 +16,21 @@
  *   --carrusel         Además de la hoja, genera perfil.png (cómo se ve en la rejilla 3:4 del perfil)
  *   --estricto         Sale con código 1 si hay avisos (no solo errores)
  *
+ * La marca entra por variables CSS (--papel, --tinta, --acento, --fuente…, ver marca.json en la skill
+ * direccion-de-arte) y por elementos marcados: data-marca="nombre" | "web_texto" | "lema" | … (cualquier
+ * campo de texto del JSON) y data-marca="logo" (se rellena con logo.svg, que usa currentColor).
+ *
  * Cada pieza es un elemento con data-pieza="nombre" y, opcionalmente,
  * data-ancho / data-alto (se comprueba que mide eso), data-margen (zona segura
  * en px), data-min-letra (px) y data-permite-sombra (desactiva el aviso de
- * sombras y brillos).
+ * sombras y brillos). Dentro de la pieza, data-maqueta marca una maqueta de
+ * interfaz (tarjeta, ventana): su texto puede ser más pequeño y entrar en el
+ * margen, pero nunca salirse ni quedar cortado.
+ *
+ * Errores que detecta: tamaño distinto, texto fuera o cortado, textos que se
+ * pisan, texto que choca con un bloque ajeno (tarjeta, botón), imágenes rotas,
+ * fuentes que no cargan. Avisos: margen, letra mínima, contraste, sombras,
+ * imágenes ampliadas, viudas en titulares.
  *
  * Salida: un PNG por pieza, hoja.png (todas juntas a tamaño de móvil, para
  * juzgar el ritmo) e informe.json. Lo que imprime por consola es el resumen.
@@ -41,6 +54,41 @@ const selector = opt('selector', '[data-pieza]')
 const salida = path.resolve(opt('salida', path.join(path.dirname(fichero), 'out', path.basename(fichero, path.extname(fichero)))))
 const escala = Number(opt('escala', '1')) || 1
 const solo = opt('solo', null)
+const ficheroMarca = opt('marca', null) ? path.resolve(opt('marca')) : (existsSync(path.join(path.dirname(fichero), 'marca.json')) ? path.join(path.dirname(fichero), 'marca.json') : null)
+let marca = null
+if (ficheroMarca) {
+  try { marca = JSON.parse(await readFile(ficheroMarca, 'utf8')) } catch (e) { console.error(`No puedo leer la marca ${ficheroMarca}: ${e.message}`); process.exit(2) }
+}
+
+// ── Marca ───────────────────────────────────────────────────────────────────
+// Se ejecuta en el navegador: pone los tokens de la marca por encima de los de la plantilla,
+// carga su tipografía y rellena nombre, web y logo.
+async function aplicarMarcaEnPagina(m) {
+  const c = m.colores || {}, t = m.tipografia || {}
+  const vars = Object.entries(c).map(([k, v]) => `--${k}:${v}`)
+  if (t.fuente) vars.push(`--fuente:'${t.fuente}', system-ui, sans-serif`)
+  if (t.mono) vars.push(`--mono:'${t.mono}', ui-monospace, monospace`)
+  if (m.forma?.radio) vars.push(`--radio:${m.forma.radio}`)
+  const st = document.createElement('style')
+  st.id = 'marca-json'
+  st.textContent = `:root{${vars.join(';')}}`
+  document.head.appendChild(st)
+  if (t.google_fonts) {
+    const l = document.createElement('link')
+    l.rel = 'stylesheet'
+    l.href = `https://fonts.googleapis.com/css2?${t.google_fonts}&display=block`
+    await new Promise(r => { l.onload = l.onerror = r; document.head.appendChild(l) })
+  }
+  const leer = k => k.split('.').reduce((a, x) => (a == null ? a : a[x]), m)
+  for (const el of document.querySelectorAll('[data-marca]')) {
+    const k = el.dataset.marca
+    if (k === 'logo') { if (m.logo?.svg) el.innerHTML = m.logo.svg }
+    else { const v = leer(k); if (typeof v === 'string') el.textContent = v }
+  }
+  if (t.fuente) await Promise.all([400, 500, 600, 700, 800].map(w => document.fonts.load(`${w} 40px "${t.fuente}"`).catch(() => null)))
+  await document.fonts.ready
+  return !t.fuente || [...document.fonts].some(f => f.family.replace(/["']/g, '') === t.fuente && f.status === 'loaded')
+}
 
 // ── Navegador ───────────────────────────────────────────────────────────────
 
@@ -150,6 +198,7 @@ function revisarEnPagina({ selector, solo, escala }) {
     }
 
     const vistos = new Set()
+    const textos = []
     for (const el of [p, ...p.querySelectorAll('*')]) {
       const cs = getComputedStyle(el)
       if (!p.hasAttribute('data-permite-sombra')) {
@@ -163,9 +212,14 @@ function revisarEnPagina({ selector, solo, escala }) {
       const rt = rectTexto(el)
       if (!rt || cs.visibility === 'hidden' || Number(cs.opacity) === 0) continue
       const texto = corta(el.textContent)
+      // Para los choques vale la caja de línea, no la del glifo (con interlineado < 1 el glifo se sale y no pisa nada)
+      let bloque = el
+      while (bloque !== p && getComputedStyle(bloque).display === 'inline') bloque = bloque.parentElement
+      const bb = bloque.getBoundingClientRect()
+      textos.push({ el, rt: { left: rt.left, right: rt.right, top: Math.max(rt.top, bb.top), bottom: Math.min(rt.bottom, bb.bottom) }, texto })
       if (rt.left < caja.left - 1 || rt.top < caja.top - 1 || rt.right > caja.right + 1 || rt.bottom > caja.bottom + 1) {
         errores.push(`Texto fuera de la pieza: «${texto}»`)
-      } else if (!el.closest('[data-sin-margen]') && (rt.left - caja.left < margen || rt.top - caja.top < margen || caja.right - rt.right < margen || caja.bottom - rt.bottom < margen)) {
+      } else if (!el.closest('[data-sin-margen], [data-maqueta]') && (rt.left - caja.left < margen || rt.top - caja.top < margen || caja.right - rt.right < margen || caja.bottom - rt.bottom < margen)) {
         avisos.push(`Texto dentro del margen de seguridad (${margen}px): «${texto}»`)
       }
       for (let n = el; n && n !== p.parentElement; n = n.parentElement) {
@@ -175,7 +229,7 @@ function revisarEnPagina({ selector, solo, escala }) {
         }
       }
       const tam = parseFloat(cs.fontSize)
-      if (tam < minLetra) avisos.push(`Letra de ${tam}px (mínimo ${minLetra}px en este formato): «${texto}»`)
+      if (tam < (el.closest('[data-maqueta]') ? Math.min(minLetra, Math.max(14, Math.round(Math.min(w, h) * 0.016))) : minLetra)) avisos.push(`Letra de ${tam}px (mínimo ${minLetra}px en este formato): «${texto}»`)
       const sobreFoto = rectImgs.some(ri => cruza(ri, rt))
       const fondo = fondoDe(el)
       const color = parse(cs.color)
@@ -186,6 +240,54 @@ function revisarEnPagina({ selector, solo, escala }) {
         const grande = tam >= Math.min(w, h) * 0.04 || (tam >= Math.min(w, h) * 0.03 && Number(cs.fontWeight) >= 700)
         const minimo = grande ? 3 : 4.5
         if (c < minimo) avisos.push(`Contraste ${c.toFixed(2)}:1 (mínimo ${minimo}:1): «${texto}»`)
+      }
+    }
+    // Choques: dos textos que no se contienen uno a otro y se pisan
+    const pisa = (a, b) => Math.min(a.right, b.right) - Math.max(a.left, b.left) > 2 && Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > 2
+    for (let i = 0; i < textos.length; i++) for (let j = i + 1; j < textos.length; j++) {
+      const a = textos[i], b = textos[j]
+      if (a.el.contains(b.el) || b.el.contains(a.el)) continue
+      if (pisa(a.rt, b.rt)) errores.push(`Textos que se pisan: «${a.texto.slice(0, 30)}» y «${b.texto.slice(0, 30)}»`)
+    }
+    // Texto que choca con un bloque (tarjeta, botón, maqueta) que no es el suyo
+    const bloques = [...p.querySelectorAll('*')].filter(b => {
+      if (b.tagName === 'IMG' || b.tagName === 'svg' || b.closest('svg')) return false
+      const c = getComputedStyle(b), bg = parse(c.backgroundColor)
+      return (bg && bg.a > 0.05) || parseFloat(c.borderTopWidth) > 0 && parseFloat(c.borderLeftWidth) > 0
+    }).map(b => ({ b, r: visible(b) }))
+    for (const t of textos) {
+      for (const { b, r } of bloques) {
+        if (b.contains(t.el) || t.el.contains(b)) continue
+        if (pisa(t.rt, r)) { errores.push(`Texto que choca con un bloque <${b.tagName.toLowerCase()} class="${b.className}">: «${t.texto.slice(0, 40)}»`); break }
+      }
+    }
+    // Bloques sin aire: dos tarjetas o botones que no se tocan pero quedan a menos de 24 px
+    for (let i = 0; i < bloques.length; i++) for (let j = i + 1; j < bloques.length; j++) {
+      const A = bloques[i], B = bloques[j]
+      if (A.b.contains(B.b) || B.b.contains(A.b)) continue
+      const sx = Math.max(A.r.left, B.r.left) - Math.min(A.r.right, B.r.right)
+      const sy = Math.max(A.r.top, B.r.top) - Math.min(A.r.bottom, B.r.bottom)
+      const hueco = Math.max(sx, sy)
+      if (hueco >= 0 && hueco < 24 && (sx < 0 || sy < 0)) {
+        avisos.push(`Bloques sin aire (${Math.round(hueco)} px): <${A.b.tagName.toLowerCase()} class="${A.b.className}"> y <${B.b.tagName.toLowerCase()} class="${B.b.className}">`)
+      }
+    }
+    // Viudas: un titular de varias líneas que acaba con una palabra sola
+    for (const el of p.querySelectorAll('h1, h2, h3, [data-titular]')) {
+      const palabras = []
+      const recorrer = n => {
+        if (n.nodeType === 3) {
+          const re = /\S+/g; let mt
+          while ((mt = re.exec(n.textContent))) {
+            const rg = document.createRange(); rg.setStart(n, mt.index); rg.setEnd(n, mt.index + mt[0].length)
+            const q = rg.getClientRects()[0]; if (q) palabras.push(Math.round(q.top))
+          }
+        } else n.childNodes.forEach(recorrer)
+      }
+      recorrer(el)
+      const lineas = [...new Set(palabras)].sort((x, y) => x - y)
+      if (lineas.length > 1 && palabras.filter(t => t === lineas[lineas.length - 1]).length === 1) {
+        avisos.push(`Viuda: el titular «${corta(el.textContent).slice(0, 40)}» acaba con una palabra sola en la última línea`)
       }
     }
     return { nombre, ancho: w, alto: h, errores: [...new Set(errores)], avisos: [...new Set(avisos)], fuentesFallidas }
@@ -228,6 +330,11 @@ pagina.on('pageerror', e => fallosRed.push(`Error JS: ${e.message}`))
 
 await pagina.goto(pathToFileURL(fichero).href, { waitUntil: 'networkidle', timeout: 60000 })
 await pagina.evaluate(() => document.fonts.ready)
+let fuenteMarcaOk = true
+if (marca) {
+  fuenteMarcaOk = await pagina.evaluate(aplicarMarcaEnPagina, marca)
+  console.log(`Marca: ${marca.nombre ?? '?'} (${path.relative(process.cwd(), ficheroMarca) || ficheroMarca})`)
+}
 await pagina.waitForTimeout(250)
 
 const informe = await pagina.evaluate(revisarEnPagina, { selector, solo, escala })
@@ -261,6 +368,7 @@ for (const p of informe) {
   if (p.avisos.length > 12) console.log(`   · …y ${p.avisos.length - 12} avisos más (informe.json)`)
 }
 if (fuentes.length) { nErr++; console.log(`\n✗ Fuentes que no cargaron: ${fuentes.join(', ')}`) }
+if (!fuenteMarcaOk) { nErr++; console.log(`\n✗ La fuente de la marca («${marca.tipografia.fuente}») no cargó: revisa tipografia.google_fonts en ${ficheroMarca}`) }
 if (fallosRed.length) { nErr++; console.log(`\n✗ Recursos que fallaron:\n   ${fallosRed.join('\n   ')}`) }
 console.log(`\nResumen: ${nErr} error(es), ${nAv} aviso(s).`)
 console.log('Ahora ABRE los PNG y la hoja.png y míralos: el informe no sustituye a tu ojo.\n')

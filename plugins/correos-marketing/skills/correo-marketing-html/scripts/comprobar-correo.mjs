@@ -4,9 +4,11 @@
  * correo exigente y lo renderiza en las condiciones en que lo verá la gente.
  *
  * Uso:
- *   node comprobar-correo.mjs <correo.html> [--marketing] [--salida <dir>] [--sin-render]
+ *   node comprobar-correo.mjs <correo.html> [--marketing] [--borrador] [--salida <dir>] [--sin-render]
  *
  *   --marketing   Exige enlace de baja (LSSI / RGPD y buena entregabilidad)
+ *   --borrador    Deja pasar imágenes con ruta local (hero-ejemplo.png) como aviso, para previsualizar
+ *                 antes de subirlas. Para dar el correo por bueno, sin esta opción.
  *   --salida      Carpeta de salida (por defecto revision-<nombre>/ junto al HTML)
  *   --sin-render  Solo las comprobaciones estáticas
  *
@@ -34,6 +36,7 @@ const fichero = path.resolve(args[0])
 if (!existsSync(fichero)) { console.error(`No existe: ${fichero}`); process.exit(2) }
 const salida = path.resolve(opt('salida', path.join(path.dirname(fichero), `revision-${path.basename(fichero, path.extname(fichero))}`)))
 const marketing = flag('marketing')
+const borrador = flag('borrador')
 
 const html = await readFile(fichero, 'utf8')
 const errores = [], avisos = [], datos = {}
@@ -83,11 +86,11 @@ const bordesColor = bordes.flatMap(b => (b.match(/#[0-9a-f]{3,6}\b/gi) ?? [])).f
 if (bordesColor.length) err(`Bordes de color (${[...new Set(bordesColor)].join(', ')}): los bordes son líneas finas neutras o nada`)
 if (/border[^;]*dashed|border[^;]*dotted/i.test(todo)) av('Bordes discontinuos: se leen como cupón barato. Mejor un fondo plano')
 
-// Fondo blanco (decisión de la casa)
+// Fondo blanco (el que mejor aguanta el modo oscuro y los clientes que pintan el suyo)
 const fondoBody = /<body[^>]*style="[^"]*background(?:-color)?\s*:\s*(#[0-9a-f]{3,6}|white)/i.exec(html)?.[1]?.toLowerCase()
 datos.fondo = fondoBody ?? 'sin definir'
 if (!fondoBody) av('El <body> no declara color de fondo: algunos clientes ponen el suyo')
-else if (!['#fff', '#ffffff', 'white'].includes(fondoBody)) av(`Fondo del body ${fondoBody}: el estilo de la casa es fondo blanco`)
+else if (!['#fff', '#ffffff', 'white'].includes(fondoBody)) av(`Fondo del body ${fondoBody}: estas plantillas usan fondo blanco`)
 
 // <style>: solo mejoras (media queries), nunca lo esencial
 for (const bloque of [...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/gi)].map(m => m[1])) {
@@ -101,7 +104,10 @@ datos.imagenes = imgs.length
 for (const img of imgs) {
   const src = /src\s*=\s*"([^"]*)"/i.exec(img)?.[1] ?? ''
   const corto = src.slice(0, 70)
-  if (!/^https:\/\//i.test(src)) err(`Imagen sin URL https absoluta: ${corto || '(vacía)'}`)
+  if (!/^https:\/\//i.test(src)) {
+    const m = `Imagen sin URL https absoluta: ${corto || '(vacía)'}. Súbela a un sitio público antes de enviar`
+    borrador && src && !/^http:/i.test(src) ? av(m) : err(m)
+  }
   if (/\.(webp|svg|avif)(\?|$)/i.test(src)) err(`Formato que Outlook no pinta (usa PNG o JPG): ${corto}`)
   if (!/\balt\s*=/i.test(img)) err(`Imagen sin alt: ${corto}`)
   if (!/\bwidth\s*=\s*"?\d/i.test(img)) av(`Imagen sin atributo width (Outlook la pinta a tamaño real): ${corto}`)
@@ -121,7 +127,9 @@ const tieneBaja = enlaces.some(e => /baja|unsubscribe|darme de baja|cancelar sus
 if (marketing && !tieneBaja) err('Correo comercial sin enlace de baja visible (obligatorio por la LSSI y lo mira Gmail)')
 if (marketing && !/list-unsubscribe/i.test(html)) av('Recuerda la cabecera List-Unsubscribe (y One-Click) al enviarlo: la exigen Gmail y Yahoo a remitentes masivos')
 
-// Restos de plantilla
+// Marca sin aplicar y restos de plantilla
+const sinMarca = [...new Set(sinComentarios.match(/%%[\w.-]+%%/g) ?? [])]
+if (sinMarca.length) err(`Marca sin aplicar (${sinMarca.slice(0, 4).join(' ')}…): pasa antes aplicar-marca.mjs <plantilla> <marca.json>`)
 const restos = sinComentarios.match(/\[\[[^\]]+\]\]|\bTODO\b|[Ll]orem ipsum|XXX/g)
 if (restos) err(`Restos de plantilla: ${[...new Set(restos)].slice(0, 5).join(', ')}`)
 const etiquetas = [...new Set(html.match(/\{\{\s*[\w.]+\s*\}\}/g) ?? [])]
@@ -138,8 +146,8 @@ if (pequenos.length) av(`Hay texto a ${Math.min(...pequenos)}px: por debajo de 1
 const textoPlano = html.replace(/<style[\s\S]*?<\/style>/gi, '').replace(/<!--[\s\S]*?-->/g, '').replace(/<[^>]+>/g, ' ').replace(/&[a-z#0-9]+;/gi, ' ').replace(/\s+/g, ' ').trim()
 datos.palabras = textoPlano.split(' ').filter(w => /\w/.test(w)).length
 if (datos.palabras < 50) av(`Solo ${datos.palabras} palabras de texto real: los filtros de spam desconfían de los correos que son casi todo imagen`)
-if (/!{2,}|¡[^!]*!\s*¡/.test(textoPlano)) av('Exclamaciones en cadena: suenan a spam y no son el tono de la casa')
-if (/[\u{1F300}-\u{1FAFF}]/u.test(textoPlano)) av('Hay emojis en el cuerpo: el estilo de la casa no los usa en correos')
+if (/!{2,}|¡[^!]*!\s*¡/.test(textoPlano)) av('Exclamaciones en cadena: suenan a spam')
+if (/[\u{1F300}-\u{1FAFF}]/u.test(textoPlano)) av('Hay emojis en el cuerpo: el estilo sobrio no los usa (si la marca sí, que sea a propósito)')
 
 // Ancho del contenedor
 const anchos = [...html.matchAll(/<table[^>]*\bwidth\s*=\s*"(\d+)"/gi)].map(m => Number(m[1]))

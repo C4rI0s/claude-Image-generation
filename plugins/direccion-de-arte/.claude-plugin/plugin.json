@@ -1,10 +1,21 @@
 {
   "name": "direccion-de-arte",
-  "version": "1.0.0",
-  "description": "Dirección de arte para marketing con nivel de agencia: brief, copy, tipografía, rejillas, color, marca GamzyHost y la revisión visual obligatoria antes de entregar.",
-  "author": { "name": "Carlos · GamzyHost", "url": "https://gamzyhost.com" },
+  "version": "2.0.0",
+  "description": "Dirección de arte para marketing de cualquier marca con nivel de agencia: brief de marca convertido en marca.json (colores, tipografía, logo, tono) con comprobador de contraste, copy, tipografía, rejillas, color y la revisión visual obligatoria antes de entregar.",
+  "author": {
+    "name": "C4rI0s",
+    "url": "https://github.com/C4rI0s"
+  },
   "homepage": "https://github.com/C4rI0s/claude-skills-marketing",
   "repository": "https://github.com/C4rI0s/claude-skills-marketing",
   "license": "UNLICENSED",
-  "keywords": ["diseño", "dirección de arte", "tipografía", "copywriting", "marca", "marketing"]
+  "keywords": [
+    "diseño",
+    "dirección de arte",
+    "tipografía",
+    "copywriting",
+    "marca",
+    "marketing",
+    "cualquier marca"
+  ]
 }

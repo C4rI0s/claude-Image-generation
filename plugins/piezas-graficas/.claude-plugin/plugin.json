@@ -1,10 +1,24 @@
 {
   "name": "piezas-graficas",
-  "version": "1.0.0",
-  "description": "Portadas, banners, miniaturas, imágenes OG, stories y heros de correo como HTML exportado a PNG exacto con Chrome, con recortador de capturas, revisión automática y guía para generar imágenes de apoyo con IA (Higgsfield) sin el look IA.",
-  "author": { "name": "Carlos · GamzyHost", "url": "https://gamzyhost.com" },
+  "version": "2.0.0",
+  "description": "Portadas, banners, miniaturas, imágenes OG, stories y heros de correo para cualquier marca, como HTML exportado a PNG exacto con Chrome, con maquetas de producto escalables, recortador de capturas, revisión automática y guía de imágenes de apoyo con IA sin el look IA.",
+  "author": {
+    "name": "C4rI0s",
+    "url": "https://github.com/C4rI0s"
+  },
   "homepage": "https://github.com/C4rI0s/claude-skills-marketing",
   "repository": "https://github.com/C4rI0s/claude-skills-marketing",
   "license": "UNLICENSED",
-  "keywords": ["banner", "miniatura", "thumbnail", "og image", "story", "portada", "higgsfield", "ia"]
+  "keywords": [
+    "banner",
+    "miniatura",
+    "thumbnail",
+    "og image",
+    "story",
+    "portada",
+    "higgsfield",
+    "ia",
+    "marca",
+    "cualquier marca"
+  ]
 }
