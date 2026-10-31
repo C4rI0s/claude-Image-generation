@@ -27,6 +27,14 @@
  * interfaz (tarjeta, ventana): su texto puede ser más pequeño y entrar en el
  * margen, pero nunca salirse ni quedar cortado.
  *
+ * Estilo «producto en contexto» (data-estilo="producto" en la pieza): valen las
+ * sombras oscuras y suaves de las capas, pero se avisa de cualquier brillo
+ * (sombra clara o de color, text-shadow) y de desenfocar el contexto. Las capas
+ * de producto (cada [data-maqueta]) pueden solaparse entre ellas: es la
+ * profundidad buscada; el texto libre (titular, apoyo, botón) no puede chocar
+ * con ninguna. El texto dentro de .atenuado o [data-atenuado] es contexto
+ * apagado a propósito: no se le mide el contraste ni la letra mínima.
+ *
  * Errores que detecta: tamaño distinto, texto fuera o cortado, textos que se
  * pisan, texto que choca con un bloque ajeno (tarjeta, botón), imágenes rotas,
  * fuentes que no cargan. Avisos: margen, letra mínima, contraste, sombras,
@@ -117,12 +125,36 @@ async function abrirNavegador() {
 // Se ejecuta en el navegador: mide lo que de verdad se ha pintado.
 
 function revisarEnPagina({ selector, solo, escala }) {
+  // Cualquier color CSS (rgb, oklab, oklch, color(), color-mix ya calculado…) a rgba, con un lienzo de 1 px
+  const lienzo = document.createElement('canvas'); lienzo.width = lienzo.height = 1
+  const ctx = lienzo.getContext('2d', { willReadFrequently: true })
+  const cache = new Map()
   const parse = s => {
-    const m = /rgba?\(([^)]+)\)/.exec(s || '')
-    if (!m) return null
-    const p = m[1].split(/[\s,/]+/).filter(Boolean).map(Number)
-    return { r: p[0], g: p[1], b: p[2], a: p[3] === undefined ? 1 : p[3] }
+    if (!s || s === 'none') return null
+    if (cache.has(s)) return cache.get(s)
+    let out = null
+    const m = /^rgba?\(([^)]+)\)$/.exec(s.trim())
+    if (m) {
+      const p = m[1].split(/[\s,/]+/).filter(Boolean).map(Number)
+      out = { r: p[0], g: p[1], b: p[2], a: p[3] === undefined ? 1 : p[3] }
+    } else if (/^(oklab|oklch|lab|lch|color|hsla?|hwb)\(|^#|^transparent$/.test(s.trim())) {
+      ctx.clearRect(0, 0, 1, 1); ctx.fillStyle = '#000'; ctx.fillStyle = s; ctx.fillRect(0, 0, 1, 1)
+      const d = ctx.getImageData(0, 0, 1, 1).data
+      out = { r: d[0], g: d[1], b: d[2], a: d[3] / 255 }
+    }
+    cache.set(s, out)
+    return out
   }
+  // Capas de una sombra calculada: «color x y blur spread [inset]», separadas por comas fuera de paréntesis
+  const capasSombra = s => s.split(/,(?![^(]*\))/).map(x => x.trim()).filter(Boolean).map(x => {
+    const col = (x.match(/(rgba?|oklab|oklch|lab|lch|color|hsla?)\([^)]*\)/) || [])[0] || 'rgb(0, 0, 0)'
+    const resto = x.replace(col, '')
+    const n = resto.replace('inset', '').trim().split(/\s+/).map(parseFloat)
+    return { color: parse(col), blur: n[2] || 0, inset: /inset/.test(resto) }
+  })
+  // Brillo = sombra difusa clara o de color vivo (las de profundidad son oscuras)
+  const esBrillo = s => capasSombra(s).some(c => !c.inset && c.blur > 4 && c.color && c.color.a > 0.15 && lum(c.color) > 0.18)
+  const raiz = el => el.closest('[data-maqueta]')
   const lin = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4 }
   const lum = c => 0.2126 * lin(c.r) + 0.7152 * lin(c.g) + 0.0722 * lin(c.b)
   const contraste = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05) }
@@ -199,18 +231,21 @@ function revisarEnPagina({ selector, solo, escala }) {
 
     const vistos = new Set()
     const textos = []
+    const producto = p.dataset.estilo === 'producto'
     for (const el of [p, ...p.querySelectorAll('*')]) {
       const cs = getComputedStyle(el)
       if (!p.hasAttribute('data-permite-sombra')) {
-        const brillo = (cs.textShadow !== 'none' && 'text-shadow') || (cs.boxShadow !== 'none' && 'box-shadow')
-          || (/drop-shadow|blur/.test(cs.filter) && 'filter')
+        const brillo = (cs.textShadow !== 'none' && 'text-shadow')
+          || (cs.boxShadow !== 'none' && (!producto ? 'box-shadow' : esBrillo(cs.boxShadow) && 'box-shadow clara o de color'))
+          || (/drop-shadow|blur/.test(cs.filter) && (producto ? 'filter: el contexto se atenúa, no se desenfoca' : 'filter'))
         if (brillo && !vistos.has(brillo + el.tagName)) {
           vistos.add(brillo + el.tagName)
-          avisos.push(`Sombra o brillo (${brillo}) en <${el.tagName.toLowerCase()}>: el estilo es plano`)
+          avisos.push(`Sombra o brillo (${brillo}) en <${el.tagName.toLowerCase()} class="${el.className?.baseVal ?? el.className}">: ${producto ? 'en el estilo producto solo valen sombras oscuras y suaves' : 'el estilo es plano'}`)
         }
       }
       const rt = rectTexto(el)
       if (!rt || cs.visibility === 'hidden' || Number(cs.opacity) === 0) continue
+      const atenuado = !!el.closest('.atenuado, [data-atenuado]')
       const texto = corta(el.textContent)
       // Para los choques vale la caja de línea, no la del glifo (con interlineado < 1 el glifo se sale y no pisa nada)
       let bloque = el
@@ -229,11 +264,14 @@ function revisarEnPagina({ selector, solo, escala }) {
         }
       }
       const tam = parseFloat(cs.fontSize)
-      if (tam < (el.closest('[data-maqueta]') ? Math.min(minLetra, Math.max(14, Math.round(Math.min(w, h) * 0.016))) : minLetra)) avisos.push(`Letra de ${tam}px (mínimo ${minLetra}px en este formato): «${texto}»`)
+      const minimoAqui = el.closest('[data-maqueta]') ? Math.min(minLetra, Math.max(14, Math.round(Math.min(w, h) * 0.016))) : minLetra
+      if (!atenuado && tam < minimoAqui) avisos.push(`Letra de ${Math.round(tam * 10) / 10}px (mínimo ${minimoAqui}px aquí): «${texto}»`)
       const sobreFoto = rectImgs.some(ri => cruza(ri, rt))
       const fondo = fondoDe(el)
       const color = parse(cs.color)
-      if (sobreFoto || fondo.imagen) {
+      if (atenuado) {
+        // contexto apagado a propósito: ni contraste ni letra mínima
+      } else if (sobreFoto || fondo.imagen) {
         if (!el.closest('[data-legible]')) avisos.push(`Texto sobre imagen, comprueba la legibilidad a ojo: «${texto}»`)
       } else if (color && fondo.color) {
         const c = contraste(mezcla(color, fondo.color), fondo.color)
@@ -247,6 +285,9 @@ function revisarEnPagina({ selector, solo, escala }) {
     for (let i = 0; i < textos.length; i++) for (let j = i + 1; j < textos.length; j++) {
       const a = textos[i], b = textos[j]
       if (a.el.contains(b.el) || b.el.contains(a.el)) continue
+      // Dos capas de producto distintas que se solapan: la de arriba tapa a la de abajo a propósito
+      const ra = raiz(a.el), rb = raiz(b.el)
+      if (ra && rb && ra !== rb) continue
       if (pisa(a.rt, b.rt)) errores.push(`Textos que se pisan: «${a.texto.slice(0, 30)}» y «${b.texto.slice(0, 30)}»`)
     }
     // Texto que choca con un bloque (tarjeta, botón, maqueta) que no es el suyo
@@ -256,15 +297,20 @@ function revisarEnPagina({ selector, solo, escala }) {
       return (bg && bg.a > 0.05) || parseFloat(c.borderTopWidth) > 0 && parseFloat(c.borderLeftWidth) > 0
     }).map(b => ({ b, r: visible(b) }))
     for (const t of textos) {
+      const rt0 = raiz(t.el)
       for (const { b, r } of bloques) {
         if (b.contains(t.el) || t.el.contains(b)) continue
+        const rb = raiz(b)
+        if (rt0 && rb && rt0 !== rb) continue
         if (pisa(t.rt, r)) { errores.push(`Texto que choca con un bloque <${b.tagName.toLowerCase()} class="${b.className}">: «${t.texto.slice(0, 40)}»`); break }
       }
     }
     // Bloques sin aire: dos tarjetas o botones que no se tocan pero quedan a menos de 24 px
+    // (entre piezas de maquetas no se mide: es el espaciado de la interfaz o un solape buscado)
     for (let i = 0; i < bloques.length; i++) for (let j = i + 1; j < bloques.length; j++) {
       const A = bloques[i], B = bloques[j]
       if (A.b.contains(B.b) || B.b.contains(A.b)) continue
+      if (raiz(A.b) && raiz(B.b)) continue
       const sx = Math.max(A.r.left, B.r.left) - Math.min(A.r.right, B.r.right)
       const sy = Math.max(A.r.top, B.r.top) - Math.min(A.r.bottom, B.r.bottom)
       const hueco = Math.max(sx, sy)
@@ -335,6 +381,8 @@ if (marca) {
   fuenteMarcaOk = await pagina.evaluate(aplicarMarcaEnPagina, marca)
   console.log(`Marca: ${marca.nombre ?? '?'} (${path.relative(process.cwd(), ficheroMarca) || ficheroMarca})`)
 }
+// Con la fuente definitiva, las capas con data-sobre (producto.js) se vuelven a colocar encima de su fila
+await pagina.evaluate(() => window.recolocar?.())
 await pagina.waitForTimeout(250)
 
 const informe = await pagina.evaluate(revisarEnPagina, { selector, solo, escala })

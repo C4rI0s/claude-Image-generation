@@ -8,10 +8,15 @@ description: Crea carruseles de Instagram (y LinkedIn) profesionales a 1080x1350
 Antes, lee **`direccion-de-arte`** (brief de marca → `marca.json`, copy, revisión). Aquí está cómo se fabrica.
 
 ## Qué hay aquí
-- `plantillas/carrusel.html` · sistema de 7 diapositivas con todos los tipos: **portada** (con maqueta que sangra),
-  **punto con prueba** (lista de facturas), **punto con línea de tiempo**, **lista**, **cifra**, **tabla** y **cierre**
-  sobre el color de marca. Temas claro, `.oscuro` y `.color`; cabecera y pie fijos con contador y barra de progreso.
-  Ejemplo: Pliego, marca ficticia. Sin colores ni fuentes sueltos: todo son variables que pone `marca.json`.
+- `plantillas/carrusel.html` · sistema de 7 diapositivas: **portada con producto en contexto** (la app sobre el
+  degradado de la marca, sangrando, con la fila que cuenta la promesa destacada encima), **punto con producto en
+  claro** (modal sobre la app atenuada), **punto con producto en oscuro** (ajustes de la función), **lista**,
+  **cifra**, **tabla** y **cierre** sobre el color de marca. Temas claro, `.oscuro`, `.color` y `.escena`
+  (`.escena.clara`, `.escena.malla`); cabecera y pie fijos con contador y barra de progreso. Ejemplo: Pliego, marca
+  ficticia. Sin colores ni fuentes sueltos: todo son variables que pone `marca.json`.
+- `plantillas/producto.css` + `producto.js` · los componentes de la skill `producto-en-contexto` (ventana de app,
+  capas flotantes con borde degradado, chips, avisos, iconos de línea). Cópialos junto al HTML. Reglas del estilo en
+  `piezas-graficas/skills/producto-en-contexto/references/estilo.md`; son el mismo fichero que allí.
 - `scripts/exportar.mjs` · aplica la marca (`--marca`), exporta cada `[data-pieza]` a PNG exacto y revisa: tamaño,
   texto fuera o cortado, **textos que se pisan**, **texto que choca con una tarjeta**, **viudas en titulares**, margen
   de seguridad, letra mínima, contraste real, sombras/brillos, imágenes rotas o ampliadas y fuentes que no cargan.
@@ -23,7 +28,8 @@ Antes, lee **`direccion-de-arte`** (brief de marca → `marca.json`, copy, revis
    carrusel sale con la marca de ejemplo: no lo entregues así.
 2. **Guion antes que diseño** (`references/estructura-y-ritmo.md`): 5-10 diapositivas, una idea por diapositiva,
    titulares de ≤ 8 palabras escritos en una lista. Portada = gancho; última = una acción. Datos comprobados.
-3. **Copia la plantilla** a la carpeta del trabajo: `cp <skill>/plantillas/carrusel.html ./carrusel.html`.
+3. **Copia la plantilla** a la carpeta del trabajo, con sus componentes:
+   `cp <skill>/plantillas/carrusel.html <skill>/plantillas/producto.css <skill>/plantillas/producto.js ./`.
 4. **Monta las diapositivas** duplicando el tipo que toque y cambiando el texto y los datos de las maquetas
    (`.factura`, `.facturas`, `.tiempo`, `.tabla`): son genéricas, cámbiales el contenido por el del producto (un pedido,
    una reserva, un panel, un mensaje). Mantén `data-pieza` numerado (`01-portada`, `02-…`), el contador `0X / 0N` y la
@@ -51,6 +57,11 @@ Antes, lee **`direccion-de-arte`** (brief de marca → `marca.json`, copy, revis
 - **Texto grande**: titulares 80-84 px, apoyo 38 px, nada por debajo de 22 px. Se lee en un móvil a 1/3 de tamaño.
 - **Pruebas visuales** (tarjetas, tablas, líneas de tiempo) dibujadas en HTML con los tokens: nítidas y coherentes.
   Las maquetas que sangran llevan padding extra en el lado que se corta, para que su texto no quede fuera.
+- **Producto en contexto** en 2-3 diapositivas (portada y los puntos fuertes): la app de verdad en `.ventana` sobre
+  `.escena`, una o dos capas `.flotante` que cuentan la idea de esa diapositiva y el resto `.atenuado`. Diapositiva
+  con `data-estilo="producto"`; titular en peso 600; nada de texto medio tapado por una capa (`data-sobre` coloca
+  la fila destacada encima de la suya). La ventana termina encima del pie (el contador no puede tocarla).
+- **Exporta a 2x** (`--escala 2`) para que la interfaz pequeña salga nítida.
 - **Capturas reales**: sin texto quemado que duplique o contradiga el de la diapositiva (recórtalas); nunca ampliadas.
 - **Rejilla del perfil**: Instagram enseña la portada recortada a 3:4 (pierde ~34 px por lado). Nada importante
   pegado a los laterales; comprueba la vista `perfil` de la hoja.

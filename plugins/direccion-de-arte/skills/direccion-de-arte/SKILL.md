@@ -29,6 +29,13 @@ titular, exclamaciones, iconos 3D brillantes, fondos con texturas, más de un ac
 efectos «cristal», palabras de relleno («increíble», «revolucionario», «descubre», «potencia»), stock genérico de
 gente señalando.
 
+**La excepción medida: «producto en contexto»** (skill `producto-en-contexto`, el estilo de las imágenes de
+producto de Proton o Linear). Cuando la pieza enseña la app, valen —y son lo que da el nivel— un **degradado de
+fondo suave** (acento → tono claro y cálido), **capas flotantes con borde de ~1 px degradado** y **una sombra
+oscura larga y suave**. Siguen prohibidos el glow, el neón, las sombras de color, los bordes gruesos o laterales, el
+cristal y desenfocar el contexto. Fuera de las imágenes de producto (correo HTML, piezas solo de texto), el estilo
+sigue siendo plano.
+
 ## Flujo (no te saltes pasos)
 0. **Brief de marca → `marca.json`** (`references/marca.md`). Si ya hay un `marca.json` en la carpeta del trabajo,
    léelo y compruébalo. Si no, consíguelo en este orden: el manual o la guía de la marca que te den; su web (saca
@@ -65,6 +72,8 @@ gente señalando.
   va de relleno (botón, etiqueta) o como texto sobre oscuro. Para texto sobre claro, `acento-texto`.
 - **Maquetas de producto** cuando no hay capturas buenas: tarjetas planas con la tipografía y los colores de la
   marca (factura, pedido, panel, mensaje), con datos verosímiles. Más nítidas y coherentes que una captura borrosa.
+  Para el salto de nivel, **la app entera en contexto** (ventana con lateral, buscador y lista + 1-2 capas que
+  cuentan una función): componentes listos en `producto-en-contexto`.
 - **Capturas reales**: recortadas a lo que importa, con radio coherente y una línea fina neutra; el fondo de la
   captura tiene que casar con el lienzo.
 - **Coherencia entre formatos**: una campaña = mismo `marca.json`, mismo titular, misma maqueta en todos los tamaños.

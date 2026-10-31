@@ -1,26 +1,36 @@
 # claude-skills-marketing
 
 Marketplace privado de plugins para **Claude Code** con skills para hacer piezas de marketing visual con nivel de
-agencia **para cualquier marca o proyecto**: correos HTML, carruseles de Instagram, portadas, banners, miniaturas,
-imágenes OG, stories, heros de correo y reels. La estética es **sobria y plana**: una tipografía, neutros y un acento,
-nada de brillos, sombras ni bordes de color.
+agencia **para cualquier marca o proyecto**: imágenes de producto en contexto, correos HTML, carruseles de
+Instagram, portadas, banners, miniaturas, imágenes OG, stories, heros de correo y reels.
+
+Dos estilos, los dos sobrios:
+- **Producto en contexto** (el de las imágenes de producto de Proton o Linear): la interfaz de la app, real y con
+  detalle, en una ventana que sangra sobre un degradado suave, con 1-2 capas flotantes (modal, fila destacada, aviso)
+  que cuentan una función; borde de ~1 px degradado, una sombra oscura suave y el resto atenuado. Sin glow ni neón.
+- **Plano**: una tipografía, neutros y un acento, sin brillos, sombras ni bordes de color. Es el de los correos HTML
+  y las piezas de solo texto.
 
 La marca es un **parámetro**. La skill `direccion-de-arte` empieza pidiendo o leyendo el brief de marca (nombre,
 colores, tipografía, logo, tono) y lo guarda en un `marca.json`; las plantillas lo aplican solas (variables CSS en
-las piezas, marcadores en los correos). Los ejemplos usan **Pliego**, una marca ficticia de facturación para
-autónomos.
+las piezas, marcadores en los correos), incluido el degradado de fondo, que sale del acento si la marca no lo trae.
+Los ejemplos usan **Pliego**, una marca ficticia de facturación para autónomos.
 
 Todas las skills siguen la misma regla: **no se entrega nada que no se haya renderizado con un Chrome real y mirado**.
-Los scripts exportan a PNG y revisan lo que suele salir mal: texto cortado o fuera, textos que se pisan, texto que
-choca con una tarjeta, bloques sin aire, viudas en titulares, márgenes, contraste, fuentes que no cargan, imágenes
-rotas o ampliadas y, en correos, compatibilidad con Gmail, Outlook y Apple Mail.
+Los scripts exportan a PNG (a 2x si se pide) y revisan lo que suele salir mal: texto cortado o fuera, textos que se
+pisan, texto que choca con una tarjeta, bloques sin aire, viudas en titulares, márgenes, contraste, brillos, fuentes
+que no cargan, imágenes rotas o ampliadas y, en correos, compatibilidad con Gmail, Outlook y Apple Mail.
 
-| Carrusel 1080x1350 | Campaña en 5 formatos | Correo «producto» |
+| Producto en contexto · hero 16:9 | Cabecera de correo |
+|---|---|
+| ![Hero](docs/ejemplos/producto-hero.png) | ![Cabecera](docs/ejemplos/producto-cabecera-correo.png) |
+
+| Campaña de producto en 7 formatos | Carrusel 1080x1350 | Correo «producto» |
 |---|---|---|
-| ![Carrusel](docs/ejemplos/carrusel-hoja.png) | ![Piezas](docs/ejemplos/piezas-hoja.png) | ![Correo](docs/ejemplos/correo-producto.png) |
+| ![Producto](docs/ejemplos/producto-hoja.png) | ![Carrusel](docs/ejemplos/carrusel-hoja.png) | ![Correo](docs/ejemplos/correo-producto.png) |
 
-La misma plantilla con otra marca (otro `marca.json`, sin tocar el HTML):
-![Otra marca](docs/ejemplos/carrusel-otra-marca.png)
+Las mismas plantillas con otra marca (otro `marca.json`, sin tocar el HTML):
+![Otra marca](docs/ejemplos/producto-otra-marca.png)
 
 ## Instalación
 
@@ -28,7 +38,7 @@ Como el repositorio es privado, Claude Code necesita acceso a GitHub: `gh auth l
 `GH_TOKEN` en el entorno.
 
 ```
-/plugin marketplace add C4rI0s/claude-skills-marketing
+/plugin marketplace add C4rI0s/claude-Image-generation
 /plugin install direccion-de-arte@claude-skills-marketing
 /plugin install correos-marketing@claude-skills-marketing
 /plugin install carruseles-instagram@claude-skills-marketing
@@ -49,8 +59,9 @@ Para actualizar: `/plugin marketplace update claude-skills-marketing`.
 
 ### Requisitos de los scripts
 - **Node 18 o superior.**
-- **Chrome o Edge** instalados. Los scripts los usan directamente, así que no hace falta descargar ningún navegador.
-  Si no hay ninguno, define `CHROME_PATH` o ejecuta `npx playwright install chromium`.
+- **Chrome o Edge** recientes (el estilo de producto usa `color-mix()` y colores relativos de CSS). Los scripts los
+  usan directamente, así que no hace falta descargar ningún navegador. Si no hay ninguno, define `CHROME_PATH` o
+  ejecuta `npx playwright install chromium`.
 - La primera vez, en la carpeta `scripts/` de cada skill: `npm install` (solo instala `playwright-core`). Claude lo
   hace solo cuando sigue la skill. `comprobar-marca.mjs` y `aplicar-marca.mjs` no necesitan nada.
 - **ffmpeg** para revisar vídeos por fotogramas (`reel-de-marketing`).
@@ -60,16 +71,18 @@ Para actualizar: `/plugin marketplace update claude-skills-marketing`.
 | Plugin | Skill | Para qué |
 |---|---|---|
 | `direccion-de-arte` | `direccion-de-arte` | La base: **brief de marca → `marca.json`** con `comprobar-marca.mjs` (campos y contraste de cada pareja de color), brief de la pieza, copy, tipografía, rejillas y zonas seguras, color y la **revisión visual obligatoria**. Las demás skills la usan |
-| `correos-marketing` | `correo-marketing-html` | Correos de marketing sobrios. Plantillas `producto`, `anuncio` y `oferta`; `aplicar-marca.mjs` las pasa a tu marca y `comprobar-correo.mjs` hace comprobaciones estáticas y renderiza **escritorio, móvil, sin imágenes y modo oscuro** |
-| `carruseles-instagram` | `carrusel-instagram` | Carruseles 1080x1350 con un sistema de diapositivas (portada, punto con maqueta, línea de tiempo, lista, cifra, tabla, cierre). `exportar.mjs --marca marca.json --carrusel` genera los PNG, la hoja de contacto y la rejilla 3:4 del perfil |
-| `piezas-graficas` | `piezas-graficas` | Hero de correo, OG, miniatura de YouTube, banner de X, story y otros formatos, con maquetas de producto escalables y un recortador exacto de capturas |
+| `piezas-graficas` | `producto-en-contexto` | **Imágenes de producto al nivel de Proton o Linear**: la app en una ventana (lateral, buscador, lista, iconos de línea) sobre un degradado, con modal, fila destacada y avisos flotantes. Cabecera de correo, hero 16:9, post 1:1 y 4:5, banner de X, miniatura y story a PNG 2x. Componentes reutilizables en `producto.css` + `producto.js` y reglas medidas en `references/estilo.md` |
+| `piezas-graficas` | `piezas-graficas` | Hero de correo, OG, miniatura de YouTube, banner de X, story y otros formatos con titular, con maquetas de producto flotantes sobre fondos de escena y un recortador exacto de capturas |
 | `piezas-graficas` | `imagen-ia` | Imágenes de apoyo con IA (Higgsfield u otro) sin el «look IA»: prompts con la paleta de la marca, control de gasto y revisión |
+| `correos-marketing` | `correo-marketing-html` | Correos de marketing sobrios con **cabecera de producto en contexto**. Plantillas `producto`, `anuncio` y `oferta`; `aplicar-marca.mjs` las pasa a tu marca y `comprobar-correo.mjs` hace comprobaciones estáticas y renderiza **escritorio, móvil, sin imágenes y modo oscuro** |
+| `carruseles-instagram` | `carrusel-instagram` | Carruseles 1080x1350 con diapositivas de **producto en contexto** (portada, punto en claro, punto en oscuro) y de texto (lista, cifra, tabla, cierre). `exportar.mjs --marca marca.json --carrusel --escala 2` genera los PNG, la hoja de contacto y la rejilla 3:4 del perfil |
 | `video-marketing` | `reel-de-marketing` | Reels y vídeos cortos: guion por segundos, zonas seguras 9:16, subtítulos y revisión por fotogramas, sobre motion-graphics (Remotion) |
 
 ## Uso rápido
 
 Puedes pedirlo en lenguaje normal; Claude elige la skill:
 
+- «Hazme las imágenes del lanzamiento de la función de recordatorios: cabecera de correo, hero y post, estilo Proton».
 - «Esta es la web de mi cliente: saca su marca y hazme un carrusel de 6 diapositivas sobre su nuevo servicio».
 - «Correo de lanzamiento con la plantilla de producto para la marca de `./marca.json`, y compruébalo».
 - «La misma campaña en OG, miniatura, banner de X y story».
@@ -79,8 +92,10 @@ O a mano:
 ```bash
 # Marca
 node plugins/direccion-de-arte/skills/direccion-de-arte/scripts/comprobar-marca.mjs marca.json
+# Producto en contexto (a 2x)
+node plugins/piezas-graficas/skills/piezas-graficas/scripts/exportar.mjs producto-en-contexto.html --marca marca.json --escala 2
 # Carrusel o piezas
-node plugins/carruseles-instagram/skills/carrusel-instagram/scripts/exportar.mjs mi-carrusel.html --marca marca.json --carrusel
+node plugins/carruseles-instagram/skills/carrusel-instagram/scripts/exportar.mjs mi-carrusel.html --marca marca.json --carrusel --escala 2
 node plugins/piezas-graficas/skills/piezas-graficas/scripts/exportar.mjs mis-piezas.html --marca marca.json
 # Correo
 node plugins/correos-marketing/skills/correo-marketing-html/scripts/aplicar-marca.mjs plantillas/producto.html marca.json -o correo.html
@@ -93,7 +108,8 @@ node plugins/correos-marketing/skills/correo-marketing-html/scripts/comprobar-co
 .claude-plugin/marketplace.json        catálogo del marketplace
 plugins/<plugin>/.claude-plugin/plugin.json
 plugins/<plugin>/skills/<skill>/SKILL.md
-                                /plantillas/   HTML de partida (y marca.json de ejemplo) con contenido de Pliego
+                                /plantillas/   HTML de partida (y marca.json de ejemplo) con contenido de Pliego;
+                                               producto.css + producto.js donde hay maquetas de producto
                                 /scripts/      exportadores y comprobadores (Node + playwright-core)
                                 /references/   guías que la skill carga cuando las necesita
 docs/ejemplos/                         renders de las plantillas
@@ -105,6 +121,8 @@ docs/ejemplos/                         renders de las plantillas
 2. Si es un plugin nuevo, añade su `plugin.json` y su entrada en `.claude-plugin/marketplace.json`.
 3. Si trae plantillas, que lean la marca de `marca.json` (variables CSS o marcadores `%%…%%`), renderízalas con su
    script, míralas y deja el resultado en `docs/ejemplos/`. Nada de marcas reales en las plantillas.
-4. Sube la `version` del plugin y `metadata.version` para que `/plugin marketplace update` lo recoja.
+4. `producto.css`/`producto.js` y `exportar.mjs` están repetidos en varias skills a propósito (cada plugin se instala
+   solo): si cambias uno, copia los demás.
+5. Sube la `version` del plugin y `metadata.version` para que `/plugin marketplace update` lo recoja.
 
 Uso privado. No se publica.

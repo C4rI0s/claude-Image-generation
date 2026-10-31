@@ -1,13 +1,13 @@
 {
   "name": "piezas-graficas",
-  "version": "2.0.0",
-  "description": "Portadas, banners, miniaturas, imágenes OG, stories y heros de correo para cualquier marca, como HTML exportado a PNG exacto con Chrome, con maquetas de producto escalables, recortador de capturas, revisión automática y guía de imágenes de apoyo con IA sin el look IA.",
+  "version": "2.1.0",
+  "description": "Imágenes de producto en contexto para cualquier marca (la app en una ventana sobre un degradado suave, con modal, fila destacada y avisos flotantes, estilo Proton/Linear) en cabecera de correo, hero 16:9, post 1:1 y 4:5, banner, miniatura y story a PNG 2x; más portadas, banners, miniaturas, OG, stories y heros con titular, recortador de capturas, revisión automática y guía de imágenes de apoyo con IA sin el look IA.",
   "author": {
     "name": "C4rI0s",
     "url": "https://github.com/C4rI0s"
   },
-  "homepage": "https://github.com/C4rI0s/claude-skills-marketing",
-  "repository": "https://github.com/C4rI0s/claude-skills-marketing",
+  "homepage": "https://github.com/C4rI0s/claude-Image-generation",
+  "repository": "https://github.com/C4rI0s/claude-Image-generation",
   "license": "UNLICENSED",
   "keywords": [
     "banner",
@@ -19,6 +19,10 @@
     "higgsfield",
     "ia",
     "marca",
-    "cualquier marca"
+    "cualquier marca",
+    "producto",
+    "mockup",
+    "producto en contexto",
+    "hero"
   ]
 }

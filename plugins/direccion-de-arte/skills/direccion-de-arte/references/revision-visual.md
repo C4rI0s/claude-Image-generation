@@ -31,7 +31,10 @@ el PNG.
 - [ ] Sin viudas en titulares; sin palabras partidas raras.
 
 **Estilo**
-- [ ] Plano: sin brillos, sombras difusas, degradados, bordes ni barras laterales de color, ni emojis.
+- [ ] Plano: sin brillos, sombras difusas, degradados, bordes ni barras laterales de color, ni emojis. Excepción:
+      las imágenes de «producto en contexto» (degradado suave de fondo, capas con borde de ~1 px degradado y una
+      sombra oscura suave); ahí se mira además la lista de `producto-en-contexto/references/estilo.md` (nada medio
+      tapado por una capa, el borde no brilla, el contexto atenuado sin desenfocar).
 - [ ] Un acento, < 10 % de la superficie, con contraste suficiente.
 - [ ] La tipografía y los colores son los del `marca.json` (no los del ejemplo) y la fuente cargó de verdad.
 - [ ] Capturas nítidas (no ampliadas), recortadas a lo que importa, con fondo que casa con el lienzo y sin texto

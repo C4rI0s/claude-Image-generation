@@ -1,20 +1,20 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "claude-skills-marketing",
-  "description": "Skills de Claude Code para piezas de marketing visual de cualquier marca con nivel de agencia: correos HTML, carruseles de Instagram, portadas, banners, miniaturas, OG, stories, reels y dirección de arte. La marca es un parámetro (marca.json). Estética sobria y plana.",
+  "description": "Skills de Claude Code para piezas de marketing visual de cualquier marca con nivel de agencia: imágenes de producto en contexto (la app sobre un degradado con capas flotantes, estilo Proton/Linear), correos HTML, carruseles de Instagram, portadas, banners, miniaturas, OG, stories, reels y dirección de arte. La marca es un parámetro (marca.json).",
   "owner": {
     "name": "C4rI0s",
     "url": "https://github.com/C4rI0s"
   },
   "metadata": {
-    "version": "2.0.0"
+    "version": "2.1.0"
   },
   "plugins": [
     {
       "name": "direccion-de-arte",
       "source": "./plugins/direccion-de-arte",
       "description": "La base: brief de marca → marca.json (con comprobador de contraste), copy, tipografía, rejillas, color y la revisión visual obligatoria. Instálala siempre.",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "category": "design",
       "tags": [
         "diseño",
@@ -26,8 +26,8 @@
     {
       "name": "correos-marketing",
       "source": "./plugins/correos-marketing",
-      "description": "Correos HTML de marketing compatibles con Gmail, Outlook y Apple Mail, con plantillas probadas, aplicador de marca y comprobador que renderiza 4 vistas.",
-      "version": "2.0.0",
+      "description": "Correos HTML de marketing compatibles con Gmail, Outlook y Apple Mail, con cabecera de producto en contexto, plantillas probadas, aplicador de marca y comprobador que renderiza 4 vistas.",
+      "version": "2.1.0",
       "category": "design",
       "tags": [
         "email",
@@ -38,8 +38,8 @@
     {
       "name": "carruseles-instagram",
       "source": "./plugins/carruseles-instagram",
-      "description": "Carruseles 1080x1350 con sistema de diapositivas y maquetas de producto, exportación a PNG con Chrome real, revisión automática y hoja de contacto con la rejilla del perfil.",
-      "version": "2.0.0",
+      "description": "Carruseles 1080x1350 con diapositivas de producto en contexto (la app con capas flotantes) y de texto, exportación a PNG 2x con Chrome real, revisión automática y hoja de contacto con la rejilla del perfil.",
+      "version": "2.1.0",
       "category": "design",
       "tags": [
         "instagram",
@@ -50,22 +50,24 @@
     {
       "name": "piezas-graficas",
       "source": "./plugins/piezas-graficas",
-      "description": "Portadas, banners, miniaturas, OG, stories y heros de correo exportados a PNG exacto, más imágenes de apoyo con IA sin el look IA.",
-      "version": "2.0.0",
+      "description": "Imágenes de producto en contexto (la app en una ventana sobre un degradado, con modal, fila destacada y avisos flotantes) en cabecera de correo, hero 16:9, post 1:1 y 4:5, banner, miniatura y story a PNG 2x; más portadas, OG y heros, y apoyo con IA sin el look IA.",
+      "version": "2.1.0",
       "category": "design",
       "tags": [
         "banner",
         "miniatura",
         "og",
         "story",
-        "ia"
+        "ia",
+        "producto",
+        "mockup"
       ]
     },
     {
       "name": "video-marketing",
       "source": "./plugins/video-marketing",
       "description": "Reels y vídeos cortos: guion por segundos, zonas seguras, subtítulos y revisión por fotogramas, sobre el plugin motion-graphics (Remotion).",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "category": "design",
       "tags": [
         "reel",

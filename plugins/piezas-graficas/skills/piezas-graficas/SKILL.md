@@ -6,7 +6,10 @@ description: Diseña y exporta piezas gráficas estáticas de marketing para cua
 # Piezas gráficas (portadas, banners, miniaturas, OG, stories, heros)
 
 Antes, lee **`direccion-de-arte`** (marca → `marca.json`, copy, revisión). Para fondos o escenas con IA,
-**`imagen-ia`**.
+**`imagen-ia`**. Si la pieza enseña la app o el producto digital (lo más habitual en un lanzamiento), usa la skill
+hermana **`producto-en-contexto`**: la interfaz real en una ventana sobre un degradado suave, con capas flotantes,
+al nivel de las imágenes de producto de las grandes apps. Sus componentes (`producto.css`, `producto.js`) también
+sirven aquí: enlázalos y pon `data-estilo="producto"` en la pieza.
 
 ## Principio
 **El texto se compone en HTML, nunca dentro de la imagen generada.** La pieza es un `<section>` con su tamaño
@@ -67,4 +70,7 @@ la tipografía de la marca. Así sale nítido, sin faltas, corregible en segundo
 ## Exportar otras cosas
 `exportar.mjs` vale para cualquier HTML: `--selector` elige qué exportar, `--escala 2` para retina, `--estricto`
 para fallar también con avisos. Piezas existentes de otros proyectos se exportan igual marcando sus contenedores con
-`data-pieza`.
+`data-pieza`. Con `data-estilo="producto"` en una pieza acepta las sombras suaves de las capas (y avisa de brillos),
+deja que las maquetas se solapen entre ellas y no mide el contraste del texto dentro de `.atenuado`. Antes de
+revisar llama a `window.recolocar()` (de `producto.js`) para que las capas con `data-sobre` caigan en su fila con la
+fuente definitiva. Es el mismo fichero que el de `carrusel-instagram`: si lo cambias, copia el otro.

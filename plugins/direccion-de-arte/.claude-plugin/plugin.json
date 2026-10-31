@@ -1,13 +1,13 @@
 {
   "name": "direccion-de-arte",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Dirección de arte para marketing de cualquier marca con nivel de agencia: brief de marca convertido en marca.json (colores, tipografía, logo, tono) con comprobador de contraste, copy, tipografía, rejillas, color y la revisión visual obligatoria antes de entregar.",
   "author": {
     "name": "C4rI0s",
     "url": "https://github.com/C4rI0s"
   },
-  "homepage": "https://github.com/C4rI0s/claude-skills-marketing",
-  "repository": "https://github.com/C4rI0s/claude-skills-marketing",
+  "homepage": "https://github.com/C4rI0s/claude-Image-generation",
+  "repository": "https://github.com/C4rI0s/claude-Image-generation",
   "license": "UNLICENSED",
   "keywords": [
     "diseño",

@@ -1,13 +1,13 @@
 {
   "name": "video-marketing",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Dirección de reels y vídeos cortos de marketing para cualquier marca: guion por segundos, zonas seguras 9:16, subtítulos, entrega y revisión por fotogramas. Se apoya en el plugin motion-graphics (Remotion) y en generadores de vídeo con IA.",
   "author": {
     "name": "C4rI0s",
     "url": "https://github.com/C4rI0s"
   },
-  "homepage": "https://github.com/C4rI0s/claude-skills-marketing",
-  "repository": "https://github.com/C4rI0s/claude-skills-marketing",
+  "homepage": "https://github.com/C4rI0s/claude-Image-generation",
+  "repository": "https://github.com/C4rI0s/claude-Image-generation",
   "license": "UNLICENSED",
   "keywords": [
     "reel",

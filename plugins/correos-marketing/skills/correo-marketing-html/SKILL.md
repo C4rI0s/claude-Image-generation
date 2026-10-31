@@ -14,7 +14,10 @@ Antes de nada, lee la skill **`direccion-de-arte`** (marca → `marca.json`, bri
   opcional con pie, lista corta, botón oscuro secundario.
 - `plantillas/oferta.html` · cupón: código en caja plana, fecha de fin, botón, condiciones.
 - `plantillas/hero-ejemplo.png`, `imagen-ejemplo.png` · imágenes de la marca de ejemplo (Pliego, ficticia) para
-  previsualizar. Las tuyas se hacen con `piezas-graficas` (pieza `hero-correo`).
+  previsualizar: el producto en contexto (la app sobre un degradado, con el modal y la fila que cuentan la función).
+  Las tuyas se hacen con la skill **`producto-en-contexto`** (pieza `cabecera-correo`, 600x300 exportada a 2x =
+  1200x600; en el correo, `width="560" height="280"`). Es lo que más sube el nivel de un correo: la imagen enseña el
+  producto haciendo la novedad y el titular va en HTML debajo.
 - `scripts/aplicar-marca.mjs` · rellena los marcadores `%%colores.tinta%%`, `%%nombre%%`, `%%web%%`… con tu
   `marca.json` (en correo no hay variables CSS: la marca va escrita en cada estilo en línea).
 - `scripts/comprobar-correo.mjs` · comprobaciones estáticas + render real en 4 vistas.
@@ -53,7 +56,8 @@ Antes de nada, lee la skill **`direccion-de-arte`** (marca → `marca.json`, bri
 
 ## Reglas de estilo de estas plantillas (no las rompas)
 - Fondo **blanco** fuera y dentro. Bloques de apoyo en `bloque` plano sin borde.
-- **Sin** sombras, brillos, degradados, bordes de color, bordes discontinuos, emojis ni exclamaciones.
+- **Sin** sombras, brillos, degradados, bordes de color, bordes discontinuos, emojis ni exclamaciones en el HTML. La
+  profundidad (degradado suave, capas con borde fino) vive solo dentro de la imagen de cabecera, nunca en el correo.
 - El **botón es el único elemento de color** (`acento` con texto `sobre-acento`; el secundario, `tinta` con blanco).
   El acento como texto solo en `acento-texto` (números de las ventajas).
 - Etiqueta (kicker) en gris, mayúsculas espaciadas; titular 29-30 px, 800, interletra −0,02 em; `&nbsp;` en las dos
