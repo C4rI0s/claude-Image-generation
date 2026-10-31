@@ -1,0 +1,10 @@
+{
+  "name": "video-marketing",
+  "version": "1.0.0",
+  "description": "Dirección de reels y vídeos cortos de marketing: guion por segundos, zonas seguras 9:16, subtítulos, entrega y revisión por fotogramas. Se apoya en el plugin motion-graphics (Remotion) y en Higgsfield.",
+  "author": { "name": "Carlos · GamzyHost", "url": "https://gamzyhost.com" },
+  "homepage": "https://github.com/C4rI0s/claude-skills-marketing",
+  "repository": "https://github.com/C4rI0s/claude-skills-marketing",
+  "license": "UNLICENSED",
+  "keywords": ["reel", "tiktok", "shorts", "vídeo", "remotion", "motion graphics", "anuncio"]
+}

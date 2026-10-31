@@ -1,0 +1,125 @@
+<!doctype html>
+<!--
+  PLANTILLA DE PIEZAS · una misma campaña en todos los formatos (hero de correo, OG, miniatura,
+  banner de X, story). Cada <section data-pieza> se exporta a PNG con:
+    node ../scripts/exportar.mjs piezas.html            (1x, tamaño exacto)
+    node ../scripts/exportar.mjs piezas.html --solo hero-correo --escala 1   (el hero ya está a 2x: 1200 para 600)
+  Reglas:
+    · Tokens en :root; nada de colores sueltos.
+    · El texto SIEMPRE en HTML (nítido y corregible). La imagen (captura real o fondo de IA) va debajo.
+    · Recortes de capturas con <div class="recorte" data-crop="x,y,ancho,alto"> en píxeles de la imagen original:
+      el script del final la escala para que ese rectángulo llene la caja. Si la caja es más grande que el
+      rectángulo, la imagen se amplía y el exportador avisa (se verá blanda): pide una captura mayor.
+    · Zonas seguras: data-margen en cada pieza (la story deja 250 px arriba y 340 abajo para la interfaz).
+  Contenido de ejemplo real (GamzyDrive, cifras comprobadas en drive.gamzyhost.com el 31-10-2026).
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Piezas · GamzyDrive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=block" rel="stylesheet">
+<style>
+  :root {
+    --acento: #79c7b7; --acento-texto: #1f6f62;
+    --tinta: #1d1a15; --texto: #33302b; --suave: #6b655c; --linea: #e2ddd4;
+    --papel: #f6f3ee; --noche: #17150f; --noche-linea: #34302a; --claro: #f4f1ea; --claro-suave: #a8a196;
+    --fuente: 'Plus Jakarta Sans', system-ui, sans-serif; --mono: 'JetBrains Mono', ui-monospace, monospace;
+    --captura: url('https://gamzyhost.com/imagenes/correo/productos/gamzydrive-hero-v4.jpg');
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0 }
+  body { background: #d6d2ca; padding: 60px; display: flex; flex-direction: column; align-items: flex-start; gap: 60px; font-family: var(--fuente) }
+  section { position: relative; overflow: hidden; background: var(--papel); color: var(--tinta); -webkit-font-smoothing: antialiased }
+  .oscuro { background: var(--noche); color: var(--claro) }
+
+  .marca { display: flex; align-items: center; gap: 12px; font-weight: 800; letter-spacing: -.01em }
+  .marca svg { color: var(--acento-texto) } .oscuro .marca svg { color: var(--acento) }
+  .chip { display: inline-block; font-weight: 600; border: 2px solid var(--linea); border-radius: 999px; color: var(--texto); white-space: nowrap }
+  .tit { font-weight: 800; letter-spacing: -.04em; line-height: 1 }
+  .tit em { font-style: normal; color: var(--acento-texto) } .oscuro .tit em { color: var(--acento) }
+  .sub { font-weight: 500; color: var(--suave); letter-spacing: -.01em; line-height: 1.35 } .oscuro .sub { color: var(--claro-suave) }
+  .url { font-family: var(--mono); font-weight: 500; color: var(--suave) } .oscuro .url { color: var(--claro-suave) }
+
+  .recorte { position: absolute; overflow: hidden; border-radius: 16px; border: 2px solid var(--linea); background: var(--noche) }
+  .oscuro .recorte { border-color: var(--noche-linea) }
+  .recorte img { position: absolute; left: 0; top: 0; transform-origin: 0 0; display: block; max-width: none }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><symbol id="nube" viewBox="0 0 40 28"><path d="M11 26h19a8 8 0 0 0 1.6-15.84A11 11 0 0 0 10.2 8.1 9 9 0 0 0 11 26Z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/></symbol></svg>
+
+<!-- HERO DE CORREO · 1200x680 (se pinta a 600x340 en el correo: letra mínima 26 px aquí = 13 px allí) -->
+<section data-pieza="hero-correo" data-ancho="1200" data-alto="680" data-min-letra="26" style="width:1200px;height:680px;padding:64px 72px">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <div class="marca" style="font-size:34px"><svg width="46" height="32"><use href="#nube"/></svg>GamzyDrive</div>
+    <div style="display:flex;gap:14px"><span class="chip" style="font-size:26px;padding:10px 22px">20 GB gratis</span><span class="chip" style="font-size:26px;padding:10px 22px">Servidores en Europa</span></div>
+  </div>
+  <h1 class="tit" style="font-size:84px;margin-top:44px">Tu nube, <em>tu control.</em></h1>
+  <p class="sub" style="font-size:32px;margin-top:18px">Envía hasta 20 GB sin cuenta o guárdalo todo en tu propio Drive.</p>
+  <div class="recorte" data-crop="90,225,665,272" style="left:268px;width:665px;top:410px;height:272px;border-radius:16px 16px 0 0">
+    <img src="https://gamzyhost.com/imagenes/correo/productos/gamzydrive-hero-v4.jpg" alt="">
+  </div>
+</section>
+
+<!-- OG / VISTA PREVIA DE ENLACE · 1200x630. Se ve pequeña (≈ 500 px): pocas palabras y grandes -->
+<section data-pieza="og" data-ancho="1200" data-alto="630" data-min-letra="26" style="width:1200px;height:630px;padding:72px">
+  <div class="marca" style="font-size:34px"><svg width="46" height="32"><use href="#nube"/></svg>GamzyDrive</div>
+  <h1 class="tit" style="font-size:88px;margin-top:70px;max-width:620px">Envía 20 GB <em>sin cuenta.</em></h1>
+  <p class="url" style="font-size:28px;position:absolute;left:72px;bottom:72px">drive.gamzyhost.com</p>
+  <div class="recorte" data-crop="760,415,350,335" style="right:72px;top:148px;width:350px;height:335px">
+    <img src="https://gamzyhost.com/imagenes/correo/productos/gamzydrive-hero-v4.jpg" alt="">
+  </div>
+</section>
+
+<!-- MINIATURA DE YOUTUBE · 1280x720. Se juzga a 320 px de ancho: 3-4 palabras, contraste alto, una sola imagen -->
+<section class="oscuro" data-pieza="miniatura" data-ancho="1280" data-alto="720" data-min-letra="40" style="width:1280px;height:720px;padding:80px">
+  <p class="tit" style="font-size:250px;color:var(--acento);letter-spacing:-.06em;line-height:.85;margin-top:40px">20 GB</p>
+  <p class="tit" style="font-size:96px;margin-top:36px">gratis.</p>
+  <div class="recorte" data-crop="760,415,350,335" style="right:80px;top:192px;width:350px;height:335px">
+    <img src="https://gamzyhost.com/imagenes/correo/productos/gamzydrive-hero-v4.jpg" alt="">
+  </div>
+</section>
+
+<!-- BANNER DE X · 1500x500. La foto de perfil tapa la esquina inferior izquierda (≈ 400x200) y el móvil recorta arriba y abajo -->
+<section data-pieza="banner-x" data-ancho="1500" data-alto="500" data-margen="70" data-min-letra="24" style="width:1500px;height:500px">
+  <div style="position:absolute;left:440px;top:130px">
+    <div class="marca" style="font-size:30px"><svg width="42" height="30"><use href="#nube"/></svg>GamzyDrive</div>
+    <h1 class="tit" style="font-size:68px;margin-top:24px">Tu nube, <em>tu control.</em></h1>
+    <p class="url" style="font-size:26px;margin-top:24px">drive.gamzyhost.com</p>
+  </div>
+  <div class="recorte" data-crop="90,225,600,330" style="left:1110px;top:110px;width:600px;height:330px">
+    <img src="https://gamzyhost.com/imagenes/correo/productos/gamzydrive-hero-v4.jpg" alt="">
+  </div>
+</section>
+
+<!-- STORY · 1080x1920. Interfaz de Instagram: 250 px arriba y 340 abajo no son tuyos.
+     Claro porque la captura trae fondo crema: el fondo de la captura tiene que casar con el lienzo -->
+<section data-pieza="story" data-ancho="1080" data-alto="1920" data-min-letra="34" style="width:1080px;height:1920px">
+  <div style="position:absolute;left:96px;right:96px;top:300px">
+    <div class="marca" style="font-size:38px"><svg width="52" height="36"><use href="#nube"/></svg>GamzyDrive</div>
+    <h1 class="tit" style="font-size:132px;margin-top:64px">Tu nube,<br><em>tu control.</em></h1>
+    <p class="sub" style="font-size:44px;margin-top:40px">Envía hasta 20 GB sin cuenta. Empieza con 20 GB gratis.</p>
+  </div>
+  <div class="recorte" data-crop="90,225,1020,565" style="left:96px;top:1000px;width:888px;height:492px;border:0;background:transparent">
+    <img src="https://gamzyhost.com/imagenes/correo/productos/gamzydrive-hero-v4.jpg" alt="">
+  </div>
+  <p class="url" style="position:absolute;left:96px;top:1520px;font-size:36px">drive.gamzyhost.com</p>
+</section>
+
+<script>
+  // Recorte exacto: data-crop="x,y,ancho,alto" en píxeles de la imagen original → llena la caja.
+  // Escala por el lado que manda (cover) y centra el sobrante.
+  for (const caja of document.querySelectorAll('.recorte[data-crop]')) {
+    const img = caja.querySelector('img')
+    const aplicar = () => {
+      const [x, y, w, h] = caja.dataset.crop.split(',').map(Number)
+      const k = Math.max(caja.clientWidth / w, caja.clientHeight / h)
+      img.style.width = `${img.naturalWidth * k}px`
+      img.style.transform = `translate(${-x * k + (caja.clientWidth - w * k) / 2}px, ${-y * k + (caja.clientHeight - h * k) / 2}px)`
+    }
+    img.complete && img.naturalWidth ? aplicar() : img.addEventListener('load', aplicar)
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "claude-skills-marketing",
+  "description": "Skills de Claude Code para piezas de marketing y multimedia con nivel de agencia: correos HTML, carruseles de Instagram, portadas, banners, miniaturas, reels y dirección de arte. Estética sobria y plana (GamzyHost).",
+  "owner": {
+    "name": "Carlos · GamzyHost",
+    "url": "https://github.com/C4rI0s"
+  },
+  "metadata": {
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "direccion-de-arte",
+      "source": "./plugins/direccion-de-arte",
+      "description": "La base: brief, copy, tipografía, rejillas, color, marca GamzyHost y la revisión visual obligatoria. Instálala siempre.",
+      "version": "1.0.0",
+      "category": "design",
+      "tags": ["diseño", "marca", "copy", "tipografía"]
+    },
+    {
+      "name": "correos-marketing",
+      "source": "./plugins/correos-marketing",
+      "description": "Correos HTML de marketing nivel Proton compatibles con Gmail, Outlook y Apple Mail, con plantillas probadas y comprobador que renderiza 4 vistas.",
+      "version": "1.0.0",
+      "category": "design",
+      "tags": ["email", "correo", "newsletter"]
+    },
+    {
+      "name": "carruseles-instagram",
+      "source": "./plugins/carruseles-instagram",
+      "description": "Carruseles 1080x1350 con sistema de diapositivas, exportación a PNG con Chrome real, revisión automática y hoja de contacto con la rejilla del perfil.",
+      "version": "1.0.0",
+      "category": "design",
+      "tags": ["instagram", "carrusel", "redes"]
+    },
+    {
+      "name": "piezas-graficas",
+      "source": "./plugins/piezas-graficas",
+      "description": "Portadas, banners, miniaturas, OG, stories y heros de correo exportados a PNG exacto, más imágenes de apoyo con IA (Higgsfield) sin el look IA.",
+      "version": "1.0.0",
+      "category": "design",
+      "tags": ["banner", "miniatura", "og", "story", "ia"]
+    },
+    {
+      "name": "video-marketing",
+      "source": "./plugins/video-marketing",
+      "description": "Reels y vídeos cortos: guion por segundos, zonas seguras, subtítulos y revisión por fotogramas, sobre el plugin motion-graphics (Remotion).",
+      "version": "1.0.0",
+      "category": "design",
+      "tags": ["reel", "vídeo", "remotion"]
+    }
+  ]
+}

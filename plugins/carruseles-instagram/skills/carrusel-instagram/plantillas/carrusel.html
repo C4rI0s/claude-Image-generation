@@ -1,0 +1,226 @@
+<!doctype html>
+<!--
+  PLANTILLA DE CARRUSEL 1080x1350 (4:5)
+  Cada <section class="slide"> es una diapositiva y se exporta a PNG con:
+    node ../scripts/exportar.mjs carrusel.html --carrusel
+  Cómo adaptarla:
+    1. Cambia los tokens de :root (acento de la marca o del producto). Nada de colores sueltos por el HTML.
+    2. Copia el tipo de diapositiva que necesites (portada, punto, lista, cifra, tabla, cierre) y cambia SOLO el texto.
+    3. Numera data-pieza en orden (01-…, 02-…) y actualiza el contador «0X / 0N» y la barra (style="--paso:X/N").
+  El contenido de ejemplo es real (GamzyDrive). No inventes cifras: si no las tienes, pídelas.
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Carrusel · GamzyDrive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=block" rel="stylesheet">
+<style>
+  :root {
+    /* Marca (GamzyHost). El acento es el del producto: Drive = verde agua, Mail/Host = ámbar #f7a01e. */
+    --acento: #79c7b7;          /* sobre fondo oscuro */
+    --acento-texto: #1f6f62;    /* el mismo acento, oscurecido para texto sobre claro (contraste ≥ 4.5) */
+    --tinta: #1d1a15;
+    --texto: #33302b;
+    --suave: #6b655c;
+    --linea: #e2ddd4;
+    --papel: #faf8f4;
+    --noche: #17150f;
+    --noche-2: #23201a;
+    --noche-linea: #34302a;
+    --claro: #f4f1ea;
+    --claro-suave: #a8a196;
+
+    --margen: 88px;
+    --fuente: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0 }
+  body { background: #d6d2ca; padding: 60px 0; display: flex; flex-direction: column; align-items: center; gap: 48px; font-family: var(--fuente) }
+
+  /* ── Lienzo ─────────────────────────────────────────────── */
+  .slide {
+    position: relative; width: 1080px; height: 1350px; overflow: hidden;
+    background: var(--papel); color: var(--tinta);
+    padding: var(--margen); display: flex; flex-direction: column;
+    -webkit-font-smoothing: antialiased; font-feature-settings: 'ss01', 'tnum' 0;
+  }
+  .slide.oscuro { background: var(--noche); color: var(--claro) }
+
+  /* Cabecera y pie se repiten en todas: son lo que da continuidad al deslizar */
+  .cab { display: flex; justify-content: space-between; align-items: center; height: 44px }
+  .marca { display: flex; align-items: center; gap: 14px; font-weight: 800; font-size: 28px; letter-spacing: -.01em }
+  .marca svg { width: 40px; height: 28px; color: var(--acento-texto) }
+  .oscuro .marca svg { color: var(--acento) }
+  .serie { font-family: var(--mono); font-size: 22px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--suave) }
+  .oscuro .serie { color: var(--claro-suave) }
+
+  .cuerpo { flex: 1; display: flex; flex-direction: column; justify-content: center; min-height: 0 }
+
+  .pie { display: flex; align-items: center; gap: 28px; height: 44px }
+  .paso { font-family: var(--mono); font-size: 22px; font-weight: 600; letter-spacing: .06em; color: var(--suave); white-space: nowrap }
+  .oscuro .paso { color: var(--claro-suave) }
+  .barra { flex: 1; height: 4px; background: var(--linea); border-radius: 2px; position: relative }
+  .oscuro .barra { background: var(--noche-linea) }
+  .barra::after { content: ''; position: absolute; inset: 0 auto 0 0; width: calc(var(--paso) * 100%); background: var(--tinta); border-radius: 2px }
+  .oscuro .barra::after { background: var(--acento) }
+  .desliza { font-size: 24px; font-weight: 700; white-space: nowrap }
+
+  /* ── Tipografía (escala 1.333 sobre 38px) ───────────────── */
+  .kicker { font-family: var(--mono); font-size: 24px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--acento-texto); margin-bottom: 36px }
+  .oscuro .kicker { color: var(--acento) }
+  .titular { font-size: 112px; line-height: .98; font-weight: 800; letter-spacing: -.04em }
+  .titulo { font-size: 80px; line-height: 1.02; font-weight: 800; letter-spacing: -.035em; max-width: 880px }
+  .titular em, .titulo em { font-style: normal; color: var(--acento-texto) }
+  .oscuro .titular em, .oscuro .titulo em { color: var(--acento) }
+  .entrada { font-size: 40px; line-height: 1.35; font-weight: 500; color: var(--suave); margin-top: 40px; max-width: 860px; letter-spacing: -.01em }
+  .oscuro .entrada { color: var(--claro-suave) }
+  .num { font-family: var(--mono); font-size: 30px; font-weight: 600; color: var(--acento-texto); letter-spacing: .04em; margin-bottom: 28px }
+
+  /* ── Piezas de apoyo (planas: línea fina neutra, sin sombras ni brillos) ── */
+  .ficha { margin-top: 64px; border: 2px solid var(--linea); border-radius: 24px; background: #fff; padding: 40px 44px }
+  .ficha .fila { display: flex; justify-content: space-between; align-items: baseline; gap: 24px }
+  .ficha .nombre { font-size: 34px; font-weight: 700 }
+  .ficha .dato { font-family: var(--mono); font-size: 26px; color: var(--suave); white-space: nowrap }
+  .ficha .enlace { font-family: var(--mono); font-size: 28px; font-weight: 500; color: var(--texto); background: var(--papel); border-radius: 12px; padding: 18px 22px; margin-top: 28px }
+  .progreso { height: 14px; border-radius: 7px; background: var(--linea); margin-top: 30px; overflow: hidden }
+  .progreso i { display: block; height: 100%; width: 68%; background: var(--tinta); border-radius: 7px }
+  .nota { font-size: 26px; color: var(--suave); margin-top: 22px }
+  .nota b { color: var(--acento-texto); font-weight: 700 }
+
+  .lista { list-style: none; margin-top: 60px; border-top: 2px solid var(--linea) }
+  .lista li { display: flex; align-items: baseline; gap: 28px; padding: 34px 0; border-bottom: 2px solid var(--linea) }
+  .lista .ico { font-family: var(--mono); font-size: 36px; font-weight: 600; color: var(--acento-texto); width: 52px; flex: none }
+  .lista .t { font-size: 42px; font-weight: 700; letter-spacing: -.02em }
+  .lista .d { font-size: 30px; color: var(--suave); margin-top: 8px; line-height: 1.35 }
+
+  .cifra { font-size: 330px; line-height: .82; font-weight: 800; letter-spacing: -.06em; color: var(--acento) }
+  .cifra small { font-size: 140px; letter-spacing: -.04em }
+
+  .tabla { width: 100%; border-collapse: collapse; margin-top: 56px }
+  .tabla td { padding: 30px 0; border-bottom: 2px solid var(--linea); font-size: 36px; vertical-align: baseline }
+  .tabla tr:first-child td { border-top: 2px solid var(--tinta) }
+  .tabla .plan { font-weight: 800; letter-spacing: -.02em }
+  .tabla .gb { font-family: var(--mono); font-size: 30px; color: var(--suave) }
+  .tabla .precio { text-align: right; font-weight: 700 }
+  .tabla .precio span { font-size: 26px; font-weight: 500; color: var(--suave) }
+  .tabla tr.destacado .plan { color: var(--acento-texto) }
+
+  .captura { position: absolute; left: var(--margen); width: 1200px; bottom: -2px; height: 415px; border-radius: 28px 0 0 0; overflow: hidden; border: 2px solid var(--noche-linea) }
+  .captura img { width: 100%; height: 100%; object-fit: cover; object-position: 0% 100%; display: block }
+
+  .cta { display: inline-flex; align-items: center; gap: 20px; margin-top: 72px; background: var(--acento); color: var(--noche); font-weight: 800; font-size: 40px; padding: 30px 44px; border-radius: 20px; align-self: flex-start; letter-spacing: -.01em }
+  .url { font-family: var(--mono); font-size: 30px; color: var(--claro-suave); margin-top: 32px }
+</style>
+</head>
+<body>
+
+<!-- Logotipo de producto como SVG en línea: hereda currentColor, así vale en claro y en oscuro -->
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="nube" viewBox="0 0 40 28"><path d="M11 26h19a8 8 0 0 0 1.6-15.84A11 11 0 0 0 10.2 8.1 9 9 0 0 0 11 26Z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/></symbol>
+</svg>
+
+<!-- 01 · PORTADA: el gancho. Una promesa, una línea de apoyo y una imagen real del producto -->
+<section class="slide oscuro" data-pieza="01-portada" data-ancho="1080" data-alto="1350">
+  <header class="cab">
+    <div class="marca"><svg><use href="#nube"/></svg>GamzyDrive</div>
+    <div class="serie">GamzyHost</div>
+  </header>
+  <div class="cuerpo" style="justify-content:flex-start;padding-top:96px">
+    <p class="kicker">Tu nube en Europa</p>
+    <h1 class="titular">Tu nube,<br><em>tu control.</em></h1>
+    <p class="entrada">Envía hasta 20 GB sin crear cuenta y guarda lo tuyo en servidores europeos.</p>
+    <p class="desliza" style="margin-top:44px;color:var(--acento)">Desliza →</p>
+  </div>
+  <!-- La captura sangra por abajo y por la derecha: invita a pasar y enseña el producto real -->
+  <div class="captura"><img src="https://gamzyhost.com/imagenes/correo/productos/gamzydrive-hero-v1.jpg" alt="Interfaz de GamzyDrive"></div>
+</section>
+
+<!-- 02 · PUNTO con ficha: idea + prueba visual de que es real -->
+<section class="slide" data-pieza="02-envio" data-ancho="1080" data-alto="1350">
+  <header class="cab"><div class="marca"><svg><use href="#nube"/></svg>GamzyDrive</div><div class="serie">Envíos</div></header>
+  <div class="cuerpo">
+    <p class="num">01</p>
+    <h2 class="titulo">Envía archivos <em>sin crear cuenta.</em></h2>
+    <p class="entrada">Hasta 20 GB por archivo, con un enlace que dura 48 horas. Quien lo recibe tampoco necesita registrarse.</p>
+    <div class="ficha">
+      <div class="fila"><span class="nombre">mapa-servidor.zip</span><span class="dato">8,4 GB</span></div>
+      <div class="enlace">drive.gamzyhost.com/e/k8Q2mX</div>
+      <p class="nota">Caduca en <b>48 horas</b></p>
+    </div>
+  </div>
+  <footer class="pie"><span class="paso">02 / 07</span><span class="barra" style="--paso:2/7"></span></footer>
+</section>
+
+<!-- 03 · PUNTO con progreso -->
+<section class="slide" data-pieza="03-copias" data-ancho="1080" data-alto="1350">
+  <header class="cab"><div class="marca"><svg><use href="#nube"/></svg>GamzyDrive</div><div class="serie">Copias</div></header>
+  <div class="cuerpo">
+    <p class="num">02</p>
+    <h2 class="titulo">Las copias de tu servidor, <em>a salvo.</em></h2>
+    <p class="entrada">Súbelas desde la terminal con una sola orden. Si la conexión se corta, la subida sigue por donde iba.</p>
+    <div class="ficha">
+      <div class="fila"><span class="nombre">copia-31-10.tar.gz</span><span class="dato">3,2 GB · 68 %</span></div>
+      <div class="progreso"><i></i></div>
+      <p class="nota">Reanudada tras un corte de red</p>
+    </div>
+  </div>
+  <footer class="pie"><span class="paso">03 / 07</span><span class="barra" style="--paso:3/7"></span></footer>
+</section>
+
+<!-- 04 · LISTA: tres opciones, como mucho cuatro -->
+<section class="slide" data-pieza="04-compartir" data-ancho="1080" data-alto="1350">
+  <header class="cab"><div class="marca"><svg><use href="#nube"/></svg>GamzyDrive</div><div class="serie">Compartir</div></header>
+  <div class="cuerpo">
+    <p class="num">03</p>
+    <h2 class="titulo">Comparte con <em>tus condiciones.</em></h2>
+    <ul class="lista">
+      <li><span class="ico">→</span><div><p class="t">Con contraseña</p><p class="d">Solo entra quien la sabe.</p></div></li>
+      <li><span class="ico">→</span><div><p class="t">Con caducidad</p><p class="d">El enlace deja de funcionar el día que elijas.</p></div></li>
+      <li><span class="ico">→</span><div><p class="t">Solo para invitados</p><p class="d">Nadie más puede abrirlo.</p></div></li>
+    </ul>
+  </div>
+  <footer class="pie"><span class="paso">04 / 07</span><span class="barra" style="--paso:4/7"></span></footer>
+</section>
+
+<!-- 05 · CIFRA: un número grande que resume. Fondo oscuro para romper el ritmo -->
+<section class="slide oscuro" data-pieza="05-cifra" data-ancho="1080" data-alto="1350">
+  <header class="cab"><div class="marca"><svg><use href="#nube"/></svg>GamzyDrive</div><div class="serie">Gratis</div></header>
+  <div class="cuerpo">
+    <p class="cifra">20<small>&nbsp;GB</small></p>
+    <h2 class="titulo" style="margin-top:56px">Gratis para siempre.</h2>
+    <p class="entrada">Sin tarjeta, sin publicidad y sin que nadie analice tus archivos.</p>
+  </div>
+  <footer class="pie"><span class="paso">05 / 07</span><span class="barra" style="--paso:5/7"></span></footer>
+</section>
+
+<!-- 06 · TABLA: precios o comparativa. Cifras alineadas a la derecha y en tabulares -->
+<section class="slide" data-pieza="06-planes" data-ancho="1080" data-alto="1350">
+  <header class="cab"><div class="marca"><svg><use href="#nube"/></svg>GamzyDrive</div><div class="serie">Planes</div></header>
+  <div class="cuerpo">
+    <h2 class="titulo">¿Necesitas más? <em>Desde 2 € al mes.</em></h2>
+    <table class="tabla">
+      <tr><td class="plan">Gratis</td><td class="gb">20 GB</td><td class="precio">0 €</td></tr>
+      <tr class="destacado"><td class="plan">Starter</td><td class="gb">50 GB</td><td class="precio">2 € <span>/mes</span></td></tr>
+      <tr><td class="plan">Pro</td><td class="gb">200 GB</td><td class="precio">5 € <span>/mes</span></td></tr>
+      <tr><td class="plan">Business</td><td class="gb">1 TB</td><td class="precio">12 € <span>/mes</span></td></tr>
+    </table>
+    <p class="nota" style="margin-top:36px;font-size:30px">Mensuales y sin permanencia.</p>
+  </div>
+  <footer class="pie"><span class="paso">06 / 07</span><span class="barra" style="--paso:6/7"></span></footer>
+</section>
+
+<!-- 07 · CIERRE: una sola acción y dónde hacerla -->
+<section class="slide oscuro" data-pieza="07-cierre" data-ancho="1080" data-alto="1350">
+  <header class="cab"><div class="marca"><svg><use href="#nube"/></svg>GamzyDrive</div><div class="serie">GamzyHost</div></header>
+  <div class="cuerpo">
+    <h2 class="titular" style="font-size:104px">Empieza con<br><em>20 GB gratis.</em></h2>
+    <span class="cta">Crear mi cuenta</span>
+    <p class="url">drive.gamzyhost.com</p>
+  </div>
+  <footer class="pie"><span class="paso">07 / 07</span><span class="barra" style="--paso:7/7"></span><span class="desliza" style="color:var(--claro-suave)">Guárdalo</span></footer>
+</section>
+
+</body>
+</html>

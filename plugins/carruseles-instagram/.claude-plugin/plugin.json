@@ -1,0 +1,10 @@
+{
+  "name": "carruseles-instagram",
+  "version": "1.0.0",
+  "description": "Carruseles de Instagram 1080x1350 con nivel de agencia: sistema de diapositivas (portada, punto, lista, cifra, tabla, cierre), exportación a PNG con Chrome real, revisión automática y hoja de contacto con la rejilla del perfil.",
+  "author": { "name": "Carlos · GamzyHost", "url": "https://gamzyhost.com" },
+  "homepage": "https://github.com/C4rI0s/claude-skills-marketing",
+  "repository": "https://github.com/C4rI0s/claude-skills-marketing",
+  "license": "UNLICENSED",
+  "keywords": ["instagram", "carrusel", "carousel", "redes sociales", "diseño", "png"]
+}
